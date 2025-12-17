@@ -194,7 +194,7 @@ function MainPage() {
           </h1>
           <div className="header-actions desktop-only">
             <button onClick={handleDownload} className="header-btn">
-              <Download size={16} /> Download
+              <Download size={16} /> Download .ics
             </button>
             <button onClick={handleShare} className="header-btn">
               <Share2 size={14} /> Share (copy timetable link)
