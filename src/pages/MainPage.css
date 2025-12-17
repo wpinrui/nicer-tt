@@ -1636,7 +1636,7 @@ html.dark .privacy-link:hover {
 }
 
 /* Mobile sticky controls */
-@media (max-width: 1240px) {
+@media (max-width: 768px) {
   .main-page {
     height: 100%;
     overflow: hidden;
