@@ -41,14 +41,6 @@ Your timetable is automatically saved in your browser. You can now download it a
 
 ## :sparkles: Features
 
-### :iphone: Mobile-Friendly
-
-The app is fully responsive and optimized for mobile devices:
-- Fixed header controls (search, filters) always visible at the top
-- Fixed action buttons (Download, Share, Options) always visible at the bottom
-- Scrollable event list in the middle
-- Larger touch targets for easy tapping
-
 ### Viewing Your Timetable
 
 Once you've uploaded your timetable, you'll see all your events organized by date. Each event shows:
@@ -90,10 +82,6 @@ Click **Download .ics** to save your timetable as a calendar file. You can then 
 
 #### Share
 Click **Share** to copy a link to your clipboard. Anyone with the link can view your timetable without needing to upload the HTML file themselves.
-
-When opening a shared link while you already have your own timetable loaded, you can choose to:
-- **Replace** - Replace your timetable with the shared one
-- **Just View** - Temporarily view the shared timetable without replacing yours. A banner will appear allowing you to return to your own timetable anytime.
 
 :lock: The shared link contains your timetable data encoded in the URL. No data is stored on any server.
 
