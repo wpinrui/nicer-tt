@@ -4,6 +4,10 @@ A better way to view, filter, and organize your NIE timetable.
 
 **[:rocket: Try it out](https://nicer-tt.vercel.app/)**
 
+<p align="center">
+  <img src="public/screenshot.png" alt="NIcEr Timetable Screenshot" width="700">
+</p>
+
 ## What it does
 
 NIcEr Timetable transforms your clunky NIE Portal timetable into a clean, searchable interface. Filter by course, search for specific classes, hide past events, and share your schedule with classmates. When you're ready, export to Google Calendar, Outlook, or any calendar app.
