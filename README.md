@@ -55,3 +55,8 @@ Push to `main` to trigger a Vercel deploy.
 - React + TypeScript
 - Vite
 - CSS (no framework)
+
+## Credits
+
+- Background photo by [Mihai Moisa](https://unsplash.com/@moisamihai092) on [Unsplash](https://unsplash.com/photos/rugged-mountain-range-under-a-hazy-sky-Jsxfie_bUyw)
+- [Schedule icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/schedule)

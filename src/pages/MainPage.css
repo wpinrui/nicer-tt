@@ -89,6 +89,8 @@ header h1 {
   margin-right: 0.4rem;
   color: #646cff;
   flex-shrink: 0;
+  position: relative;
+  top: 2px;
 }
 
 .brand-letter {

@@ -2,6 +2,16 @@
 
 A tool to convert your NIE timetable into a calendar file you can import into Google Calendar, Outlook, Apple Calendar, or any other calendar app.
 
+---
+
+## :link: Share Your Timetable Anywhere
+
+**Click Share to copy a link to your clipboard.** Anyone with the link can view your timetable without needing to upload the HTML file themselves. You can save this link to view your timetable from any device.
+
+:iphone: **Pro tip:** Save the share link as a bookmark on your phone to quickly access your timetable on the go!
+
+---
+
 ## :rocket: Getting Started
 
 ### Step 1: Go to your timetable page

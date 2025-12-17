@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Upload, Download, FileText, Share2, CalendarDays, HelpCircle, Settings } from 'lucide-react';
+import { Upload, Download, FileText, Share2, HelpCircle, Settings } from 'lucide-react';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { parseIcs } from '../utils/parseIcs';
@@ -153,7 +153,7 @@ function MainPage() {
       {events ? (
         <div className="compact-header no-print">
           <h1>
-            <CalendarDays size={26} className="brand-icon" />
+            <img src="/schedule.png" alt="" className="brand-icon" width={26} height={26} />
             <span className="brand-letter">N</span>
             <span className="brand-letter">I</span>
             <span className="brand-small">c</span>
@@ -174,7 +174,7 @@ function MainPage() {
         <>
           <header className="no-print">
             <h1>
-              <CalendarDays size={36} className="brand-icon" />
+              <img src="/schedule.png" alt="" className="brand-icon" width={36} height={36} />
               <span className="brand-letter">N</span>
               <span className="brand-letter">I</span>
               <span className="brand-small">c</span>

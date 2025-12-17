@@ -98,12 +98,17 @@
 }
 
 .made-by svg {
-  width: 27px;
-  height: 27px;
+  width: 18px;
+  height: 18px;
   fill: rgba(255, 255, 255, 0.9);
 }
 
-.made-by:hover svg {
+.made-by .github-link {
+  display: flex;
+  align-items: center;
+}
+
+.made-by .github-link:hover svg {
   fill: #fff;
 }
 
