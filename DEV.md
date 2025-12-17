@@ -1,4 +1,7 @@
 # Changelog
+## v1.0.4 (17 Dec 2025)
+- Use version from package.json instead of hardcoded value
+
 ## v1.0.3 (17 Dec 2025)
 - Fix modal appearing mid-scroll instead of onscreen (created by v1.0.2)
 - Remove background for readability on mobile view
