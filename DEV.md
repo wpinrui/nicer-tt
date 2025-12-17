@@ -1,4 +1,21 @@
 # Changelog
+## v1.0.9 (17 Dec 2025)
+- Skip share dialog when pasting own share link (same data)
+
+## v1.0.8 (17 Dec 2025)
+- Handle share link pasted while already on page (hashchange listener)
+
+## v1.0.7 (17 Dec 2025)
+- Add "Just View" option for shared timetables (temporary viewing without replacing)
+- Show banner when temporarily viewing shared timetable with back button
+- Add secondary action support to Modal component
+
+## v1.0.6 (17 Dec 2025)
+- Mobile layout: sticky top controls (search, filters) and bottom buttons
+- Add tablet breakpoint (768px-1280px) for fluid card layout
+- Enlarge touch targets on mobile (buttons, filters, help icon)
+- Update GUIDE.md with mobile features
+
 ## v1.0.5 (17 Dec 2025)
 - Add changelog link to footer
 
