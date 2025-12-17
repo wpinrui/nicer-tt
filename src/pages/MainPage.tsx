@@ -37,11 +37,13 @@ function formatDateDisplay(dateStr: string): string {
   return `${dayName}, ${day} ${monthName}`;
 }
 
-// Hardcoded for testing - Jan 8, 2026
-const TODAY_SORT_KEY = '2026-01-08';
+function getTodaySortKey(): string {
+  const today = new Date();
+  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+}
 
 function isToday(sortKey: string): boolean {
-  return sortKey === TODAY_SORT_KEY;
+  return sortKey === getTodaySortKey();
 }
 
 function getDateSearchString(dateStr: string): string {
