@@ -105,6 +105,18 @@ function MainPage() {
     }
   };
 
+  // Unified handler for Options panel (detects file type)
+  const handleAnyFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.name.toLowerCase().endsWith('.ics')) {
+      handleIcsFileChange(e);
+    } else {
+      handleFileChange(e);
+    }
+  };
+
   const handleDownload = () => {
     if (!displayEvents) return;
     const ics = generateIcs(displayEvents);
@@ -334,7 +346,7 @@ function MainPage() {
           onClose={() => setShowOptions(false)}
           onDarkModeChange={setDarkMode}
           onShowTutorChange={setShowTutor}
-          onFileChange={handleFileChange}
+          onFileChange={handleAnyFileChange}
           onReset={handleReset}
           onShowPrivacy={() => setShowPrivacyNotice(true)}
         />

@@ -79,7 +79,7 @@ export function OptionsPanel({
               <input
                 ref={fileInputRef}
                 type="file"
-                accept=".html,.htm"
+                accept=".html,.htm,.ics"
                 onChange={handleFileChange}
                 className="file-input"
               />

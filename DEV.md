@@ -1,4 +1,7 @@
 # Changelog
+## v1.0.10 (17 Dec 2025)
+- Allow ICS files in Options > Change file
+
 ## v1.0.9 (17 Dec 2025)
 - Skip share dialog when pasting own share link (same data)
 
@@ -14,7 +17,6 @@
 - Mobile layout: sticky top controls (search, filters) and bottom buttons
 - Add tablet breakpoint (768px-1280px) for fluid card layout
 - Enlarge touch targets on mobile (buttons, filters, help icon)
-- Update GUIDE.md with mobile features
 
 ## v1.0.5 (17 Dec 2025)
 - Add changelog link to footer
