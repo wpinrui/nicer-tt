@@ -121,7 +121,8 @@
   .card {
     min-width: unset;
     max-width: 100%;
-    min-height: 100vh;
+    max-height: none;
+    min-height: auto;
     border-radius: 0;
     border: none;
     background: rgba(255, 255, 255, 0.9);
@@ -133,12 +134,11 @@
 
   .card-content {
     padding: 1.5rem;
+    overflow: visible;
   }
 
-  .photo-credit {
-    bottom: 0.5rem;
-    left: 0.5rem;
-    font-size: 0.65rem;
+  .page-footer {
+    display: none;
   }
 }
 
