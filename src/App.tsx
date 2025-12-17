@@ -1,4 +1,5 @@
 import MainPage from './pages/MainPage';
+import { Analytics } from '@vercel/analytics/react';
 import './App.css';
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
           </a>
         </span>
       </footer>
+      <Analytics />
     </div>
   );
 }
