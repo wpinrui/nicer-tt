@@ -1,4 +1,5 @@
 import type { TimetableEvent } from './parseHtml';
+import { TIMETABLE_YEAR } from './constants';
 
 function unescapeIcsText(text: string): string {
   return text
@@ -23,7 +24,7 @@ function parseIcsDateTime(dtString: string): { date: string; time: string } {
 
 function getDayName(dateStr: string): string {
   const [day, month] = dateStr.split('/').map(Number);
-  const date = new Date(2026, month - 1, day);
+  const date = new Date(TIMETABLE_YEAR, month - 1, day);
   return date.toLocaleDateString('en-US', { weekday: 'long' });
 }
 

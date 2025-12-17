@@ -1,14 +1,13 @@
 import type { TimetableEvent } from './parseHtml';
+import { TIMETABLE_YEAR } from './constants';
 
 function formatTimeForIcs(time: string): string {
-  // Convert "0830" to "083000"
   return time.padEnd(6, '0');
 }
 
-function parseDateDDMM(dateStr: string, year: number): Date {
-  // Parse "12/01" as day 12, month 01
+function parseDateDDMM(dateStr: string): Date {
   const [day, month] = dateStr.split('/').map(Number);
-  return new Date(year, month - 1, day);
+  return new Date(TIMETABLE_YEAR, month - 1, day);
 }
 
 function formatDateForIcs(date: Date, time: string): string {
@@ -19,7 +18,7 @@ function formatDateForIcs(date: Date, time: string): string {
 }
 
 function generateUid(): string {
-  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}@nie-timetable`;
+  return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}@nie-timetable`;
 }
 
 function escapeIcsText(text: string): string {
@@ -31,13 +30,11 @@ function escapeIcsText(text: string): string {
 }
 
 export function generateIcs(events: TimetableEvent[]): string {
-  const year = 2026; // Hardcoded as requested
-
   const icsEvents: string[] = [];
 
   for (const event of events) {
     for (const dateStr of event.dates) {
-      const date = parseDateDDMM(dateStr, year);
+      const date = parseDateDDMM(dateStr);
 
       const summary = `${event.course} - ${event.group}`;
       const location = event.venue;
