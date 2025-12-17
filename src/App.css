@@ -98,6 +98,14 @@
   color: inherit;
 }
 
+.made-by a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+
 .made-by svg {
   width: 18px;
   height: 18px;

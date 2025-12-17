@@ -1,4 +1,7 @@
 # Changelog
+## v1.0.5 (17 Dec 2025)
+- Add changelog link to footer
+
 ## v1.0.4 (17 Dec 2025)
 - Use version from package.json instead of hardcoded value
 
