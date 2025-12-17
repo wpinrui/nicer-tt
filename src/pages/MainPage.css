@@ -1667,6 +1667,20 @@ html.dark .privacy-link:hover {
     background: linear-gradient(to bottom, #1a1a1a 0%, #0d0d0d 100%);
   }
 
+  .hide-past-toggle {
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .help-link {
+    padding: 0.6rem;
+  }
+
+  .help-link svg {
+    width: 24px;
+    height: 24px;
+  }
+
   .events-count {
     flex-shrink: 0;
   }
@@ -1689,9 +1703,19 @@ html.dark .privacy-link:hover {
     margin-right: -1rem;
     padding-left: 1rem;
     padding-right: 1rem;
+    flex-wrap: wrap;
   }
 
   html.dark .actions {
     background: linear-gradient(to bottom, #0d0d0d 0%, #1a1a1a 100%);
+  }
+
+  .actions .download-button,
+  .actions .share-button,
+  .actions .options-button {
+    flex: 1;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
   }
 }
