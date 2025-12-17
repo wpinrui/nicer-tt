@@ -130,6 +130,19 @@ html.dark .page-footer a {
   color: rgba(255, 255, 255, 0.85);
 }
 
+/* Tablet - make card fluid */
+@media (max-width: 1280px) {
+  .app {
+    padding: 1.5rem;
+  }
+
+  .card {
+    min-width: unset;
+    max-width: 100%;
+  }
+}
+
+/* Mobile - full screen layout */
 @media (max-width: 768px) {
   .app {
     padding: 0;
