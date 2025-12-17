@@ -34,7 +34,7 @@ function MainPage() {
     exitTempView,
     cancelShare,
     getImmediateShareData,
-  } = useShareData(hasExistingData);
+  } = useShareData(hasExistingData, events);
 
   // Determine which events to display (temp view or stored)
   const displayEvents = tempViewData?.events ?? events;

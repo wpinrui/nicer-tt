@@ -49,7 +49,7 @@ function decodeShareData(encoded: string): ShareData | null {
   }
 }
 
-export function useShareData(hasExistingData: boolean) {
+export function useShareData(hasExistingData: boolean, currentEvents?: TimetableEvent[] | null) {
   const [pendingShareData, setPendingShareData] = useState<ShareData | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareMessage, setShareMessage] = useState<string | null>(null);
@@ -63,6 +63,16 @@ export function useShareData(hasExistingData: boolean) {
         const encoded = hash.slice(7);
         const decoded = decodeShareData(encoded);
         if (decoded) {
+          // Check if shared data is same as current data
+          const isSameData = currentEvents &&
+            JSON.stringify(decoded.events) === JSON.stringify(currentEvents);
+
+          if (isSameData) {
+            // Same data, just clear the hash without showing dialog
+            window.history.replaceState(null, '', window.location.pathname);
+            return;
+          }
+
           if (hasExistingData) {
             setPendingShareData(decoded);
             setShowShareModal(true);
@@ -81,7 +91,7 @@ export function useShareData(hasExistingData: boolean) {
     window.addEventListener('hashchange', handleShareHash);
     return () => window.removeEventListener('hashchange', handleShareHash);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasExistingData]);
+  }, [hasExistingData, currentEvents]);
 
   const createShareLink = useCallback(async (events: TimetableEvent[], fileName: string) => {
     const encoded = encodeShareData(events, fileName);
