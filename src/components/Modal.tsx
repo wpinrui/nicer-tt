@@ -8,6 +8,8 @@ interface ModalProps {
   confirmText?: string;
   confirmVariant?: 'danger' | 'primary';
   cancelText?: string;
+  onSecondary?: () => void;
+  secondaryText?: string;
 }
 
 export function Modal({
@@ -18,6 +20,8 @@ export function Modal({
   confirmText = 'Confirm',
   confirmVariant = 'danger',
   cancelText = 'Cancel',
+  onSecondary,
+  secondaryText,
 }: ModalProps) {
   const confirmClass = confirmVariant === 'primary' ? 'modal-confirm-primary' : 'modal-confirm';
 
@@ -30,6 +34,11 @@ export function Modal({
           <button className="modal-cancel" onClick={onClose}>
             {cancelText}
           </button>
+          {onSecondary && secondaryText && (
+            <button className="modal-secondary" onClick={onSecondary}>
+              {secondaryText}
+            </button>
+          )}
           <button className={confirmClass} onClick={onConfirm}>
             {confirmText}
           </button>

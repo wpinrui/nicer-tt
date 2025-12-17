@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Upload, Download, FileText, Share2, HelpCircle, Settings } from 'lucide-react';
+import { Upload, Download, FileText, Share2, HelpCircle, Settings, ArrowLeft } from 'lucide-react';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { parseIcs } from '../utils/parseIcs';
@@ -27,11 +27,19 @@ function MainPage() {
   const {
     showShareModal,
     shareMessage,
+    tempViewData,
     createShareLink,
     confirmShare,
+    viewTempShare,
+    exitTempView,
     cancelShare,
     getImmediateShareData,
   } = useShareData(hasExistingData);
+
+  // Determine which events to display (temp view or stored)
+  const displayEvents = tempViewData?.events ?? events;
+  const displayFileName = tempViewData?.fileName ?? fileName;
+  const isViewingTemp = tempViewData !== null;
 
   const {
     groupedByDate,
@@ -39,7 +47,7 @@ function MainPage() {
     courseColorMap,
     uniqueCourses,
     filteredCount,
-  } = useFilteredEvents(events, searchQuery, selectedCourses, hidePastDates);
+  } = useFilteredEvents(displayEvents, searchQuery, selectedCourses, hidePastDates);
 
   // Apply dark mode class to document
   useEffect(() => {
@@ -98,8 +106,8 @@ function MainPage() {
   };
 
   const handleDownload = () => {
-    if (!events) return;
-    const ics = generateIcs(events);
+    if (!displayEvents) return;
+    const ics = generateIcs(displayEvents);
     downloadIcs(ics);
   };
 
@@ -119,8 +127,8 @@ function MainPage() {
   };
 
   const handleShare = () => {
-    if (!events || !fileName) return;
-    createShareLink(events, fileName);
+    if (!displayEvents || !displayFileName) return;
+    createShareLink(displayEvents, displayFileName);
   };
 
   const handleConfirmShareData = () => {
@@ -235,8 +243,16 @@ function MainPage() {
         </div>
       )}
 
-      {events && (
+      {displayEvents && (
         <div className="results">
+          {isViewingTemp && (
+            <div className="temp-view-banner no-print">
+              <span>Viewing shared timetable</span>
+              <button onClick={exitTempView} className="temp-view-back-btn">
+                <ArrowLeft size={14} /> Back to my timetable
+              </button>
+            </div>
+          )}
           <FilterSection
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
@@ -303,8 +319,10 @@ function MainPage() {
           onConfirm={handleConfirmShareData}
           confirmText="Replace"
           confirmVariant="primary"
+          onSecondary={viewTempShare}
+          secondaryText="Just View"
         >
-          <p>You have existing timetable data. Do you want to replace it with the shared data?</p>
+          <p>You have existing timetable data. Would you like to replace it or just view the shared timetable temporarily?</p>
         </Modal>
       )}
 

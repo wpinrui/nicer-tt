@@ -91,6 +91,10 @@ Click **Download .ics** to save your timetable as a calendar file. You can then 
 #### Share
 Click **Share** to copy a link to your clipboard. Anyone with the link can view your timetable without needing to upload the HTML file themselves.
 
+When opening a shared link while you already have your own timetable loaded, you can choose to:
+- **Replace** - Replace your timetable with the shared one
+- **Just View** - Temporarily view the shared timetable without replacing yours. A banner will appear allowing you to return to your own timetable anytime.
+
 :lock: The shared link contains your timetable data encoded in the URL. No data is stored on any server.
 
 ### :gear: Options

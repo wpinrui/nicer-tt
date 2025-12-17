@@ -520,6 +520,42 @@ header h1 {
   min-width: 12rem;
 }
 
+/* Temporary view banner */
+.temp-view-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  background: rgba(100, 108, 255, 0.1);
+  border: 1px solid rgba(100, 108, 255, 0.3);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  color: #646cff;
+  flex-shrink: 0;
+}
+
+.temp-view-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.75rem;
+  background: #646cff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.temp-view-back-btn:hover {
+  background: #535bf2;
+}
+
 .actions {
   display: flex;
   gap: 0.5rem;
@@ -831,6 +867,22 @@ header h1 {
 
 .modal-confirm-primary:hover {
   background: #535bf2;
+}
+
+.modal-secondary {
+  padding: 0.6rem 1.25rem;
+  background: rgba(0, 0, 0, 0.08);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.modal-secondary:hover {
+  background: rgba(0, 0, 0, 0.12);
 }
 
 /* Options panel styles */
@@ -1232,6 +1284,21 @@ html.dark .modal-cancel {
 
 html.dark .modal-cancel:hover {
   background: rgba(255, 255, 255, 0.15);
+}
+
+html.dark .modal-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ccc;
+}
+
+html.dark .modal-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+html.dark .temp-view-banner {
+  background: rgba(100, 108, 255, 0.2);
+  border-color: rgba(100, 108, 255, 0.4);
+  color: #8b91ff;
 }
 
 html.dark .error-message {

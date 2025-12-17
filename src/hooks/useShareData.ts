@@ -53,6 +53,7 @@ export function useShareData(hasExistingData: boolean) {
   const [pendingShareData, setPendingShareData] = useState<ShareData | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareMessage, setShareMessage] = useState<string | null>(null);
+  const [tempViewData, setTempViewData] = useState<ShareData | null>(null);
 
   // Check for shared data in URL on mount
   useEffect(() => {
@@ -93,6 +94,18 @@ export function useShareData(hasExistingData: boolean) {
     return data;
   }, [pendingShareData]);
 
+  const viewTempShare = useCallback(() => {
+    setShowShareModal(false);
+    if (pendingShareData) {
+      setTempViewData(pendingShareData);
+    }
+    setPendingShareData(null);
+  }, [pendingShareData]);
+
+  const exitTempView = useCallback(() => {
+    setTempViewData(null);
+  }, []);
+
   const cancelShare = useCallback(() => {
     setShowShareModal(false);
     setPendingShareData(null);
@@ -111,8 +124,11 @@ export function useShareData(hasExistingData: boolean) {
     pendingShareData,
     showShareModal,
     shareMessage,
+    tempViewData,
     createShareLink,
     confirmShare,
+    viewTempShare,
+    exitTempView,
     cancelShare,
     getImmediateShareData,
   };
