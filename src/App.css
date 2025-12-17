@@ -1,9 +1,9 @@
 .app {
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 2rem;
+  padding: 3.5rem 2rem 2rem;
   background: url('/mihai-moisa-Jsxfie_bUyw-unsplash.jpg') center/cover fixed;
   position: relative;
 }

@@ -14,6 +14,7 @@ function MainPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set());
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [hidePastDates, setHidePastDates] = useState(true);
   const [showResetModal, setShowResetModal] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
@@ -48,7 +49,7 @@ function MainPage() {
     courseColorMap,
     uniqueCourses,
     filteredCount,
-  } = useFilteredEvents(displayEvents, searchQuery, selectedCourses, hidePastDates);
+  } = useFilteredEvents(displayEvents, searchQuery, selectedCourses, hidePastDates, selectedDate);
 
   // Apply dark mode class to document
   useEffect(() => {
@@ -174,9 +175,10 @@ function MainPage() {
   const clearFilters = () => {
     setSearchQuery('');
     setSelectedCourses(new Set());
+    setSelectedDate(null);
   };
 
-  const hasActiveFilters = selectedCourses.size > 0 || searchQuery.length > 0;
+  const hasActiveFilters = selectedCourses.size > 0 || searchQuery.length > 0 || selectedDate !== null;
 
   return (
     <div className={`main-page ${mobileMenuOpen ? 'menu-open' : ''}`}>
@@ -298,6 +300,8 @@ function MainPage() {
           <FilterSection
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
+            selectedDate={selectedDate}
+            onDateChange={setSelectedDate}
             hidePastDates={hidePastDates}
             onHidePastChange={setHidePastDates}
             uniqueCourses={uniqueCourses}

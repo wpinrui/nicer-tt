@@ -232,7 +232,7 @@ header h1 {
 
 .search-input {
   width: 100%;
-  padding: 0.6rem 1rem 0.6rem 2.25rem;
+  padding: 0.6rem 2.25rem 0.6rem 2.25rem;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   font-size: 0.9rem;
@@ -248,6 +248,73 @@ header h1 {
 
 .search-input::placeholder {
   color: #999;
+}
+
+/* Date picker inside search box */
+.search-input-wrapper.has-date-pill .search-input {
+  padding-left: 7rem;
+}
+
+.date-input-hidden {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.date-picker-btn {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.date-picker-btn:hover {
+  background: rgba(100, 108, 255, 0.1);
+  color: #646cff;
+}
+
+.date-pill {
+  position: absolute;
+  left: 2.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  background: #646cff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.date-pill:hover {
+  background: #5558dd;
+}
+
+.date-pill-x {
+  opacity: 0.8;
+}
+
+.date-pill:hover .date-pill-x {
+  opacity: 1;
 }
 
 .hide-past-toggle {
@@ -1223,6 +1290,23 @@ html.dark .search-input::placeholder {
 
 html.dark .search-icon {
   color: #888;
+}
+
+html.dark .date-picker-btn {
+  color: #888;
+}
+
+html.dark .date-picker-btn:hover {
+  background: rgba(100, 108, 255, 0.2);
+  color: #a5a8ff;
+}
+
+html.dark .date-pill {
+  background: #646cff;
+}
+
+html.dark .date-pill:hover {
+  background: #7577ff;
 }
 
 html.dark .hide-past-toggle {

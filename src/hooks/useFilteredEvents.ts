@@ -24,7 +24,8 @@ export function useFilteredEvents(
   events: TimetableEvent[] | null,
   searchQuery: string,
   selectedCourses: Set<string>,
-  hidePastDates: boolean
+  hidePastDates: boolean,
+  selectedDate: string | null = null
 ): UseFilteredEventsResult {
   return useMemo(() => {
     if (!events) {
@@ -53,8 +54,17 @@ export function useFilteredEvents(
     });
 
     const query = searchQuery.toLowerCase();
-    const hasFilters = selectedCourses.size > 0 || query.length > 0 || hidePastDates;
+    const hasFilters = selectedCourses.size > 0 || query.length > 0 || hidePastDates || selectedDate !== null;
     const todaySortKey = getTodaySortKey();
+
+    // Parse selected date for filtering (format: YYYY-MM-DD from date input)
+    let filterMonth: number | null = null;
+    let filterDay: number | null = null;
+    if (selectedDate) {
+      const [, month, day] = selectedDate.split('-').map(Number);
+      filterMonth = month;
+      filterDay = day;
+    }
 
     for (const event of events) {
       for (const dateStr of event.dates) {
@@ -65,6 +75,14 @@ export function useFilteredEvents(
         // Filter past dates if toggle is on
         if (hidePastDates && sortKey < todaySortKey) {
           continue;
+        }
+
+        // Filter by selected date (match month and day only)
+        if (filterMonth !== null && filterDay !== null) {
+          const [eventDay, eventMonth] = dateStr.split('/').map(Number);
+          if (eventMonth !== filterMonth || eventDay !== filterDay) {
+            continue;
+          }
         }
 
         // Apply course filter
@@ -120,5 +138,5 @@ export function useFilteredEvents(
       uniqueCourses: coursesArray,
       filteredCount: hasFilters ? filtered : total,
     };
-  }, [events, searchQuery, selectedCourses, hidePastDates]);
+  }, [events, searchQuery, selectedCourses, hidePastDates, selectedDate]);
 }

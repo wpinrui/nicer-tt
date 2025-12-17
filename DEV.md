@@ -1,4 +1,8 @@
 # Changelog
+## v1.0.12 (18 Dec 2025)
+- Add date picker filter inside search box with date pill display
+- Position card at top of viewport instead of centered
+
 ## v1.0.11 (18 Dec 2025)
 - Add mobile hamburger menu with Download, Share, Options, Help
 - Add collapsible filter panel for mobile

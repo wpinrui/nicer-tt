@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import { Search, X, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Search, X, Filter, ChevronDown, ChevronUp, Calendar } from 'lucide-react';
 
 interface FilterSectionProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
+  selectedDate: string | null;
+  onDateChange: (value: string | null) => void;
   hidePastDates: boolean;
   onHidePastChange: (value: boolean) => void;
   uniqueCourses: string[];
@@ -14,9 +16,17 @@ interface FilterSectionProps {
   hasActiveFilters: boolean;
 }
 
+function formatDatePill(dateStr: string): string {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
 export function FilterSection({
   searchQuery,
   onSearchChange,
+  selectedDate,
+  onDateChange,
   hidePastDates,
   onHidePastChange,
   uniqueCourses,
@@ -27,19 +37,53 @@ export function FilterSection({
   hasActiveFilters,
 }: FilterSectionProps) {
   const [filtersExpanded, setFiltersExpanded] = useState(false);
+  const dateInputRef = useRef<HTMLInputElement>(null);
+
+  const handleDatePickerClick = () => {
+    dateInputRef.current?.showPicker();
+  };
+
+  const handleDateClear = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDateChange(null);
+  };
 
   return (
     <div className="filters-section no-print">
       <div className="search-row">
-        <div className="search-input-wrapper">
+        <div className={`search-input-wrapper ${selectedDate ? 'has-date-pill' : ''}`}>
           <Search size={16} className="search-icon" />
+          {selectedDate && (
+            <button
+              className="date-pill"
+              onClick={handleDateClear}
+              title="Clear date filter"
+            >
+              <span>{formatDatePill(selectedDate)}</span>
+              <X size={12} className="date-pill-x" />
+            </button>
+          )}
           <input
             type="text"
-            placeholder="Search courses, venues, tutors..."
+            placeholder={selectedDate ? "Search..." : "Search courses, venues, tutors..."}
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             className="search-input"
           />
+          <input
+            ref={dateInputRef}
+            type="date"
+            className="date-input-hidden"
+            value={selectedDate || ''}
+            onChange={(e) => onDateChange(e.target.value || null)}
+          />
+          <button
+            className="date-picker-btn"
+            onClick={handleDatePickerClick}
+            title="Filter by date"
+          >
+            <Calendar size={16} />
+          </button>
         </div>
         {/* Mobile: expand filters button */}
         <button
