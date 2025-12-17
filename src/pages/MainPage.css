@@ -1655,7 +1655,7 @@ html.dark .privacy-link:hover {
     position: sticky;
     top: 0;
     z-index: 10;
-    background: linear-gradient(to bottom, #fff 0%, #f0f0f0 100%);
+    background: transparent;
     padding-bottom: 0.5rem;
     margin-left: -1rem;
     margin-right: -1rem;
@@ -1664,7 +1664,7 @@ html.dark .privacy-link:hover {
   }
 
   html.dark .filters-section {
-    background: linear-gradient(to bottom, #1a1a1a 0%, #0d0d0d 100%);
+    background: transparent;
   }
 
   .hide-past-toggle {
@@ -1707,7 +1707,7 @@ html.dark .privacy-link:hover {
     position: sticky;
     bottom: 0;
     z-index: 10;
-    background: linear-gradient(to bottom, #f0f0f0 0%, #fff 100%);
+    background: transparent;
     padding: 0.75rem 0;
     margin-left: -1rem;
     margin-right: -1rem;
@@ -1717,7 +1717,7 @@ html.dark .privacy-link:hover {
   }
 
   html.dark .actions {
-    background: linear-gradient(to bottom, #0d0d0d 0%, #1a1a1a 100%);
+    background: transparent;
   }
 
   .actions .download-button,
