@@ -1672,6 +1672,16 @@ html.dark .privacy-link:hover {
     font-size: 0.95rem;
   }
 
+  .course-filter-btn {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  .clear-filters-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
   .help-link {
     padding: 0.6rem;
   }
