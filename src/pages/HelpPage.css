@@ -27,6 +27,35 @@
   background: rgba(0, 0, 0, 0.3);
 }
 
+.privacy-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  background: rgba(230, 81, 0, 0.12);
+  color: #e65100;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.privacy-banner-link {
+  background: none;
+  border: none;
+  color: #e65100;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.privacy-banner-link:hover {
+  color: #bf360c;
+}
+
 .steps {
   margin: 0;
   padding: 0 0 0 1.25rem;
@@ -201,4 +230,17 @@ html.dark .image-modal-close {
 
 html.dark .image-modal-close:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+html.dark .privacy-banner {
+  background: rgba(255, 152, 0, 0.15);
+  color: #ffa726;
+}
+
+html.dark .privacy-banner-link {
+  color: #ffa726;
+}
+
+html.dark .privacy-banner-link:hover {
+  color: #ffb74d;
 }

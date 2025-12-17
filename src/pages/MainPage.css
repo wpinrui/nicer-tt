@@ -67,6 +67,18 @@ header h1 {
   box-shadow: none;
 }
 
+.file-button-tertiary {
+  background: rgba(230, 81, 0, 0.15);
+  color: #e65100;
+  box-shadow: none;
+}
+
+.file-button-tertiary:hover {
+  background: rgba(230, 81, 0, 0.25);
+  transform: translateY(-1px);
+  box-shadow: none;
+}
+
 .compact-header {
   display: flex;
   align-items: center;
@@ -888,6 +900,7 @@ header h1 {
 .options-section {
   padding: 1rem 1.25rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: left;
 }
 
 .options-section:last-child {
@@ -1000,6 +1013,22 @@ header h1 {
 
 .options-btn-danger:hover {
   background: rgba(198, 40, 40, 0.2);
+}
+
+.options-privacy-desc {
+  margin: 0 0 0.75rem 0;
+  color: #666;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.options-btn-privacy {
+  background: rgba(230, 81, 0, 0.1);
+  color: #e65100;
+}
+
+.options-btn-privacy:hover {
+  background: rgba(230, 81, 0, 0.2);
 }
 
 /* Event tutor text display */
@@ -1295,6 +1324,19 @@ html.dark .options-btn-danger:hover {
   background: rgba(198, 40, 40, 0.3);
 }
 
+html.dark .options-privacy-desc {
+  color: #999;
+}
+
+html.dark .options-btn-privacy {
+  background: rgba(255, 152, 0, 0.2);
+  color: #ffa726;
+}
+
+html.dark .options-btn-privacy:hover {
+  background: rgba(255, 152, 0, 0.3);
+}
+
 html.dark .event-tutor {
   color: #999;
 }
@@ -1315,4 +1357,280 @@ html.dark .file-button-secondary {
 
 html.dark .file-button-secondary:hover {
   background: rgba(255, 255, 255, 0.15);
+}
+
+html.dark .file-button-tertiary {
+  background: rgba(255, 152, 0, 0.2);
+  color: #ffa726;
+}
+
+html.dark .file-button-tertiary:hover {
+  background: rgba(255, 152, 0, 0.3);
+}
+
+/* Share Welcome Modal */
+.share-welcome-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 500px;
+  max-width: 90vw;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: modal-slide-in 0.2s ease-out;
+}
+
+.share-welcome-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.share-welcome-icon {
+  color: #9c27b0;
+  flex-shrink: 0;
+}
+
+.share-welcome-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.share-welcome-content {
+  text-align: left;
+}
+
+.share-welcome-content p {
+  margin: 0 0 1rem 0;
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.share-welcome-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(100, 108, 255, 0.08);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+}
+
+.share-welcome-tip .tip-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.share-welcome-tip span {
+  color: #444;
+}
+
+.share-welcome-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.share-welcome-close {
+  padding: 0.75rem 2rem;
+  background: #c62828;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.share-welcome-close:hover {
+  background: #b71c1c;
+}
+
+html.dark .share-welcome-modal {
+  background: #2a2a2a;
+}
+
+html.dark .share-welcome-header h3 {
+  color: #e0e0e0;
+}
+
+html.dark .share-welcome-content p {
+  color: #bbb;
+}
+
+html.dark .share-welcome-tip {
+  background: rgba(100, 108, 255, 0.15);
+}
+
+html.dark .share-welcome-tip span {
+  color: #ccc;
+}
+
+/* Privacy Notice Modal */
+.privacy-notice-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 550px;
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: modal-slide-in 0.2s ease-out;
+}
+
+.privacy-notice-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.privacy-notice-icon {
+  color: #e65100;
+  flex-shrink: 0;
+}
+
+.privacy-notice-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.privacy-notice-content {
+  text-align: left;
+}
+
+.privacy-notice-content section {
+  margin-bottom: 1.25rem;
+}
+
+.privacy-notice-content h4 {
+  margin: 0 0 0.35rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.privacy-notice-content p {
+  margin: 0;
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.privacy-notice-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(230, 81, 0, 0.08);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+  border-left: 3px solid #e65100;
+}
+
+.privacy-notice-warning .warning-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.privacy-notice-warning div {
+  color: #444;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.privacy-notice-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.privacy-notice-close {
+  padding: 0.75rem 2rem;
+  background: #e65100;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.privacy-notice-close:hover {
+  background: #bf360c;
+}
+
+/* Privacy button */
+.privacy-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem;
+  background: #e65100;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.privacy-button:hover {
+  background: #bf360c;
+}
+
+.privacy-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #e65100;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.privacy-link:hover {
+  color: #bf360c;
+}
+
+html.dark .privacy-notice-modal {
+  background: #2a2a2a;
+}
+
+html.dark .privacy-notice-header h3 {
+  color: #e0e0e0;
+}
+
+html.dark .privacy-notice-content h4 {
+  color: #e0e0e0;
+}
+
+html.dark .privacy-notice-content p {
+  color: #bbb;
+}
+
+html.dark .privacy-notice-warning {
+  background: rgba(230, 81, 0, 0.15);
+}
+
+html.dark .privacy-notice-warning div {
+  color: #ccc;
+}
+
+html.dark .privacy-link {
+  color: #ff9800;
+}
+
+html.dark .privacy-link:hover {
+  color: #ffb74d;
 }

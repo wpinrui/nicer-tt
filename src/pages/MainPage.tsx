@@ -5,7 +5,7 @@ import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { parseIcs } from '../utils/parseIcs';
 import { STORAGE_KEYS } from '../utils/constants';
 import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents } from '../hooks';
-import { Modal, OptionsPanel, FilterSection, EventsList } from '../components';
+import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, PrivacyNoticeModal } from '../components';
 import HelpPage from './HelpPage';
 import './MainPage.css';
 
@@ -17,6 +17,8 @@ function MainPage() {
   const [hidePastDates, setHidePastDates] = useState(true);
   const [showResetModal, setShowResetModal] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
+  const [showShareWelcome, setShowShareWelcome] = useState(false);
+  const [showPrivacyNotice, setShowPrivacyNotice] = useState(false);
   const [darkMode, setDarkMode] = useLocalStorage(STORAGE_KEYS.DARK_MODE, true);
   const [showTutor, setShowTutor] = useLocalStorage(STORAGE_KEYS.SHOW_TUTOR, true);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -64,6 +66,13 @@ function MainPage() {
       const text = await file.text();
       const parsedEvents = parseHtmlTimetable(text);
       setTimetable(parsedEvents, file.name);
+
+      // Show share welcome modal on first HTML upload
+      const hasSeenTip = localStorage.getItem(STORAGE_KEYS.HAS_SEEN_SHARE_TIP);
+      if (!hasSeenTip) {
+        setShowShareWelcome(true);
+        localStorage.setItem(STORAGE_KEYS.HAS_SEEN_SHARE_TIP, 'true');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to parse file');
       clearTimetable();
@@ -213,7 +222,10 @@ function MainPage() {
             </label>
           </div>
 
-          <HelpPage onUploadClick={() => fileInputRef.current?.click()} />
+          <HelpPage
+            onUploadClick={() => fileInputRef.current?.click()}
+            onPrivacyClick={() => setShowPrivacyNotice(true)}
+          />
         </>
       )}
 
@@ -306,7 +318,16 @@ function MainPage() {
           onShowTutorChange={setShowTutor}
           onFileChange={handleFileChange}
           onReset={handleReset}
+          onShowPrivacy={() => setShowPrivacyNotice(true)}
         />
+      )}
+
+      {showShareWelcome && (
+        <ShareWelcomeModal onClose={() => setShowShareWelcome(false)} />
+      )}
+
+      {showPrivacyNotice && (
+        <PrivacyNoticeModal onClose={() => setShowPrivacyNotice(false)} />
       )}
     </div>
   );

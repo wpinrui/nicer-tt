@@ -8,7 +8,7 @@ A tool to convert your NIE timetable into a calendar file you can import into Go
 
 **Click Share to copy a link to your clipboard.** Anyone with the link can view your timetable without needing to upload the HTML file themselves. You can save this link to view your timetable from any device.
 
-:iphone: **Pro tip:** Save the share link as a bookmark on your phone to quickly access your timetable on the go!
+:iphone: **Pro tip:** Open the share link on your phone's browser once, and your timetable will be saved on your phone the next time you visit [NIcEr Timetable](https://nicer-tt.vercel.app/).
 
 ---
 

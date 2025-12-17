@@ -5,6 +5,7 @@ export const STORAGE_KEYS = {
   TIMETABLE_DATA: 'nie-timetable-data',
   DARK_MODE: 'nie-dark-mode',
   SHOW_TUTOR: 'nie-show-tutor',
+  HAS_SEEN_SHARE_TIP: 'nie-has-seen-share-tip',
 } as const;
 
 // Color palette for course codes (darker shades for white text)

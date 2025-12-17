@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { X, Upload, RotateCcw, Sun, Moon } from 'lucide-react';
+import { X, Upload, RotateCcw, Sun, Moon, Shield } from 'lucide-react';
 
 interface OptionsPanelProps {
   fileName: string | null;
@@ -10,6 +10,7 @@ interface OptionsPanelProps {
   onShowTutorChange: (value: boolean) => void;
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onReset: () => void;
+  onShowPrivacy: () => void;
 }
 
 export function OptionsPanel({
@@ -21,6 +22,7 @@ export function OptionsPanel({
   onShowTutorChange,
   onFileChange,
   onReset,
+  onShowPrivacy,
 }: OptionsPanelProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -87,6 +89,16 @@ export function OptionsPanel({
               <RotateCcw size={14} /> Reset data
             </button>
           </div>
+        </div>
+
+        <div className="options-section">
+          <h4>Privacy & Security</h4>
+          <p className="options-privacy-desc">
+            Learn how your data is processed and stored.
+          </p>
+          <button className="options-btn options-btn-privacy" onClick={onShowPrivacy}>
+            <Shield size={14} /> View privacy info
+          </button>
         </div>
       </div>
     </div>

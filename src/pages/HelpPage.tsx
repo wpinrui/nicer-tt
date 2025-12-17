@@ -10,9 +10,10 @@ interface Step {
 
 interface HelpPageProps {
   onUploadClick?: () => void;
+  onPrivacyClick?: () => void;
 }
 
-function HelpPage({ onUploadClick }: HelpPageProps) {
+function HelpPage({ onUploadClick, onPrivacyClick }: HelpPageProps) {
   const [modalImage, setModalImage] = useState<{ src: string; step: Step } | null>(null);
 
   const steps: Step[] = [
@@ -51,6 +52,14 @@ function HelpPage({ onUploadClick }: HelpPageProps) {
 
   return (
     <div className="help-page">
+      {onPrivacyClick && (
+        <div className="privacy-banner">
+          🔒 This app does not collect your data. Learn more here:{' '}
+          <button className="privacy-banner-link" onClick={onPrivacyClick}>
+            Privacy Notice
+          </button>
+        </div>
+      )}
       <ol className="steps">
         {steps.map((step, index) => (
           <li key={index}>
