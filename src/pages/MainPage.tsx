@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Upload, Download, FileText, Share2, HelpCircle, Settings, ArrowLeft } from 'lucide-react';
+import { Upload, Download, FileText, Share2, HelpCircle, Settings, ArrowLeft, Menu, X } from 'lucide-react';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { parseIcs } from '../utils/parseIcs';
@@ -19,6 +19,7 @@ function MainPage() {
   const [showOptions, setShowOptions] = useState(false);
   const [showShareWelcome, setShowShareWelcome] = useState(false);
   const [showPrivacyNotice, setShowPrivacyNotice] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useLocalStorage(STORAGE_KEYS.DARK_MODE, true);
   const [showTutor, setShowTutor] = useLocalStorage(STORAGE_KEYS.SHOW_TUTOR, true);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -178,7 +179,7 @@ function MainPage() {
   const hasActiveFilters = selectedCourses.size > 0 || searchQuery.length > 0;
 
   return (
-    <div className="main-page">
+    <div className={`main-page ${mobileMenuOpen ? 'menu-open' : ''}`}>
       {events ? (
         <div className="compact-header no-print">
           <h1>
@@ -193,11 +194,38 @@ function MainPage() {
             href="https://github.com/wpinrui/nicer-tt/blob/main/GUIDE.md"
             target="_blank"
             rel="noopener noreferrer"
-            className="help-link"
+            className="help-link desktop-only"
             title="Help & Guide"
           >
             <HelpCircle size={20} />
           </a>
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+          {mobileMenuOpen && (
+            <div className="mobile-menu">
+              <button onClick={() => { handleDownload(); setMobileMenuOpen(false); }}>
+                <Download size={18} /> Download .ics
+              </button>
+              <button onClick={() => { handleShare(); setMobileMenuOpen(false); }}>
+                <Share2 size={18} /> Share (copy timetable link)
+              </button>
+              <button onClick={() => { setShowOptions(true); setMobileMenuOpen(false); }}>
+                <Settings size={18} /> Options
+              </button>
+              <a
+                href="https://github.com/wpinrui/nicer-tt/blob/main/GUIDE.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <HelpCircle size={18} /> Help & Guide
+              </a>
+            </div>
+          )}
         </div>
       ) : (
         <>
