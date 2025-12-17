@@ -1,14 +1,14 @@
-# NIcEr Timetable
+# :calendar: NIcEr Timetable
 
 A better way to view, filter, and organize your NIE timetable.
 
-**[Try it out](https://wpinrui.github.io/nicer-tt/)**
+**[:rocket: Try it out](https://nicer-tt.vercel.app/)**
 
 ## What it does
 
 NIcEr Timetable transforms your clunky NIE Portal timetable into a clean, searchable interface. Filter by course, search for specific classes, hide past events, and share your schedule with classmates. When you're ready, export to Google Calendar, Outlook, or any calendar app.
 
-## Features
+## :sparkles: Features
 
 - **Clean Interface** - See your schedule at a glance, organized by date
 - **Smart Filtering** - Search by course, venue, tutor, or date; filter by course code; hide past events
@@ -18,11 +18,11 @@ NIcEr Timetable transforms your clunky NIE Portal timetable into a clean, search
 - **Dark Mode** - Easy on the eyes
 - **Privacy-First** - Everything runs in your browser; no data is sent to any server
 
-## Usage
+## :book: Usage
 
 See the **[Guide](GUIDE.md)** for detailed instructions on how to use the app.
 
-## Development
+## :wrench: Development
 
 ### Prerequisites
 
@@ -44,7 +44,7 @@ npm run build
 
 ### Deploy
 
-TBA
+Push to `main` to trigger a Vercel deploy.
 
 ## Tech Stack
 

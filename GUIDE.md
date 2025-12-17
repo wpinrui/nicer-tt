@@ -1,8 +1,8 @@
-# NIcEr Timetable Guide
+# :book: NIcEr Timetable Guide
 
 A tool to convert your NIE timetable into a calendar file you can import into Google Calendar, Outlook, Apple Calendar, or any other calendar app.
 
-## Getting Started
+## :rocket: Getting Started
 
 ### Step 1: Go to your timetable page
 
@@ -21,7 +21,7 @@ Save the file anywhere on your computer. The default filename is usually fine.
 
 ### Step 3: Upload the file
 
-Go to [NIcEr Timetable](https://wpinrui.github.io/nicer-tt/) and click the **Upload Timetable HTML** button. Select the HTML file you just saved.
+Go to [NIcEr Timetable](https://nicer-tt.vercel.app/) and click the **Upload Timetable HTML** button. Select the HTML file you just saved.
 
 ### Step 4: Export your timetable
 
@@ -29,7 +29,7 @@ Your timetable is automatically saved in your browser. You can now download it a
 
 ---
 
-## Features
+## :sparkles: Features
 
 ### Viewing Your Timetable
 
@@ -41,7 +41,7 @@ Once you've uploaded your timetable, you'll see all your events organized by dat
 - **Venue** - Location formatted as Block, Level, Room
 - **Tutor** - The instructor's name (can be toggled in Options)
 
-### Filtering Events
+### :mag: Filtering Events
 
 #### Search
 Use the search bar to find specific events. You can search by:
@@ -53,7 +53,7 @@ Use the search bar to find specific events. You can search by:
 #### Course Filters
 Click on any course code pill below the search bar to filter by that course. Click again to remove the filter. You can select multiple courses.
 
-Tip: You can also click on a course tag in the event list to quickly filter by that course.
+:bulb: **Tip:** You can also click on a course tag in the event list to quickly filter by that course.
 
 #### Hide Past Events
 Toggle "Hide past" to show only upcoming events. This is enabled by default.
@@ -61,7 +61,7 @@ Toggle "Hide past" to show only upcoming events. This is enabled by default.
 #### Clear Filters
 Click the **Clear** button to reset all filters at once.
 
-### Exporting
+### :outbox_tray: Exporting
 
 #### Download .ics
 Click **Download .ics** to save your timetable as a calendar file. You can then import this file into:
@@ -73,9 +73,9 @@ Click **Download .ics** to save your timetable as a calendar file. You can then 
 #### Share
 Click **Share** to copy a link to your clipboard. Anyone with the link can view your timetable without needing to upload the HTML file themselves.
 
-Note: The shared link contains your timetable data encoded in the URL. No data is stored on any server.
+:lock: The shared link contains your timetable data encoded in the URL. No data is stored on any server.
 
-### Options
+### :gear: Options
 
 Click the **Options** button to access settings:
 
@@ -94,7 +94,7 @@ If you've previously downloaded an ICS file from this tool, you can load it back
 
 ---
 
-## Tips
+## :bulb: Tips
 
 1. **Bookmark the page** - Your timetable is saved in your browser, so you can return anytime without re-uploading.
 
@@ -106,7 +106,7 @@ If you've previously downloaded an ICS file from this tool, you can load it back
 
 ---
 
-## Troubleshooting
+## :warning: Troubleshooting
 
 ### "Failed to parse file"
 Make sure you're uploading the HTML file from the NIE Portal timetable page, not a PDF or screenshot. The file should have a `.html` or `.htm` extension.
@@ -119,7 +119,7 @@ The ICS file uses Singapore timezone (Asia/Singapore). Make sure your calendar a
 
 ---
 
-## Privacy
+## :lock: Privacy
 
 - All processing happens in your browser - no data is sent to any server
 - Your timetable is saved in your browser's local storage
@@ -127,6 +127,6 @@ The ICS file uses Singapore timezone (Asia/Singapore). Make sure your calendar a
 
 ---
 
-## Feedback & Issues
+## :speech_balloon: Feedback & Issues
 
 Found a bug or have a suggestion? [Open an issue on GitHub](https://github.com/wpinrui/nicer-tt/issues).
