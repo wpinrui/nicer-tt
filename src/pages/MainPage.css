@@ -1,0 +1,155 @@
+.main-page {
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.subtitle {
+  color: #666;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.upload-section {
+  margin-bottom: 1.5rem;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-input-label {
+  cursor: pointer;
+}
+
+.file-button {
+  display: inline-block;
+  padding: 0.875rem 2rem;
+  background: #646cff;
+  color: white;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(100, 108, 255, 0.3);
+}
+
+.file-button:hover {
+  background: #535bf2;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(100, 108, 255, 0.4);
+}
+
+.file-name {
+  margin-top: 1rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.error-message {
+  background: rgba(198, 40, 40, 0.1);
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  border: 1px solid rgba(198, 40, 40, 0.2);
+}
+
+.error-message p {
+  margin: 0;
+}
+
+.success-message {
+  background: rgba(46, 125, 50, 0.1);
+  color: #2e7d32;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: 1px solid rgba(46, 125, 50, 0.2);
+}
+
+.success-message p {
+  margin: 0;
+}
+
+.events-preview {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.events-preview ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.events-preview li {
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: #444;
+}
+
+.events-preview li:last-child {
+  border-bottom: none;
+}
+
+.events-preview .more {
+  color: #888;
+  font-style: italic;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: auto;
+}
+
+.download-button {
+  padding: 0.875rem 2rem;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.download-button:hover {
+  background: #43a047;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+}
+
+.reset-button {
+  padding: 0.875rem 2rem;
+  background: rgba(0, 0, 0, 0.1);
+  color: #555;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.reset-button:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
