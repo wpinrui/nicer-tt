@@ -95,6 +95,7 @@
   align-items: center;
   gap: 0.5rem;
   text-decoration: none !important;
+  color: inherit;
 }
 
 .made-by svg {
@@ -103,12 +104,7 @@
   fill: rgba(255, 255, 255, 0.9);
 }
 
-.made-by .github-link {
-  display: flex;
-  align-items: center;
-}
-
-.made-by .github-link:hover svg {
+.made-by:hover svg {
   fill: #fff;
 }
 
