@@ -1,11 +1,35 @@
 .help-page {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  text-align: left;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.help-page::-webkit-scrollbar {
+  width: 6px;
+}
+
+.help-page::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.help-page::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.help-page::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .steps {
   margin: 0;
-  padding: 0 0 0 1.5rem;
+  padding: 0 0 0 1.25rem;
 }
 
 .steps li {
@@ -28,6 +52,29 @@
   color: #555;
 }
 
+.step-thumbnail {
+  display: block;
+  margin-top: 0.75rem;
+  padding: 0;
+  background: none;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.step-thumbnail:hover {
+  border-color: #646cff;
+  transform: scale(1.02);
+}
+
+.step-thumbnail img {
+  display: block;
+  max-width: 200px;
+  height: auto;
+}
+
 kbd {
   display: inline-block;
   padding: 0.2rem 0.5rem;
@@ -39,28 +86,119 @@ kbd {
   color: #333;
 }
 
-.tips {
-  margin-top: 2rem;
-  padding: 1rem 1.25rem;
-  background: rgba(100, 108, 255, 0.08);
-  border-radius: 10px;
-  font-size: 0.9rem;
-  border: 1px solid rgba(100, 108, 255, 0.15);
+.inline-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  background: #646cff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  vertical-align: middle;
 }
 
-.tips strong {
+/* Image modal */
+.image-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+}
+
+.image-modal {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.image-modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.2s;
+}
+
+.image-modal-close:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.image-modal-step {
+  font-weight: 600;
   color: #646cff;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.image-modal img {
   display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.95rem;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 
-.tips ul {
-  margin: 0;
-  padding: 0 0 0 1.25rem;
-  color: #555;
+/* Dark mode styles */
+html.dark .help-page {
+  background: rgba(0, 0, 0, 0.3);
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
-.tips li {
-  margin-bottom: 0.35rem;
+html.dark .help-page::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+html.dark .help-page::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+html.dark .steps p {
+  color: #aaa;
+}
+
+html.dark .step-thumbnail {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+html.dark .step-thumbnail:hover {
+  border-color: #646cff;
+}
+
+html.dark kbd {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #e0e0e0;
+}
+
+html.dark .image-modal {
+  background: #1e1e1e;
+}
+
+html.dark .image-modal-close {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+}
+
+html.dark .image-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
 }

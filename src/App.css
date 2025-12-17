@@ -1,58 +1,35 @@
-html {
-  font-size: 20px;
-}
-
 .app {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background: url('/lukas-souza-hgGTfx_lcDQ-unsplash.jpg') center/cover fixed;
+  background: url('/mihai-moisa-Jsxfie_bUyw-unsplash.jpg') center/cover fixed;
+  position: relative;
+}
+
+.app::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.4) 100%);
+  pointer-events: none;
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   width: 100%;
   min-width: 1200px;
   max-width: 1200px;
-  min-height: 90vh;
+  max-height: calc(100vh - 7rem);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.tabs {
-  display: flex;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  flex-shrink: 0;
-}
-
-.tab {
-  flex: 1;
-  padding: 1.25rem;
-  border: none;
-  background: rgba(0, 0, 0, 0.03);
-  font-size: 1rem;
-  font-weight: 600;
-  color: #555;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.tab:hover {
-  background: rgba(0, 0, 0, 0.06);
-}
-
-.tab.active {
-  background: transparent;
-  color: #646cff;
-  box-shadow: inset 0 -3px 0 #646cff;
 }
 
 .card-content {
@@ -60,6 +37,35 @@ html {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media print {
+  .app {
+    background: none !important;
+    padding: 0;
+  }
+
+  .card {
+    background: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0;
+    min-width: unset;
+    max-width: 100%;
+    min-height: unset;
+  }
+
+  .page-footer {
+    display: none !important;
+  }
+
+  .card-content {
+    padding: 20px;
+    overflow: visible;
+  }
 }
 
 .page-footer {
@@ -71,8 +77,8 @@ html {
   justify-content: space-between;
   align-items: center;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.8);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .page-footer a {
@@ -103,14 +109,25 @@ html {
 
 @media (max-width: 1240px) {
   .app {
-    padding: 1rem;
-    align-items: flex-start;
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .app::before {
+    display: none;
   }
 
   .card {
     min-width: unset;
     max-width: 100%;
-    min-height: 80vh;
+    min-height: 100vh;
+    border-radius: 0;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  html.dark .card {
+    background: rgba(30, 30, 30, 0.9);
   }
 
   .card-content {
@@ -122,4 +139,18 @@ html {
     left: 0.5rem;
     font-size: 0.65rem;
   }
+}
+
+/* Dark mode styles */
+html.dark .card {
+  background: rgba(30, 30, 30, 0.7);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+html.dark .page-footer {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+html.dark .page-footer a {
+  color: rgba(255, 255, 255, 0.85);
 }
