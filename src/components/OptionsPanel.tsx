@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { X, Upload, RotateCcw, Sun, Moon, Shield } from 'lucide-react';
+import { X, Upload, RotateCcw, Sun, Moon, Shield, HelpCircle, ExternalLink } from 'lucide-react';
 
 interface OptionsPanelProps {
   fileName: string | null;
@@ -99,6 +99,31 @@ export function OptionsPanel({
           <button className="options-btn options-btn-privacy" onClick={onShowPrivacy}>
             <Shield size={14} /> View privacy info
           </button>
+        </div>
+
+        <div className="options-section">
+          <h4>Help</h4>
+          <p className="options-privacy-desc">
+            Refer to the User Guide for usage instructions.
+          </p>
+          <div className="options-buttons">
+            <a
+              href="https://github.com/wpinrui/nicer-tt/blob/main/GUIDE.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="options-btn"
+            >
+              <HelpCircle size={14} /> User Guide <ExternalLink size={12} />
+            </a>
+            <a
+              href="https://github.com/wpinrui/nicer-tt/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="options-btn"
+            >
+              <ExternalLink size={14} /> Report an issue
+            </a>
+          </div>
         </div>
       </div>
     </div>

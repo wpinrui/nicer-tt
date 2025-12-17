@@ -1,4 +1,10 @@
 # Changelog
+## v1.0.11 (18 Dec 2025)
+- Add mobile hamburger menu with Download, Share, Options, Help
+- Add collapsible filter panel for mobile
+- Move action buttons to header on desktop
+- Add Help section to Options modal (User Guide, Report issue)
+
 ## v1.0.10 (17 Dec 2025)
 - Allow ICS files in Options > Change file
 

@@ -190,15 +190,17 @@ function MainPage() {
             <span className="brand-letter">E</span>
             <span className="brand-small">r</span> Timetable
           </h1>
-          <a
-            href="https://github.com/wpinrui/nicer-tt/blob/main/GUIDE.md"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="help-link desktop-only"
-            title="Help & Guide"
-          >
-            <HelpCircle size={20} />
-          </a>
+          <div className="header-actions desktop-only">
+            <button onClick={handleDownload} className="header-btn">
+              <Download size={16} /> Download
+            </button>
+            <button onClick={handleShare} className="header-btn">
+              <Share2 size={14} /> Share (copy timetable link)
+            </button>
+            <button onClick={() => setShowOptions(true)} className="header-btn">
+              <Settings size={14} /> Options
+            </button>
+          </div>
           <button
             className="mobile-menu-btn"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -322,17 +324,6 @@ function MainPage() {
             />
           </div>
 
-          <div className="actions no-print">
-            <button onClick={handleDownload} className="download-button">
-              <Download size={16} /> Download .ics
-            </button>
-            <button onClick={handleShare} className="share-button">
-              <Share2 size={14} /> Share
-            </button>
-            <button onClick={() => setShowOptions(true)} className="options-button">
-              <Settings size={14} /> Options
-            </button>
-          </div>
         </div>
       )}
 

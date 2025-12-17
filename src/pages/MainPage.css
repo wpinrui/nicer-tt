@@ -97,6 +97,36 @@ header h1 {
   align-items: baseline;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(100, 108, 255, 0.1);
+  color: #646cff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.header-btn:hover {
+  background: rgba(100, 108, 255, 0.2);
+}
+
+.header-btn:active {
+  transform: scale(0.97);
+}
+
 .brand-icon {
   margin-right: 0.4rem;
   color: #646cff;
@@ -366,6 +396,7 @@ header h1 {
   font-size: 0.85rem;
   margin: 0 0 0.5rem 0;
   flex-shrink: 0;
+  text-align: left;
 }
 
 .events-preview {
@@ -1161,6 +1192,15 @@ html.dark .help-link {
 html.dark .help-link:hover {
   color: #646cff;
   background: rgba(100, 108, 255, 0.2);
+}
+
+html.dark .header-btn {
+  background: rgba(100, 108, 255, 0.2);
+  color: #a5a8ff;
+}
+
+html.dark .header-btn:hover {
+  background: rgba(100, 108, 255, 0.3);
 }
 
 html.dark .file-button-compact {
