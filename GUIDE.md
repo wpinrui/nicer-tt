@@ -41,6 +41,14 @@ Your timetable is automatically saved in your browser. You can now download it a
 
 ## :sparkles: Features
 
+### :iphone: Mobile-Friendly
+
+The app is fully responsive and optimized for mobile devices:
+- Fixed header controls (search, filters) always visible at the top
+- Fixed action buttons (Download, Share, Options) always visible at the bottom
+- Scrollable event list in the middle
+- Larger touch targets for easy tapping
+
 ### Viewing Your Timetable
 
 Once you've uploaded your timetable, you'll see all your events organized by date. Each event shows:
