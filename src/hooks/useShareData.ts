@@ -55,24 +55,33 @@ export function useShareData(hasExistingData: boolean) {
   const [shareMessage, setShareMessage] = useState<string | null>(null);
   const [tempViewData, setTempViewData] = useState<ShareData | null>(null);
 
-  // Check for shared data in URL on mount
+  // Check for shared data in URL on mount and hash changes
   useEffect(() => {
-    const hash = window.location.hash;
-    if (hash.startsWith('#share=')) {
-      const encoded = hash.slice(7);
-      const decoded = decodeShareData(encoded);
-      if (decoded) {
-        if (hasExistingData) {
-          setPendingShareData(decoded);
-          setShowShareModal(true);
-        } else {
-          setPendingShareData(decoded);
+    const handleShareHash = () => {
+      const hash = window.location.hash;
+      if (hash.startsWith('#share=')) {
+        const encoded = hash.slice(7);
+        const decoded = decodeShareData(encoded);
+        if (decoded) {
+          if (hasExistingData) {
+            setPendingShareData(decoded);
+            setShowShareModal(true);
+          } else {
+            setPendingShareData(decoded);
+          }
+          window.history.replaceState(null, '', window.location.pathname);
         }
-        window.history.replaceState(null, '', window.location.pathname);
       }
-    }
+    };
+
+    // Check on mount
+    handleShareHash();
+
+    // Listen for hash changes (when user pastes link while on page)
+    window.addEventListener('hashchange', handleShareHash);
+    return () => window.removeEventListener('hashchange', handleShareHash);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [hasExistingData]);
 
   const createShareLink = useCallback(async (events: TimetableEvent[], fileName: string) => {
     const encoded = encodeShareData(events, fileName);
