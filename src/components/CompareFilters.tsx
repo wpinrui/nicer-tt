@@ -166,8 +166,6 @@ export function CompareFilters({
                 <option value={60}>1 hour</option>
                 <option value={90}>1.5 hours</option>
                 <option value={120}>2 hours</option>
-                <option value={180}>3 hours</option>
-                <option value={240}>4 hours</option>
               </select>
             </label>
           </div>
@@ -212,8 +210,8 @@ export function CompareFilters({
               tooltip="Set the dinner time window"
               startValue={mealConfig.dinnerStart}
               endValue={mealConfig.dinnerEnd}
-              startOptions={Array.from({ length: 8 }, (_, i) => i + 15)}
-              endOptions={Array.from({ length: 8 }, (_, i) => i + 17)}
+              startOptions={Array.from({ length: 6 }, (_, i) => i + 15)}
+              endOptions={Array.from({ length: 5 }, (_, i) => i + 17)}
               onStartChange={(v) => onMealConfigChange({ dinnerStart: v })}
               onEndChange={(v) => onMealConfigChange({ dinnerEnd: v })}
             />
