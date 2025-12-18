@@ -2369,7 +2369,6 @@ html.dark .privacy-link:hover {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
-    margin-bottom: 0.5rem;
   }
 
   .compare-filter-btn {
@@ -3047,9 +3046,14 @@ html.dark .meal-range-label[data-tooltip]:hover::before {
   border-top-color: #444;
 }
 
-/* Travel options */
+/* Travel options - desktop only (hidden on mobile via media query) */
+@media (min-width: 769px) {
+  .travel-options {
+    display: flex;
+  }
+}
+
 .travel-options {
-  display: flex;
   gap: 1rem;
   flex-wrap: wrap;
   padding: 0.75rem;
@@ -3241,22 +3245,29 @@ html.dark .compare-vs {
   color: #555;
 }
 
+/* Compare container - 2 columns on desktop, 1 on mobile */
 .events-compare-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 0.5rem 1rem;
   position: relative;
 }
 
-/* Vertical divider line between columns */
-.events-compare-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1px;
+@media (min-width: 769px) {
+  .events-compare-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Vertical divider line between columns - desktop only */
+@media (min-width: 769px) {
+  .events-compare-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
   background: rgba(0, 0, 0, 0.12);
   pointer-events: none;
 }
@@ -3398,9 +3409,14 @@ html.dark .meal-badge[data-tooltip]:hover::before {
   border-top-color: #444;
 }
 
-/* Eat Together filter options */
+/* Eat Together filter options - desktop only (hidden on mobile via media query) */
+@media (min-width: 769px) {
+  .eat-options {
+    display: flex;
+  }
+}
+
 .eat-options {
-  display: flex;
   gap: 1rem;
   flex-wrap: wrap;
   padding: 0.75rem;
