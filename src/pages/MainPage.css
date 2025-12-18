@@ -1205,6 +1205,120 @@ header h1 {
   background: rgba(230, 81, 0, 0.2);
 }
 
+/* Background image option styles */
+.options-background-input-row {
+  margin-bottom: 0.75rem;
+}
+
+.options-background-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.options-background-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: #888;
+  pointer-events: none;
+}
+
+.options-background-input {
+  width: 100%;
+  padding: 0.6rem 0.75rem 0.6rem 2.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.8);
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.options-background-input:focus {
+  border-color: #646cff;
+}
+
+.options-background-input.error {
+  border-color: #c62828;
+}
+
+.options-background-input::placeholder {
+  color: #999;
+}
+
+.options-background-status {
+  position: absolute;
+  right: 0.75rem;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.options-background-status.loading {
+  color: #646cff;
+}
+
+.options-background-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.options-background-thumbnail {
+  width: 60px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.options-background-toast {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.options-background-toast.success {
+  background: rgba(76, 175, 80, 0.15);
+  color: #2e7d32;
+}
+
+.options-background-toast.error {
+  background: rgba(198, 40, 40, 0.15);
+  color: #c62828;
+}
+
+html.dark .options-background-input {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #e0e0e0;
+}
+
+html.dark .options-background-input::placeholder {
+  color: #888;
+}
+
+html.dark .options-background-icon {
+  color: #888;
+}
+
+html.dark .options-background-thumbnail {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+html.dark .options-background-toast.success {
+  background: rgba(76, 175, 80, 0.2);
+  color: #81c784;
+}
+
+html.dark .options-background-toast.error {
+  background: rgba(198, 40, 40, 0.2);
+  color: #ef5350;
+}
+
 /* Event tutor text display */
 .event-tutor {
   display: inline-flex;
@@ -1988,6 +2102,11 @@ html.dark .privacy-link:hover {
   /* Hide desktop-only elements on mobile */
   .desktop-only {
     display: none !important;
+  }
+
+  /* Hide background image option on mobile (no background visible) */
+  .options-background-section {
+    display: none;
   }
 
   /* Show expand filters button on mobile */

@@ -1,5 +1,6 @@
-import { useRef } from 'react';
-import { X, Upload, RotateCcw, Sun, Moon, Shield, HelpCircle, ExternalLink } from 'lucide-react';
+import { useRef, useState, useEffect } from 'react';
+import { X, Upload, RotateCcw, Sun, Moon, Shield, HelpCircle, ExternalLink, Image } from 'lucide-react';
+import { STORAGE_KEYS } from '../utils/constants';
 
 interface OptionsPanelProps {
   fileName: string | null;
@@ -25,6 +26,74 @@ export function OptionsPanel({
   onShowPrivacy,
 }: OptionsPanelProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Custom background state
+  const [customBackground, setCustomBackground] = useState<string | null>(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.CUSTOM_BACKGROUND);
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [backgroundInput, setBackgroundInput] = useState('');
+  const [backgroundStatus, setBackgroundStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [backgroundToast, setBackgroundToast] = useState<string | null>(null);
+
+  // Initialize input with current background URL
+  useEffect(() => {
+    if (customBackground) {
+      setBackgroundInput(customBackground);
+    }
+  }, [customBackground]);
+
+  // Auto-hide toast after 3 seconds
+  useEffect(() => {
+    if (backgroundToast) {
+      const timer = setTimeout(() => setBackgroundToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [backgroundToast]);
+
+  const validateAndSetBackground = (url: string) => {
+    if (!url.trim()) {
+      return;
+    }
+
+    setBackgroundStatus('loading');
+    const img = new window.Image();
+
+    img.onload = () => {
+      setBackgroundStatus('success');
+      setCustomBackground(url);
+      localStorage.setItem(STORAGE_KEYS.CUSTOM_BACKGROUND, JSON.stringify(url));
+      window.dispatchEvent(new Event('customBackgroundChange'));
+      setBackgroundToast('Background image set successfully!');
+    };
+
+    img.onerror = () => {
+      setBackgroundStatus('error');
+      setBackgroundToast('Failed to load image. Please check the URL.');
+    };
+
+    img.src = url;
+  };
+
+  const handleBackgroundBlur = () => {
+    const trimmedUrl = backgroundInput.trim();
+    if (trimmedUrl && trimmedUrl !== customBackground) {
+      validateAndSetBackground(trimmedUrl);
+    }
+  };
+
+  const handleResetBackground = () => {
+    setCustomBackground(null);
+    setBackgroundInput('');
+    setBackgroundStatus('idle');
+    localStorage.removeItem(STORAGE_KEYS.CUSTOM_BACKGROUND);
+    window.dispatchEvent(new Event('customBackgroundChange'));
+    setBackgroundToast('Background reset to default.');
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onFileChange(e);
@@ -66,6 +135,54 @@ export function OptionsPanel({
               {darkMode ? 'Switch to light' : 'Switch to dark'}
             </button>
           </label>
+        </div>
+
+        <div className="options-section options-background-section">
+          <h4>Background Image</h4>
+          <p className="options-privacy-desc">
+            Paste an image URL to set a custom background.
+          </p>
+          <div className="options-background-input-row">
+            <div className="options-background-input-wrapper">
+              <Image size={16} className="options-background-icon" />
+              <input
+                type="text"
+                className={`options-background-input ${backgroundStatus === 'error' ? 'error' : ''}`}
+                placeholder="https://example.com/image.jpg"
+                value={backgroundInput}
+                onChange={(e) => setBackgroundInput(e.target.value)}
+                onBlur={handleBackgroundBlur}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.currentTarget.blur();
+                  }
+                }}
+              />
+              {backgroundStatus === 'loading' && (
+                <span className="options-background-status loading">Loading...</span>
+              )}
+            </div>
+          </div>
+          {customBackground && (
+            <div className="options-background-preview">
+              <img
+                src={customBackground}
+                alt="Custom background preview"
+                className="options-background-thumbnail"
+              />
+              <button
+                className="options-btn options-btn-danger"
+                onClick={handleResetBackground}
+              >
+                <RotateCcw size={14} /> Reset to Default
+              </button>
+            </div>
+          )}
+          {backgroundToast && (
+            <div className={`options-background-toast ${backgroundStatus === 'error' ? 'error' : 'success'}`}>
+              {backgroundToast}
+            </div>
+          )}
         </div>
 
         <div className="options-section">

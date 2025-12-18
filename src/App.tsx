@@ -1,10 +1,55 @@
+import { useState, useEffect } from 'react';
 import MainPage from './pages/MainPage';
 import { Analytics } from '@vercel/analytics/react';
+import { STORAGE_KEYS } from './utils/constants';
 import './App.css';
 
 function App() {
+  const [customBackground, setCustomBackground] = useState<string | null>(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.CUSTOM_BACKGROUND);
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  // Listen for localStorage changes (from OptionsPanel)
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEYS.CUSTOM_BACKGROUND) {
+        try {
+          setCustomBackground(e.newValue ? JSON.parse(e.newValue) : null);
+        } catch {
+          setCustomBackground(null);
+        }
+      }
+    };
+
+    // Also listen for custom event (same-window updates)
+    const handleCustomEvent = () => {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEYS.CUSTOM_BACKGROUND);
+        setCustomBackground(stored ? JSON.parse(stored) : null);
+      } catch {
+        setCustomBackground(null);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('customBackgroundChange', handleCustomEvent);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('customBackgroundChange', handleCustomEvent);
+    };
+  }, []);
+
+  const backgroundStyle = customBackground
+    ? { background: `url('${customBackground}') center/cover fixed` }
+    : undefined;
+
   return (
-    <div className="app">
+    <div className="app" style={backgroundStyle}>
       <div className="card">
         <div className="card-content">
           <MainPage />
@@ -12,15 +57,19 @@ function App() {
       </div>
       <footer className="page-footer">
         <span className="photo-credit">
-          Photo by{' '}
-          <a href="https://unsplash.com/@moisamihai092?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
-            Mihai Moisa
-          </a>{' '}
-          on{' '}
-          <a href="https://unsplash.com/photos/rugged-mountain-range-under-a-hazy-sky-Jsxfie_bUyw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
-            Unsplash
-          </a>
-          {' | '}
+          {!customBackground && (
+            <>
+              Photo by{' '}
+              <a href="https://unsplash.com/@moisamihai092?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
+                Mihai Moisa
+              </a>{' '}
+              on{' '}
+              <a href="https://unsplash.com/photos/rugged-mountain-range-under-a-hazy-sky-Jsxfie_bUyw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
+                Unsplash
+              </a>
+              {' | '}
+            </>
+          )}
           <a href="https://www.flaticon.com/free-icons/schedule" title="schedule icons">
             Icon by Freepik - Flaticon
           </a>

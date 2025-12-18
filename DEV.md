@@ -1,4 +1,11 @@
 # Changelog
+## v1.0.13 (18 Dec 2025)
+- Add custom background image option in Options modal (paste image URL)
+- Image validation on blur with success/error toast feedback
+- Thumbnail preview with Reset to Default button when custom background is set
+- Unsplash credit hidden when using custom background (Freepik credit remains)
+- Background option hidden on mobile (no background visible in mobile view)
+
 ## v1.0.12 (18 Dec 2025)
 - Add date picker filter inside search box with date pill display
 - Position card at top of viewport instead of centered

@@ -6,6 +6,7 @@ export const STORAGE_KEYS = {
   DARK_MODE: 'nie-dark-mode',
   SHOW_TUTOR: 'nie-show-tutor',
   HAS_SEEN_SHARE_TIP: 'nie-has-seen-share-tip',
+  CUSTOM_BACKGROUND: 'nie-custom-background',
 } as const;
 
 // Color palette for course codes (darker shades for white text)
