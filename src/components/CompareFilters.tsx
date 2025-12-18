@@ -1,8 +1,5 @@
 import { Calendar, Users, Car, Info, Utensils } from 'lucide-react';
-
-type CompareFilter = 'none' | 'commonDays' | 'identical' | 'travel' | 'eat';
-type TravelDirection = 'to' | 'from' | 'both' | 'either';
-type MealType = 'lunch' | 'dinner';
+import type { CompareFilter, TravelDirection, MealType } from '../utils/constants';
 
 interface CompareFiltersProps {
   compareFilter: CompareFilter;

@@ -4,14 +4,11 @@ import { parseHtmlTimetable } from '../utils/parseHtml';
 import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { parseIcs } from '../utils/parseIcs';
 import { STORAGE_KEYS } from '../utils/constants';
+import type { CompareFilter, TravelDirection, MealType } from '../utils/constants';
 import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents } from '../hooks';
 import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, PrivacyNoticeModal, CompareModal, CompareFilters, EventsCompareView } from '../components';
 import HelpPage from './HelpPage';
 import './MainPage.css';
-
-type CompareFilter = 'none' | 'commonDays' | 'identical' | 'travel' | 'eat';
-type TravelDirection = 'to' | 'from' | 'both' | 'either';
-type MealType = 'lunch' | 'dinner';
 
 function MainPage() {
   const { events, fileName, setTimetable, clearTimetable, timetables, addTimetable, renameTimetable, deleteTimetable, getTimetable } = useTimetableStorage();

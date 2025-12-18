@@ -2,10 +2,7 @@ import { useMemo } from 'react';
 import { User, ArrowRight, ArrowLeft, ArrowLeftRight, Utensils } from 'lucide-react';
 import { formatTime12Hour, formatVenue, formatTutor, isToday, createSortKey } from '../utils/formatters';
 import type { Timetable, TimetableEvent } from '../utils/parseHtml';
-
-type CompareFilter = 'none' | 'commonDays' | 'identical' | 'travel' | 'eat';
-type TravelDirection = 'to' | 'from' | 'both' | 'either';
-type MealType = 'lunch' | 'dinner';
+import type { CompareFilter, TravelDirection, MealType } from '../utils/constants';
 
 interface EventItem {
   course: string;
@@ -482,8 +479,8 @@ export function EventsCompareView({
   }, [allDates, leftByDate, rightByDate, compareFilter, travelDirection, waitMinutes, mealType, lunchStart, lunchEnd, dinnerStart, dinnerEnd]);
 
   // Render a single event item
-  const renderEvent = (event: EventItem, isHighlighted: boolean = false) => (
-    <li key={`${event.course}-${event.startTime}`} className={isHighlighted ? 'event-highlighted' : ''}>
+  const renderEvent = (event: EventItem, index: number, isHighlighted: boolean = false) => (
+    <li key={`${event.course}-${event.group}-${event.startTime}-${index}`} className={isHighlighted ? 'event-highlighted' : ''}>
       <span className="event-time">
         <span className="time-start">{formatTime12Hour(event.startTime)}</span>
         <span className="time-separator">–</span>
@@ -614,7 +611,7 @@ export function EventsCompareView({
             <div className="compare-column">
               {leftEvents.length > 0 ? (
                 <ul>
-                  {leftEvents.map((event, i) => renderEvent(event, identicalLeft.has(i)))}
+                  {leftEvents.map((event, i) => renderEvent(event, i, identicalLeft.has(i)))}
                 </ul>
               ) : (
                 <div className="compare-empty">No classes</div>
@@ -625,7 +622,7 @@ export function EventsCompareView({
             <div className="compare-column">
               {rightEvents.length > 0 ? (
                 <ul>
-                  {rightEvents.map((event, i) => renderEvent(event, identicalRight.has(i)))}
+                  {rightEvents.map((event, i) => renderEvent(event, i, identicalRight.has(i)))}
                 </ul>
               ) : (
                 <div className="compare-empty">No classes</div>
