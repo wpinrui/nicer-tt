@@ -1,4 +1,8 @@
 # Changelog
+## v1.1.2 (18 Dec 2025)
+- Cap travel wait time at 2 hours
+- Cap dinner end time at 9pm
+
 ## v1.1.1 (18 Dec 2025)
 - Disable modal close on overlay click
 
