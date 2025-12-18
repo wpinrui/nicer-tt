@@ -9,8 +9,7 @@ interface MatchedTimetable {
 
 export function useShareData(
   hasExistingData: boolean,
-  timetables: Timetable[],
-  currentEvents?: TimetableEvent[] | null
+  timetables: Timetable[]
 ) {
   const [pendingShareData, setPendingShareData] = useState<ShareData | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);

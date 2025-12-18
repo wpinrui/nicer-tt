@@ -70,7 +70,7 @@ function MainPage() {
     getImmediateShareData,
     clearMatchedTimetable,
     clearShareLinkFallback,
-  } = useShareData(hasExistingData, timetables, events);
+  } = useShareData(hasExistingData, timetables);
 
   // State for showing "switched to" toast
   const [switchedToast, setSwitchedToast] = useState<string | null>(null);
@@ -96,9 +96,12 @@ function MainPage() {
   useEffect(() => {
     if (matchedTimetable) {
       setActiveTimetable(matchedTimetable.id);
-      setSwitchedToast(`Switched to "${matchedTimetable.name}"`);
       clearMatchedTimetable();
-      setTimeout(() => setSwitchedToast(null), 3000);
+      // Defer toast to avoid synchronous setState in effect
+      queueMicrotask(() => {
+        setSwitchedToast(`Switched to "${matchedTimetable.name}"`);
+        setTimeout(() => setSwitchedToast(null), 3000);
+      });
     }
   }, [matchedTimetable, setActiveTimetable, clearMatchedTimetable]);
 
