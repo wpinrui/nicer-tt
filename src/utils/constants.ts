@@ -1,9 +1,13 @@
 // NIE timetables are for the upcoming academic year
 export const TIMETABLE_YEAR = 2026;
 
+// Toast auto-dismiss duration
+export const TOAST_DURATION_MS = 3000;
+
 export const STORAGE_KEYS = {
   TIMETABLE_DATA: 'nie-timetable-data', // Legacy, for migration
   TIMETABLES_DATA: 'nie-timetables-data', // New multi-timetable storage
+  ACTIVE_TIMETABLE: 'nie-active-timetable', // ID of the timetable being viewed
   DARK_MODE: 'nie-dark-mode',
   SHOW_TUTOR: 'nie-show-tutor',
   HAS_SEEN_SHARE_TIP: 'nie-has-seen-share-tip',

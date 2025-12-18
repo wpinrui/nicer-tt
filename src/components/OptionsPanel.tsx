@@ -1,44 +1,44 @@
 import { useRef, useState, useEffect } from 'react';
-import { X, Upload, RotateCcw, Sun, Moon, Shield, HelpCircle, ExternalLink, Image, Trash2, Link, Pencil, Check } from 'lucide-react';
-import { STORAGE_KEYS } from '../utils/constants';
+import { X, Upload, RotateCcw, Sun, Moon, Shield, HelpCircle, ExternalLink, Image, Trash2, Link, Pencil, Check, Eye } from 'lucide-react';
+import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
 import type { Timetable, TimetableEvent } from '../utils/parseHtml';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { parseIcs } from '../utils/parseIcs';
 import { decodeShareUrl } from '../utils/shareUtils';
+import { Modal } from './Modal';
 
 interface OptionsPanelProps {
-  fileName: string | null;
   darkMode: boolean;
   showTutor: boolean;
   onClose: () => void;
   onDarkModeChange: (value: boolean) => void;
   onShowTutorChange: (value: boolean) => void;
-  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onReset: () => void;
   onShowPrivacy: () => void;
   // Timetable management
   timetables: Timetable[];
+  activeTimetableId: string | null;
+  onSetActiveTimetable: (id: string) => void;
   onAddTimetable: (events: TimetableEvent[], fileName: string | null, customName?: string) => string;
   onRenameTimetable: (id: string, newName: string) => void;
   onDeleteTimetable: (id: string) => boolean;
+  onViewingToast: (name: string) => void;
 }
 
 export function OptionsPanel({
-  fileName,
   darkMode,
   showTutor,
   onClose,
   onDarkModeChange,
   onShowTutorChange,
-  onFileChange,
-  onReset,
   onShowPrivacy,
   timetables,
+  activeTimetableId,
+  onSetActiveTimetable,
   onAddTimetable,
   onRenameTimetable,
   onDeleteTimetable,
+  onViewingToast,
 }: OptionsPanelProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const addFileInputRef = useRef<HTMLInputElement>(null);
 
   // Custom background state
@@ -86,10 +86,10 @@ export function OptionsPanel({
     window.dispatchEvent(new Event('customBackgroundChange'));
   };
 
-  // Auto-hide toast after 3 seconds
+  // Auto-hide toast
   useEffect(() => {
     if (backgroundToast) {
-      const timer = setTimeout(() => setBackgroundToast(null), 3000);
+      const timer = setTimeout(() => setBackgroundToast(null), TOAST_DURATION_MS);
       return () => clearTimeout(timer);
     }
   }, [backgroundToast]);
@@ -101,10 +101,14 @@ export function OptionsPanel({
   const [editingName, setEditingName] = useState('');
   const [timetableToast, setTimetableToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
+  // Confirmation modal state
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string; isPrimary: boolean } | null>(null);
+  const [showFactoryReset, setShowFactoryReset] = useState(false);
+
   // Auto-hide timetable toast
   useEffect(() => {
     if (timetableToast) {
-      const timer = setTimeout(() => setTimetableToast(null), 3000);
+      const timer = setTimeout(() => setTimetableToast(null), TOAST_DURATION_MS);
       return () => clearTimeout(timer);
     }
   }, [timetableToast]);
@@ -166,13 +170,30 @@ export function OptionsPanel({
     setEditingName('');
   };
 
-  const handleDeleteTimetable = (id: string, name: string) => {
-    if (window.confirm(`Delete "${name}"? This cannot be undone.`)) {
-      const deleted = onDeleteTimetable(id);
-      if (deleted) {
-        setTimetableToast({ message: `"${name}" deleted.`, type: 'success' });
+  const handleDeleteTimetable = (id: string, name: string, isPrimary: boolean) => {
+    setDeleteConfirm({ id, name, isPrimary });
+  };
+
+  const confirmDeleteTimetable = () => {
+    if (deleteConfirm) {
+      const isLastTimetable = timetables.length === 1;
+      const deleted = onDeleteTimetable(deleteConfirm.id);
+      if (deleted && isLastTimetable) {
+        // Close options panel when last timetable is deleted
+        setDeleteConfirm(null);
+        onClose();
+        return;
       }
+      if (deleted) {
+        setTimetableToast({ message: `"${deleteConfirm.name}" deleted.`, type: 'success' });
+      }
+      setDeleteConfirm(null);
     }
+  };
+
+  const handleSetActiveTimetable = (id: string, name: string) => {
+    onSetActiveTimetable(id);
+    onViewingToast(name);
   };
 
   const validateAndSetBackground = (url: string) => {
@@ -215,14 +236,13 @@ export function OptionsPanel({
     setBackgroundToast('Background reset to default.');
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onFileChange(e);
-    onClose();
+  const handleFactoryReset = () => {
+    setShowFactoryReset(true);
   };
 
-  const handleReset = () => {
-    onClose();
-    onReset();
+  const confirmFactoryReset = () => {
+    localStorage.clear();
+    window.location.reload();
   };
 
   return (
@@ -266,62 +286,75 @@ export function OptionsPanel({
 
           {/* List of timetables */}
           <div className="timetable-list">
-            {timetables.map((timetable) => (
-              <div key={timetable.id} className="timetable-list-item">
-                {editingTimetableId === timetable.id ? (
-                  <div className="timetable-edit-row">
-                    <input
-                      type="text"
-                      className="timetable-name-input"
-                      value={editingName}
-                      onChange={(e) => setEditingName(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleSaveRename();
-                        if (e.key === 'Escape') {
-                          setEditingTimetableId(null);
-                          setEditingName('');
-                        }
-                      }}
-                      autoFocus
-                    />
-                    <button
-                      className="timetable-action-btn"
-                      onClick={handleSaveRename}
-                      title="Save"
-                    >
-                      <Check size={14} />
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <div className="timetable-info">
-                      <span className="timetable-name">{timetable.name}</span>
-                      {timetable.isPrimary && (
-                        <span className="timetable-badge">You</span>
-                      )}
-                    </div>
-                    <div className="timetable-actions">
+            {timetables.map((timetable) => {
+              const isActive = timetable.id === activeTimetableId;
+              return (
+                <div key={timetable.id} className={`timetable-list-item ${isActive ? 'timetable-list-item-active' : ''}`}>
+                  {editingTimetableId === timetable.id ? (
+                    <div className="timetable-edit-row">
+                      <input
+                        type="text"
+                        className="timetable-name-input"
+                        value={editingName}
+                        onChange={(e) => setEditingName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleSaveRename();
+                          if (e.key === 'Escape') {
+                            setEditingTimetableId(null);
+                            setEditingName('');
+                          }
+                        }}
+                        autoFocus
+                      />
                       <button
                         className="timetable-action-btn"
-                        onClick={() => handleStartRename(timetable)}
-                        title="Rename"
+                        onClick={handleSaveRename}
+                        title="Save"
                       >
-                        <Pencil size={14} />
+                        <Check size={14} />
                       </button>
-                      {!timetable.isPrimary && (
+                    </div>
+                  ) : (
+                    <>
+                      <div className="timetable-info">
+                        <span className="timetable-name">{timetable.name}</span>
+                        {timetable.isPrimary && (
+                          <span className="timetable-badge">You</span>
+                        )}
+                        {isActive && (
+                          <span className="timetable-badge timetable-badge-active">Viewing</span>
+                        )}
+                      </div>
+                      <div className="timetable-actions">
+                        {!isActive && (
+                          <button
+                            className="timetable-action-btn timetable-action-btn-view"
+                            onClick={() => handleSetActiveTimetable(timetable.id, timetable.name)}
+                            title="View this timetable"
+                          >
+                            <Eye size={14} />
+                          </button>
+                        )}
+                        <button
+                          className="timetable-action-btn"
+                          onClick={() => handleStartRename(timetable)}
+                          title="Rename"
+                        >
+                          <Pencil size={14} />
+                        </button>
                         <button
                           className="timetable-action-btn timetable-action-btn-danger"
-                          onClick={() => handleDeleteTimetable(timetable.id, timetable.name)}
+                          onClick={() => handleDeleteTimetable(timetable.id, timetable.name, timetable.isPrimary)}
                           title="Delete"
                         >
                           <Trash2 size={14} />
                         </button>
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {/* Add timetable section */}
@@ -441,29 +474,6 @@ export function OptionsPanel({
         </div>
 
         <div className="options-section">
-          <h4>Data</h4>
-          <div className="options-file-info">
-            <span className="options-file-label">Current file</span>
-            <span className="options-file-name">{fileName}</span>
-          </div>
-          <div className="options-buttons">
-            <label className="options-btn">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".html,.htm,.ics"
-                onChange={handleFileChange}
-                className="file-input"
-              />
-              <Upload size={14} /> Change file
-            </label>
-            <button className="options-btn options-btn-danger" onClick={handleReset}>
-              <RotateCcw size={14} /> Reset data
-            </button>
-          </div>
-        </div>
-
-        <div className="options-section">
           <h4>Privacy & Security</h4>
           <p className="options-privacy-desc">
             Learn how your data is processed and stored.
@@ -495,10 +505,44 @@ export function OptionsPanel({
             >
               <ExternalLink size={14} /> Report an issue
             </a>
+            <button className="options-btn options-btn-danger" onClick={handleFactoryReset}>
+              <RotateCcw size={14} /> Factory Reset
+            </button>
           </div>
         </div>
         </div>
       </div>
+
+      {/* Delete confirmation modal */}
+      {deleteConfirm && (
+        <Modal
+          title={`Delete "${deleteConfirm.name}"?`}
+          onClose={() => setDeleteConfirm(null)}
+          onConfirm={confirmDeleteTimetable}
+          confirmText="Delete"
+          confirmVariant="danger"
+        >
+          <p>
+            {deleteConfirm.isPrimary
+              ? "This will clear your timetable data. You'll need to upload a new file."
+              : "This cannot be undone."}
+          </p>
+        </Modal>
+      )}
+
+      {/* Factory reset confirmation modal */}
+      {showFactoryReset && (
+        <Modal
+          title="Factory Reset"
+          onClose={() => setShowFactoryReset(false)}
+          onConfirm={confirmFactoryReset}
+          confirmText="Reset Everything"
+          confirmVariant="danger"
+        >
+          <p>This will clear ALL your data including timetables, settings, and preferences.</p>
+          <p><strong>This cannot be undone.</strong></p>
+        </Modal>
+      )}
     </div>
   );
 }

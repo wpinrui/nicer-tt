@@ -3,6 +3,7 @@ export { OptionsPanel } from './OptionsPanel';
 export { FilterSection } from './FilterSection';
 export { EventsList } from './EventsList';
 export { ShareWelcomeModal } from './ShareWelcomeModal';
+export { ShareSelectModal } from './ShareSelectModal';
 export { PrivacyNoticeModal } from './PrivacyNoticeModal';
 export { CompareModal } from './CompareModal';
 export { CompareFilters } from './CompareFilters';

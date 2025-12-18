@@ -66,13 +66,37 @@ function saveToStorage(timetables: Timetable[]): void {
   }
 }
 
+function loadActiveId(): string | null {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEYS.ACTIVE_TIMETABLE);
+    return stored ? JSON.parse(stored) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveActiveId(id: string | null): void {
+  if (id) {
+    localStorage.setItem(STORAGE_KEYS.ACTIVE_TIMETABLE, JSON.stringify(id));
+  } else {
+    localStorage.removeItem(STORAGE_KEYS.ACTIVE_TIMETABLE);
+  }
+}
+
 export function useTimetableStorage() {
   const [timetables, setTimetablesState] = useState<Timetable[]>(loadFromStorage);
+  const [activeTimetableId, setActiveTimetableIdState] = useState<string | null>(loadActiveId);
 
   // Get primary timetable (for backward compatibility)
   const primaryTimetable = timetables.find(t => t.isPrimary) || null;
-  const events = primaryTimetable?.events || null;
-  const fileName = primaryTimetable?.fileName || null;
+
+  // Get active timetable (defaults to primary if not set or invalid)
+  const activeTimetable = (activeTimetableId && timetables.find(t => t.id === activeTimetableId))
+    || primaryTimetable;
+
+  // Events and fileName now come from the active timetable (not necessarily primary)
+  const events = activeTimetable?.events || null;
+  const fileName = activeTimetable?.fileName || null;
 
   // Set or update the primary timetable (backward compatible API)
   const setTimetable = useCallback((newEvents: TimetableEvent[] | null, newFileName: string | null) => {
@@ -143,20 +167,36 @@ export function useTimetableStorage() {
     });
   }, []);
 
-  // Delete a timetable (cannot delete primary)
+  // Delete a timetable (now allows deleting primary too)
   const deleteTimetable = useCallback((id: string): boolean => {
     let deleted = false;
     setTimetablesState(prev => {
       const timetable = prev.find(t => t.id === id);
-      if (!timetable || timetable.isPrimary) {
+      if (!timetable) {
         return prev;
       }
       deleted = true;
       const updated = prev.filter(t => t.id !== id);
       saveToStorage(updated);
+
+      // If deleting the active timetable, reset to primary (or first available)
+      if (id === activeTimetableId) {
+        const nextActive = updated.find(t => t.isPrimary) || updated[0] || null;
+        setActiveTimetableIdState(nextActive?.id || null);
+        saveActiveId(nextActive?.id || null);
+      }
+
       return updated;
     });
     return deleted;
+  }, [activeTimetableId]);
+
+  // Set the active timetable being viewed
+  // Note: No validation - allows setting ID immediately after addTimetable before state updates.
+  // The activeTimetable derivation handles invalid IDs gracefully by falling back to primary.
+  const setActiveTimetable = useCallback((id: string) => {
+    setActiveTimetableIdState(id);
+    saveActiveId(id);
   }, []);
 
   // Get a specific timetable by ID
@@ -179,6 +219,8 @@ export function useTimetableStorage() {
     // New multi-timetable API
     timetables,
     primaryTimetable,
+    activeTimetable,
+    setActiveTimetable,
     addTimetable,
     renameTimetable,
     deleteTimetable,

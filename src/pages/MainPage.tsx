@@ -3,22 +3,21 @@ import { Upload, Download, FileText, Share2, HelpCircle, Settings, ArrowLeft, Me
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { parseIcs } from '../utils/parseIcs';
-import { STORAGE_KEYS } from '../utils/constants';
+import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
 import type { CompareFilter } from '../utils/constants';
 import type { TravelConfig, MealConfig } from '../utils/compareUtils';
 import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents } from '../hooks';
-import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, PrivacyNoticeModal, CompareModal, CompareFilters, EventsCompareView } from '../components';
+import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, ShareSelectModal, PrivacyNoticeModal, CompareModal, CompareFilters, EventsCompareView } from '../components';
 import HelpPage from './HelpPage';
 import './MainPage.css';
 
 function MainPage() {
-  const { events, fileName, setTimetable, clearTimetable, timetables, addTimetable, renameTimetable, deleteTimetable, getTimetable } = useTimetableStorage();
+  const { events, setTimetable, clearTimetable, timetables, activeTimetable, setActiveTimetable, addTimetable, renameTimetable, deleteTimetable, getTimetable } = useTimetableStorage();
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [hidePastDates, setHidePastDates] = useState(true);
-  const [showResetModal, setShowResetModal] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [showShareWelcome, setShowShareWelcome] = useState(false);
   const [showPrivacyNotice, setShowPrivacyNotice] = useState(false);
@@ -26,6 +25,9 @@ function MainPage() {
   const [darkMode, setDarkMode] = useLocalStorage(STORAGE_KEYS.DARK_MODE, true);
   const [showTutor, setShowTutor] = useLocalStorage(STORAGE_KEYS.SHOW_TUTOR, true);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Share select state
+  const [showShareSelect, setShowShareSelect] = useState(false);
 
   // Compare mode state
   const [showCompareModal, setShowCompareModal] = useState(false);
@@ -58,17 +60,23 @@ function MainPage() {
     showShareModal,
     shareMessage,
     tempViewData,
+    matchedTimetable,
+    shareLinkFallback,
     createShareLink,
     confirmShare,
     viewTempShare,
     exitTempView,
     cancelShare,
     getImmediateShareData,
-  } = useShareData(hasExistingData, events);
+    clearMatchedTimetable,
+    clearShareLinkFallback,
+  } = useShareData(hasExistingData, timetables);
+
+  // State for showing "switched to" toast
+  const [switchedToast, setSwitchedToast] = useState<string | null>(null);
 
   // Determine which events to display (temp view or stored)
   const displayEvents = tempViewData?.events ?? events;
-  const displayFileName = tempViewData?.fileName ?? fileName;
   const isViewingTemp = tempViewData !== null;
 
   const {
@@ -83,6 +91,19 @@ function MainPage() {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
+
+  // Handle matched timetable - auto-switch and show toast
+  useEffect(() => {
+    if (matchedTimetable) {
+      setActiveTimetable(matchedTimetable.id);
+      clearMatchedTimetable();
+      // Defer toast to avoid synchronous setState in effect
+      queueMicrotask(() => {
+        setSwitchedToast(`Switched to "${matchedTimetable.name}"`);
+        setTimeout(() => setSwitchedToast(null), TOAST_DURATION_MS);
+      });
+    }
+  }, [matchedTimetable, setActiveTimetable, clearMatchedTimetable]);
 
   // Load shared data immediately if no existing data
   useEffect(() => {
@@ -135,48 +156,38 @@ function MainPage() {
     }
   };
 
-  // Unified handler for Options panel (detects file type)
-  const handleAnyFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.name.toLowerCase().endsWith('.ics')) {
-      handleIcsFileChange(e);
-    } else {
-      handleFileChange(e);
-    }
-  };
-
   const handleDownload = () => {
     if (!displayEvents) return;
     const ics = generateIcs(displayEvents);
     downloadIcs(ics);
   };
 
-  const handleReset = () => {
-    setShowResetModal(true);
-  };
-
-  const confirmReset = () => {
-    clearTimetable();
-    setError(null);
-    setSearchQuery('');
-    setSelectedCourses(new Set());
-    setShowResetModal(false);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+  const handleShare = () => {
+    if (timetables.length > 1) {
+      // Multiple timetables - ask which one to share
+      setShowShareSelect(true);
+    } else if (activeTimetable) {
+      // Single timetable - share it directly
+      createShareLink(activeTimetable.events, activeTimetable.fileName || activeTimetable.name);
     }
   };
 
-  const handleShare = () => {
-    if (!displayEvents || !displayFileName) return;
-    createShareLink(displayEvents, displayFileName);
+  const handleShareTimetable = (timetable: typeof timetables[0]) => {
+    setShowShareSelect(false);
+    createShareLink(timetable.events, timetable.fileName || timetable.name);
   };
 
-  const handleConfirmShareData = () => {
+  const handleViewingToast = (name: string) => {
+    setSwitchedToast(`Now viewing "${name}"`);
+    setTimeout(() => setSwitchedToast(null), TOAST_DURATION_MS);
+  };
+
+  const handleAddShareData = () => {
     const sharedData = confirmShare();
     if (sharedData) {
-      setTimetable(sharedData.events, sharedData.fileName);
+      // Add as a new timetable (not replacing)
+      const newId = addTimetable(sharedData.events, sharedData.fileName);
+      setActiveTimetable(newId);
     }
   };
 
@@ -445,6 +456,7 @@ function MainPage() {
                 Showing <strong>{filteredCount}</strong>
                 {hasActiveFilters && ` of ${totalEvents}`} events
                 {` across ${groupedByDate.length} days`}
+                {activeTimetable && <span className="events-count-timetable"> from {activeTimetable.name}</span>}
               </p>
 
               <div className="events-preview">
@@ -463,50 +475,58 @@ function MainPage() {
       )}
 
       {shareMessage && <div className="share-toast">{shareMessage}</div>}
-
-      {showResetModal && (
-        <Modal
-          title="Reset Timetable?"
-          onClose={() => setShowResetModal(false)}
-          onConfirm={confirmReset}
-          confirmText="Reset"
-        >
-          <p>
-            This will clear your uploaded timetable data. You'll need to upload a new file to view
-            events again.
-          </p>
-        </Modal>
-      )}
+      {switchedToast && <div className="share-toast">{switchedToast}</div>}
 
       {showShareModal && (
         <Modal
-          title="Load Shared Timetable?"
+          title="Add Shared Timetable?"
           onClose={cancelShare}
-          onConfirm={handleConfirmShareData}
-          confirmText="Replace"
+          onConfirm={handleAddShareData}
+          confirmText="Add to Timetables"
           confirmVariant="primary"
           onSecondary={viewTempShare}
           secondaryText="Just View"
         >
-          <p>You have existing timetable data. Would you like to replace it or just view the shared timetable temporarily?</p>
+          <p>Would you like to add this shared timetable to your collection, or just view it temporarily?</p>
+        </Modal>
+      )}
+
+      {shareLinkFallback && (
+        <Modal
+          title={`Share "${shareLinkFallback.name}"`}
+          onClose={clearShareLinkFallback}
+          onConfirm={clearShareLinkFallback}
+          confirmText="Done"
+          confirmVariant="primary"
+          cancelText=""
+        >
+          <p>Copy this link to share:</p>
+          <input
+            type="text"
+            className="share-link-input"
+            value={shareLinkFallback.url}
+            readOnly
+            onFocus={(e) => e.target.select()}
+            onClick={(e) => (e.target as HTMLInputElement).select()}
+          />
         </Modal>
       )}
 
       {showOptions && (
         <OptionsPanel
-          fileName={fileName}
           darkMode={darkMode}
           showTutor={showTutor}
           onClose={() => setShowOptions(false)}
           onDarkModeChange={setDarkMode}
           onShowTutorChange={setShowTutor}
-          onFileChange={handleAnyFileChange}
-          onReset={handleReset}
           onShowPrivacy={() => setShowPrivacyNotice(true)}
           timetables={timetables}
+          activeTimetableId={activeTimetable?.id || null}
+          onSetActiveTimetable={setActiveTimetable}
           onAddTimetable={addTimetable}
           onRenameTimetable={renameTimetable}
           onDeleteTimetable={deleteTimetable}
+          onViewingToast={handleViewingToast}
         />
       )}
 
@@ -516,6 +536,14 @@ function MainPage() {
 
       {showPrivacyNotice && (
         <PrivacyNoticeModal onClose={() => setShowPrivacyNotice(false)} />
+      )}
+
+      {showShareSelect && (
+        <ShareSelectModal
+          timetables={timetables}
+          onShare={handleShareTimetable}
+          onClose={() => setShowShareSelect(false)}
+        />
       )}
 
       {showCompareModal && (
