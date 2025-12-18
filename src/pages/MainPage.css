@@ -771,7 +771,7 @@ header h1 {
   font-size: 0.9rem;
   font-weight: 500;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  z-index: 1100;
   animation: toast-slide-up 0.3s ease-out;
 }
 
