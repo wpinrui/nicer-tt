@@ -235,6 +235,7 @@ export function OptionsPanel({
           </button>
         </div>
 
+        <div className="options-content">
         <div className="options-section">
           <h4>Display</h4>
           <label className="options-toggle">
@@ -495,6 +496,7 @@ export function OptionsPanel({
               <ExternalLink size={14} /> Report an issue
             </a>
           </div>
+        </div>
         </div>
       </div>
     </div>
