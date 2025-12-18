@@ -606,63 +606,7 @@ header h1 {
   display: none;
 }
 
-/* Modal styles */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--color-overlay);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  animation: modal-fade-in 0.2s ease-out;
-}
-
-@keyframes modal-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.modal {
-  background: white;
-  border-radius: 16px;
-  padding: 1.5rem;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  animation: modal-slide-in 0.2s ease-out;
-}
-
-@keyframes modal-slide-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-.modal h3 {
-  margin: 0 0 0.75rem 0;
-  font-size: 1.1rem;
-  color: var(--color-text-primary);
-  text-align: left;
-}
-
-.modal p {
-  margin: 0 0 1.5rem 0;
-  color: var(--color-text-muted);
-  font-size: 0.95rem;
-  line-height: 1.5;
-  text-align: left;
-}
-
+/* Share link input (used in MainPage for share fallback modal) */
 .share-link-input {
   width: 100%;
   padding: 0.75rem;
@@ -673,127 +617,17 @@ header h1 {
   background: var(--color-bg-tertiary);
   margin-bottom: 1rem;
   word-break: break-all;
-}
 
-.share-link-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-}
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
 
-.modal-actions {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: flex-end;
-}
-
-.modal-cancel {
-  padding: 0.6rem 1.25rem;
-  background: var(--color-bg-tertiary);
-  border: none;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.modal-cancel:hover {
-  background: var(--color-bg-hover);
-}
-
-.modal-confirm {
-  padding: 0.6rem 1.25rem;
-  background: var(--color-error);
-  border: none;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: white;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.modal-confirm:hover {
-  background: var(--color-error-hover);
-}
-
-.modal-confirm-primary {
-  padding: 0.6rem 1.25rem;
-  background: var(--color-primary);
-  border: none;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: white;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.modal-confirm-primary:hover {
-  background: var(--color-primary-hover);
-}
-
-.modal-secondary {
-  padding: 0.6rem 1.25rem;
-  background: var(--color-bg-tertiary);
-  border: none;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.modal-secondary:hover {
-  background: var(--color-bg-hover);
-}
-
-/* Share select modal */
-.share-select-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin: 1rem 0;
-}
-
-.share-select-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  background: var(--color-bg-tertiary);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.share-select-item:hover {
-  background: var(--color-bg-tertiary);
-}
-
-.share-select-item input[type="radio"] {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--color-primary);
-}
-
-.share-select-name {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 500;
-  color: var(--color-text-primary);
-}
-
-.share-select-badge {
-  font-size: 0.7rem;
-  padding: 0.15rem 0.4rem;
-  background: rgba(100, 108, 255, 0.15);
-  color: var(--color-primary);
-  border-radius: 4px;
-  font-weight: 600;
+  html.dark & {
+    background: #2a2a2a;
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--color-text-primary);
+  }
 }
 
 /* Event tutor text display */
