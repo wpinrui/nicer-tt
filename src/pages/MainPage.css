@@ -2387,7 +2387,7 @@ html.dark .privacy-link:hover {
     display: none;
   }
 
-  /* Mobile configure button */
+  /* Mobile configure button - yellow accent for compare filters */
   .mobile-config-btn {
     display: flex;
     align-items: center;
@@ -2396,27 +2396,16 @@ html.dark .privacy-link:hover {
     width: 100%;
     padding: 0.75rem 1rem;
     margin-top: 0.5rem;
-    background: rgba(100, 108, 255, 0.1);
-    border: 1px solid rgba(100, 108, 255, 0.3);
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
     border-radius: 8px;
-    color: #646cff;
+    color: #f9a825;
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
   }
 
   .mobile-config-btn:hover {
-    background: rgba(100, 108, 255, 0.15);
-  }
-
-  /* Travel config button - yellow accent */
-  .mobile-config-btn-travel {
-    background: rgba(255, 193, 7, 0.1);
-    border-color: rgba(255, 193, 7, 0.3);
-    color: #f9a825;
-  }
-
-  .mobile-config-btn-travel:hover {
     background: rgba(255, 193, 7, 0.15);
   }
 
@@ -2425,10 +2414,10 @@ html.dark .privacy-link:hover {
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: rgba(100, 108, 255, 0.1);
-    border: 1px solid rgba(100, 108, 255, 0.2);
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.2);
     border-radius: 8px;
-    color: #646cff;
+    color: #f9a825;
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
@@ -2436,7 +2425,7 @@ html.dark .privacy-link:hover {
   }
 
   .filters-toggle:hover {
-    background: rgba(100, 108, 255, 0.15);
+    background: rgba(255, 193, 7, 0.15);
   }
 
   /* Mobile menu disabled state */
@@ -2477,6 +2466,27 @@ html.dark .privacy-link:hover {
 .header-btn-active {
   background: rgba(255, 193, 7, 0.3);
   color: #f9a825;
+}
+
+/* Exit Compare button - yellow accent */
+.exit-compare-btn {
+  background: rgba(255, 193, 7, 0.15) !important;
+  border-color: rgba(255, 193, 7, 0.3) !important;
+  color: #f9a825 !important;
+}
+
+.exit-compare-btn:hover {
+  background: rgba(255, 193, 7, 0.25) !important;
+}
+
+html.dark .exit-compare-btn {
+  background: rgba(255, 193, 7, 0.2) !important;
+  border-color: rgba(255, 193, 7, 0.4) !important;
+  color: #ffc107 !important;
+}
+
+html.dark .exit-compare-btn:hover {
+  background: rgba(255, 193, 7, 0.3) !important;
 }
 
 .header-btn:disabled {
@@ -3168,13 +3178,13 @@ html.dark .compare-filter-btn.active {
 }
 
 html.dark .filters-toggle {
-  background: rgba(100, 108, 255, 0.15);
-  border-color: rgba(100, 108, 255, 0.3);
-  color: #a5a8ff;
+  background: rgba(255, 193, 7, 0.15);
+  border-color: rgba(255, 193, 7, 0.3);
+  color: #ffc107;
 }
 
 html.dark .filters-toggle:hover {
-  background: rgba(100, 108, 255, 0.25);
+  background: rgba(255, 193, 7, 0.25);
 }
 
 html.dark .travel-options {
@@ -3538,14 +3548,14 @@ html.dark .meal-badge[data-tooltip]:hover::before {
 }
 
 .modal-config-btn:hover {
-  background: rgba(100, 108, 255, 0.1);
-  color: #646cff;
+  background: rgba(255, 193, 7, 0.15);
+  color: #f9a825;
 }
 
 .modal-config-btn.active {
-  background: #646cff;
-  color: white;
-  border-color: #646cff;
+  background: #f9a825;
+  color: #333;
+  border-color: #f9a825;
 }
 
 .modal-config-select {
@@ -3593,13 +3603,13 @@ html.dark .modal-config-btn {
 }
 
 html.dark .modal-config-btn:hover {
-  background: rgba(100, 108, 255, 0.2);
-  color: #8b91ff;
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
 }
 
 html.dark .modal-config-btn.active {
-  background: #646cff;
-  color: white;
+  background: #f9a825;
+  color: #333;
 }
 
 html.dark .modal-config-select,

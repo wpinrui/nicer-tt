@@ -115,7 +115,7 @@ export function CompareModal({
             Cancel
           </button>
           {isCompareMode && (
-            <button className="modal-secondary" onClick={onReset}>
+            <button className="modal-secondary exit-compare-btn" onClick={onReset}>
               Exit Compare
             </button>
           )}

@@ -406,7 +406,7 @@ function MainPage() {
                     />
                   </div>
                   <button
-                    className="header-btn"
+                    className="header-btn exit-compare-btn"
                     onClick={handleExitCompare}
                     title="Exit compare mode"
                   >
