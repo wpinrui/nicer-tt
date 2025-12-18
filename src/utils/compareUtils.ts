@@ -1,4 +1,4 @@
-import { createSortKey } from './formatters';
+import { createSortKey, getDateSearchString } from './formatters';
 import type { TimetableEvent } from './parseHtml';
 
 // Types
@@ -84,7 +84,7 @@ export function processEvents(
           event.group,
           event.venue,
           event.tutor,
-          dateStr,
+          getDateSearchString(dateStr),
         ].join(' ').toLowerCase();
 
         if (!searchFields.includes(searchLower)) continue;
