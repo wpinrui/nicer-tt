@@ -2411,9 +2411,11 @@ html.dark .privacy-link:hover {
   }
 }
 
-/* Hidden on desktop */
-.mobile-timetable-label {
-  display: none;
+/* Mobile timetable label - hidden on desktop */
+@media (min-width: 769px) {
+  .mobile-timetable-label {
+    display: none;
+  }
 }
 
 /* Compare button active state (yellow for compare mode) */
