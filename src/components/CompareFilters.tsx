@@ -127,6 +127,55 @@ function MealTypeButtons({ value, onChange, buttonClassName, showTooltips }: Mea
   );
 }
 
+interface ModalTimeRangeProps {
+  label: string;
+  startValue: number;
+  endValue: number;
+  startOptions: number[];
+  endOptions: number[];
+  onStartChange: (value: number) => void;
+  onEndChange: (value: number) => void;
+}
+
+function ModalTimeRange({
+  label,
+  startValue,
+  endValue,
+  startOptions,
+  endOptions,
+  onStartChange,
+  onEndChange,
+}: ModalTimeRangeProps) {
+  return (
+    <div className="modal-config-section">
+      <label className="modal-config-label">
+        {label}
+        <div className="modal-time-range">
+          <select
+            className="modal-config-select"
+            value={startValue}
+            onChange={(e) => onStartChange(Number(e.target.value))}
+          >
+            {startOptions.map(hour => (
+              <option key={hour} value={hour}>{formatHour(hour)}</option>
+            ))}
+          </select>
+          <span>to</span>
+          <select
+            className="modal-config-select"
+            value={endValue}
+            onChange={(e) => onEndChange(Number(e.target.value))}
+          >
+            {endOptions.map(hour => (
+              <option key={hour} value={hour}>{formatHour(hour)}</option>
+            ))}
+          </select>
+        </div>
+      </label>
+    </div>
+  );
+}
+
 interface MealTimeRangeProps {
   label: string;
   tooltip: string;
@@ -386,58 +435,24 @@ export function CompareFilters({
               />
             </div>
           </div>
-          <div className="modal-config-section">
-            <label className="modal-config-label">
-              Lunch window
-              <div className="modal-time-range">
-                <select
-                  className="modal-config-select"
-                  value={mealConfig.lunchStart}
-                  onChange={(e) => onMealConfigChange({ lunchStart: Number(e.target.value) })}
-                >
-                  {LUNCH_START_HOURS.map(hour => (
-                    <option key={hour} value={hour}>{formatHour(hour)}</option>
-                  ))}
-                </select>
-                <span>to</span>
-                <select
-                  className="modal-config-select"
-                  value={mealConfig.lunchEnd}
-                  onChange={(e) => onMealConfigChange({ lunchEnd: Number(e.target.value) })}
-                >
-                  {LUNCH_END_HOURS.map(hour => (
-                    <option key={hour} value={hour}>{formatHour(hour)}</option>
-                  ))}
-                </select>
-              </div>
-            </label>
-          </div>
-          <div className="modal-config-section">
-            <label className="modal-config-label">
-              Dinner window
-              <div className="modal-time-range">
-                <select
-                  className="modal-config-select"
-                  value={mealConfig.dinnerStart}
-                  onChange={(e) => onMealConfigChange({ dinnerStart: Number(e.target.value) })}
-                >
-                  {DINNER_START_HOURS.map(hour => (
-                    <option key={hour} value={hour}>{formatHour(hour)}</option>
-                  ))}
-                </select>
-                <span>to</span>
-                <select
-                  className="modal-config-select"
-                  value={mealConfig.dinnerEnd}
-                  onChange={(e) => onMealConfigChange({ dinnerEnd: Number(e.target.value) })}
-                >
-                  {DINNER_END_HOURS.map(hour => (
-                    <option key={hour} value={hour}>{formatHour(hour)}</option>
-                  ))}
-                </select>
-              </div>
-            </label>
-          </div>
+          <ModalTimeRange
+            label="Lunch window"
+            startValue={mealConfig.lunchStart}
+            endValue={mealConfig.lunchEnd}
+            startOptions={LUNCH_START_HOURS}
+            endOptions={LUNCH_END_HOURS}
+            onStartChange={(v) => onMealConfigChange({ lunchStart: v })}
+            onEndChange={(v) => onMealConfigChange({ lunchEnd: v })}
+          />
+          <ModalTimeRange
+            label="Dinner window"
+            startValue={mealConfig.dinnerStart}
+            endValue={mealConfig.dinnerEnd}
+            startOptions={DINNER_START_HOURS}
+            endOptions={DINNER_END_HOURS}
+            onStartChange={(v) => onMealConfigChange({ dinnerStart: v })}
+            onEndChange={(v) => onMealConfigChange({ dinnerEnd: v })}
+          />
         </Modal>
       )}
     </div>
