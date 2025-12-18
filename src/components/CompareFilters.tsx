@@ -36,6 +36,25 @@ function formatHour(hour: number): string {
   return `${hour - 12}pm`;
 }
 
+// Shared configuration options
+const WAIT_TIME_OPTIONS = [
+  { value: 5, label: '5 min' },
+  { value: 10, label: '10 min' },
+  { value: 15, label: '15 min' },
+  { value: 30, label: '30 min' },
+  { value: 45, label: '45 min' },
+  { value: 60, label: '1 hour' },
+  { value: 90, label: '1.5 hours' },
+  { value: 120, label: '2 hours' },
+];
+
+const LUNCH_START_HOURS = Array.from({ length: 8 }, (_, i) => i + 9);
+const LUNCH_END_HOURS = Array.from({ length: 8 }, (_, i) => i + 11);
+const DINNER_START_HOURS = Array.from({ length: 6 }, (_, i) => i + 15);
+const DINNER_END_HOURS = Array.from({ length: 5 }, (_, i) => i + 17);
+
+const MOBILE_BREAKPOINT = '(max-width: 768px)';
+
 interface MealTimeRangeProps {
   label: string;
   tooltip: string;
@@ -101,7 +120,7 @@ export function CompareFilters({
 
   // Detect mobile viewport
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    const mediaQuery = window.matchMedia(MOBILE_BREAKPOINT);
     setIsMobile(mediaQuery.matches);
 
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
@@ -206,14 +225,9 @@ export function CompareFilters({
                 value={travelConfig.waitMinutes}
                 onChange={(e) => onTravelConfigChange({ waitMinutes: Number(e.target.value) })}
               >
-                <option value={5}>5 min</option>
-                <option value={10}>10 min</option>
-                <option value={15}>15 min</option>
-                <option value={30}>30 min</option>
-                <option value={45}>45 min</option>
-                <option value={60}>1 hour</option>
-                <option value={90}>1.5 hours</option>
-                <option value={120}>2 hours</option>
+                {WAIT_TIME_OPTIONS.map(({ value, label }) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
               </select>
             </label>
           </div>
@@ -248,8 +262,8 @@ export function CompareFilters({
               tooltip="Set the lunch time window"
               startValue={mealConfig.lunchStart}
               endValue={mealConfig.lunchEnd}
-              startOptions={Array.from({ length: 8 }, (_, i) => i + 9)}
-              endOptions={Array.from({ length: 8 }, (_, i) => i + 11)}
+              startOptions={LUNCH_START_HOURS}
+              endOptions={LUNCH_END_HOURS}
               onStartChange={(v) => onMealConfigChange({ lunchStart: v })}
               onEndChange={(v) => onMealConfigChange({ lunchEnd: v })}
             />
@@ -258,8 +272,8 @@ export function CompareFilters({
               tooltip="Set the dinner time window"
               startValue={mealConfig.dinnerStart}
               endValue={mealConfig.dinnerEnd}
-              startOptions={Array.from({ length: 6 }, (_, i) => i + 15)}
-              endOptions={Array.from({ length: 5 }, (_, i) => i + 17)}
+              startOptions={DINNER_START_HOURS}
+              endOptions={DINNER_END_HOURS}
               onStartChange={(v) => onMealConfigChange({ dinnerStart: v })}
               onEndChange={(v) => onMealConfigChange({ dinnerEnd: v })}
             />
@@ -321,14 +335,9 @@ export function CompareFilters({
                 value={travelConfig.waitMinutes}
                 onChange={(e) => onTravelConfigChange({ waitMinutes: Number(e.target.value) })}
               >
-                <option value={5}>5 min</option>
-                <option value={10}>10 min</option>
-                <option value={15}>15 min</option>
-                <option value={30}>30 min</option>
-                <option value={45}>45 min</option>
-                <option value={60}>1 hour</option>
-                <option value={90}>1.5 hours</option>
-                <option value={120}>2 hours</option>
+                {WAIT_TIME_OPTIONS.map(({ value, label }) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
               </select>
             </label>
           </div>
@@ -370,7 +379,7 @@ export function CompareFilters({
                   value={mealConfig.lunchStart}
                   onChange={(e) => onMealConfigChange({ lunchStart: Number(e.target.value) })}
                 >
-                  {Array.from({ length: 8 }, (_, i) => i + 9).map(hour => (
+                  {LUNCH_START_HOURS.map(hour => (
                     <option key={hour} value={hour}>{formatHour(hour)}</option>
                   ))}
                 </select>
@@ -380,7 +389,7 @@ export function CompareFilters({
                   value={mealConfig.lunchEnd}
                   onChange={(e) => onMealConfigChange({ lunchEnd: Number(e.target.value) })}
                 >
-                  {Array.from({ length: 8 }, (_, i) => i + 11).map(hour => (
+                  {LUNCH_END_HOURS.map(hour => (
                     <option key={hour} value={hour}>{formatHour(hour)}</option>
                   ))}
                 </select>
@@ -396,7 +405,7 @@ export function CompareFilters({
                   value={mealConfig.dinnerStart}
                   onChange={(e) => onMealConfigChange({ dinnerStart: Number(e.target.value) })}
                 >
-                  {Array.from({ length: 6 }, (_, i) => i + 15).map(hour => (
+                  {DINNER_START_HOURS.map(hour => (
                     <option key={hour} value={hour}>{formatHour(hour)}</option>
                   ))}
                 </select>
@@ -406,7 +415,7 @@ export function CompareFilters({
                   value={mealConfig.dinnerEnd}
                   onChange={(e) => onMealConfigChange({ dinnerEnd: Number(e.target.value) })}
                 >
-                  {Array.from({ length: 5 }, (_, i) => i + 17).map(hour => (
+                  {DINNER_END_HOURS.map(hour => (
                     <option key={hour} value={hour}>{formatHour(hour)}</option>
                   ))}
                 </select>

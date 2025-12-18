@@ -3713,6 +3713,16 @@ html.dark .compare-empty {
   html.dark .mobile-timetable-label {
     color: #999;
   }
+
+  html.dark .mobile-config-btn {
+    background: rgba(255, 193, 7, 0.15);
+    border-color: rgba(255, 193, 7, 0.35);
+    color: #ffc107;
+  }
+
+  html.dark .mobile-config-btn:hover {
+    background: rgba(255, 193, 7, 0.25);
+  }
 }
 
 html.dark .travel-badge-to {
