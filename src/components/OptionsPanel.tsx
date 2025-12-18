@@ -226,7 +226,7 @@ export function OptionsPanel({
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay">
       <div className="options-panel" onClick={(e) => e.stopPropagation()}>
         <div className="options-header">
           <h3>Options</h3>

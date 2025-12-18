@@ -78,7 +78,7 @@ function HelpPage({ onUploadClick, onPrivacyClick }: HelpPageProps) {
       </ol>
 
       {modalImage && (
-        <div className="image-modal-overlay" onClick={() => setModalImage(null)}>
+        <div className="image-modal-overlay">
           <div className="image-modal" onClick={(e) => e.stopPropagation()}>
             <button className="image-modal-close" onClick={() => setModalImage(null)}>
               <X size={24} />
