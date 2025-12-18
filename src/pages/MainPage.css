@@ -2881,9 +2881,11 @@ html.dark .add-timetable-error {
   flex-wrap: wrap;
 }
 
-/* Hidden on desktop, shown on mobile via media query */
-.filters-toggle {
-  display: none;
+/* Filters toggle - hidden on desktop, shown on mobile */
+@media (min-width: 769px) {
+  .filters-toggle {
+    display: none;
+  }
 }
 
 .compare-filter-btn {
