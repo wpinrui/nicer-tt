@@ -5,6 +5,7 @@ import type { Timetable, TimetableEvent } from '../utils/parseHtml';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { parseIcs } from '../utils/parseIcs';
 import { decodeShareUrl } from '../utils/shareUtils';
+import { Modal } from './Modal';
 
 interface OptionsPanelProps {
   darkMode: boolean;
@@ -98,6 +99,10 @@ export function OptionsPanel({
   const [editingName, setEditingName] = useState('');
   const [timetableToast, setTimetableToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
+  // Confirmation modal state
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string; isPrimary: boolean } | null>(null);
+  const [showFactoryReset, setShowFactoryReset] = useState(false);
+
   // Auto-hide timetable toast
   useEffect(() => {
     if (timetableToast) {
@@ -164,14 +169,16 @@ export function OptionsPanel({
   };
 
   const handleDeleteTimetable = (id: string, name: string, isPrimary: boolean) => {
-    const confirmMsg = isPrimary
-      ? `Delete "${name}"? This will clear your timetable data. You'll need to upload a new file.`
-      : `Delete "${name}"? This cannot be undone.`;
-    if (window.confirm(confirmMsg)) {
-      const deleted = onDeleteTimetable(id);
+    setDeleteConfirm({ id, name, isPrimary });
+  };
+
+  const confirmDeleteTimetable = () => {
+    if (deleteConfirm) {
+      const deleted = onDeleteTimetable(deleteConfirm.id);
       if (deleted) {
-        setTimetableToast({ message: `"${name}" deleted.`, type: 'success' });
+        setTimetableToast({ message: `"${deleteConfirm.name}" deleted.`, type: 'success' });
       }
+      setDeleteConfirm(null);
     }
   };
 
@@ -221,10 +228,12 @@ export function OptionsPanel({
   };
 
   const handleFactoryReset = () => {
-    if (window.confirm('Factory Reset will clear ALL your data including timetables, settings, and preferences. This cannot be undone. Continue?')) {
-      localStorage.clear();
-      window.location.reload();
-    }
+    setShowFactoryReset(true);
+  };
+
+  const confirmFactoryReset = () => {
+    localStorage.clear();
+    window.location.reload();
   };
 
   return (
@@ -494,6 +503,37 @@ export function OptionsPanel({
         </div>
         </div>
       </div>
+
+      {/* Delete confirmation modal */}
+      {deleteConfirm && (
+        <Modal
+          title={`Delete "${deleteConfirm.name}"?`}
+          onClose={() => setDeleteConfirm(null)}
+          onConfirm={confirmDeleteTimetable}
+          confirmText="Delete"
+          confirmVariant="danger"
+        >
+          <p>
+            {deleteConfirm.isPrimary
+              ? "This will clear your timetable data. You'll need to upload a new file."
+              : "This cannot be undone."}
+          </p>
+        </Modal>
+      )}
+
+      {/* Factory reset confirmation modal */}
+      {showFactoryReset && (
+        <Modal
+          title="Factory Reset"
+          onClose={() => setShowFactoryReset(false)}
+          onConfirm={confirmFactoryReset}
+          confirmText="Reset Everything"
+          confirmVariant="danger"
+        >
+          <p>This will clear ALL your data including timetables, settings, and preferences.</p>
+          <p><strong>This cannot be undone.</strong></p>
+        </Modal>
+      )}
     </div>
   );
 }

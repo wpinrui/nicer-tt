@@ -61,6 +61,7 @@ function MainPage() {
     shareMessage,
     tempViewData,
     matchedTimetable,
+    shareLinkFallback,
     createShareLink,
     confirmShare,
     viewTempShare,
@@ -68,6 +69,7 @@ function MainPage() {
     cancelShare,
     getImmediateShareData,
     clearMatchedTimetable,
+    clearShareLinkFallback,
   } = useShareData(hasExistingData, timetables, events);
 
   // State for showing "switched to" toast
@@ -478,6 +480,27 @@ function MainPage() {
           secondaryText="Just View"
         >
           <p>Would you like to add this shared timetable to your collection, or just view it temporarily?</p>
+        </Modal>
+      )}
+
+      {shareLinkFallback && (
+        <Modal
+          title={`Share "${shareLinkFallback.name}"`}
+          onClose={clearShareLinkFallback}
+          onConfirm={clearShareLinkFallback}
+          confirmText="Done"
+          confirmVariant="primary"
+          cancelText=""
+        >
+          <p>Copy this link to share:</p>
+          <input
+            type="text"
+            className="share-link-input"
+            value={shareLinkFallback.url}
+            readOnly
+            onFocus={(e) => e.target.select()}
+            onClick={(e) => (e.target as HTMLInputElement).select()}
+          />
         </Modal>
       )}
 

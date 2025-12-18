@@ -31,9 +31,11 @@ export function Modal({
         <h3>{title}</h3>
         {children}
         <div className="modal-actions">
-          <button className="modal-cancel" onClick={onClose}>
-            {cancelText}
-          </button>
+          {cancelText && (
+            <button className="modal-cancel" onClick={onClose}>
+              {cancelText}
+            </button>
+          )}
           {onSecondary && secondaryText && (
             <button className="modal-secondary" onClick={onSecondary}>
               {secondaryText}

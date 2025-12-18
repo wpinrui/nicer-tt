@@ -17,6 +17,7 @@ export function useShareData(
   const [shareMessage, setShareMessage] = useState<string | null>(null);
   const [tempViewData, setTempViewData] = useState<ShareData | null>(null);
   const [matchedTimetable, setMatchedTimetable] = useState<MatchedTimetable | null>(null);
+  const [shareLinkFallback, setShareLinkFallback] = useState<{ url: string; name: string } | null>(null);
 
   // Check if events match any existing timetable
   const findMatchingTimetable = useCallback((events: TimetableEvent[]): MatchedTimetable | null => {
@@ -76,8 +77,13 @@ export function useShareData(
       setShareMessage(`Share link for "${timetableName}" copied!`);
       setTimeout(() => setShareMessage(null), 3000);
     } catch {
-      prompt(`Copy this link to share "${timetableName}":`, shareUrl);
+      // Clipboard failed - show fallback modal
+      setShareLinkFallback({ url: shareUrl, name: timetableName });
     }
+  }, []);
+
+  const clearShareLinkFallback = useCallback(() => {
+    setShareLinkFallback(null);
   }, []);
 
   const clearMatchedTimetable = useCallback(() => {
@@ -123,6 +129,7 @@ export function useShareData(
     shareMessage,
     tempViewData,
     matchedTimetable,
+    shareLinkFallback,
     createShareLink,
     confirmShare,
     viewTempShare,
@@ -130,5 +137,6 @@ export function useShareData(
     cancelShare,
     getImmediateShareData,
     clearMatchedTimetable,
+    clearShareLinkFallback,
   };
 }
