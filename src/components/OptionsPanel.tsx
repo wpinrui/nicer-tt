@@ -4,7 +4,7 @@ import { STORAGE_KEYS } from '../utils/constants';
 import type { Timetable, TimetableEvent } from '../utils/parseHtml';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { parseIcs } from '../utils/parseIcs';
-import pako from 'pako';
+import { decodeShareUrl } from '../utils/shareUtils';
 
 interface OptionsPanelProps {
   fileName: string | null;
@@ -21,39 +21,6 @@ interface OptionsPanelProps {
   onAddTimetable: (events: TimetableEvent[], fileName: string | null, customName?: string) => string;
   onRenameTimetable: (id: string, newName: string) => void;
   onDeleteTimetable: (id: string) => boolean;
-}
-
-// Helper function to decode share link
-function decodeShareLink(url: string): { events: TimetableEvent[]; fileName: string } | null {
-  try {
-    const hashIndex = url.indexOf('#share=');
-    if (hashIndex === -1) return null;
-
-    const encoded = url.substring(hashIndex + 7);
-    const fromUrlSafeBase64 = (str: string): string => {
-      let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
-      while (base64.length % 4) base64 += '=';
-      return base64;
-    };
-
-    // Try new compressed format first
-    try {
-      const binaryString = atob(fromUrlSafeBase64(encoded));
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      const decompressed = pako.inflate(bytes, { to: 'string' });
-      return JSON.parse(decompressed);
-    } catch {
-      // Fall back to legacy uncompressed format
-      const decoded = atob(fromUrlSafeBase64(encoded));
-      const jsonStr = decodeURIComponent(decoded);
-      return JSON.parse(jsonStr);
-    }
-  } catch {
-    return null;
-  }
 }
 
 export function OptionsPanel({
@@ -145,7 +112,7 @@ export function OptionsPanel({
   const handleAddFromShareLink = () => {
     if (!shareLinkInput.trim()) return;
 
-    const data = decodeShareLink(shareLinkInput.trim());
+    const data = decodeShareUrl(shareLinkInput.trim());
     if (!data) {
       setShareLinkError('Invalid share link. Please check the URL and try again.');
       return;
