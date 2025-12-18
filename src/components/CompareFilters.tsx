@@ -1,28 +1,18 @@
 import { Calendar, Users, Car, Info, Utensils } from 'lucide-react';
-import type { CompareFilter, TravelDirection, MealType } from '../utils/constants';
+import type { CompareFilter } from '../utils/constants';
+import type { TravelConfig, MealConfig } from '../utils/compareUtils';
 
 interface CompareFiltersProps {
   compareFilter: CompareFilter;
   onFilterChange: (filter: CompareFilter) => void;
-  travelDirection: TravelDirection;
-  onTravelDirectionChange: (direction: TravelDirection) => void;
-  waitMinutes: number;
-  onWaitMinutesChange: (minutes: number) => void;
-  mealType: MealType;
-  onMealTypeChange: (type: MealType) => void;
-  lunchStart: number;
-  onLunchStartChange: (hour: number) => void;
-  lunchEnd: number;
-  onLunchEndChange: (hour: number) => void;
-  dinnerStart: number;
-  onDinnerStartChange: (hour: number) => void;
-  dinnerEnd: number;
-  onDinnerEndChange: (hour: number) => void;
+  travelConfig: TravelConfig;
+  onTravelConfigChange: (config: Partial<TravelConfig>) => void;
+  mealConfig: MealConfig;
+  onMealConfigChange: (config: Partial<MealConfig>) => void;
   leftName: string;
   rightName: string;
 }
 
-// Helper to format hour as 12-hour time
 function formatHour(hour: number): string {
   if (hour === 0) return '12am';
   if (hour === 12) return '12pm';
@@ -33,25 +23,14 @@ function formatHour(hour: number): string {
 export function CompareFilters({
   compareFilter,
   onFilterChange,
-  travelDirection,
-  onTravelDirectionChange,
-  waitMinutes,
-  onWaitMinutesChange,
-  mealType,
-  onMealTypeChange,
-  lunchStart,
-  onLunchStartChange,
-  lunchEnd,
-  onLunchEndChange,
-  dinnerStart,
-  onDinnerStartChange,
-  dinnerEnd,
-  onDinnerEndChange,
+  travelConfig,
+  onTravelConfigChange,
+  mealConfig,
+  onMealConfigChange,
   leftName,
   rightName,
 }: CompareFiltersProps) {
   const handleFilterClick = (filter: CompareFilter) => {
-    // Toggle off if already selected, otherwise select
     onFilterChange(compareFilter === filter ? 'none' : filter);
   };
 
@@ -105,29 +84,29 @@ export function CompareFilters({
             <span className="travel-options-label">Direction:</span>
             <div className="travel-direction-btns">
               <button
-                className={`travel-direction-btn ${travelDirection === 'to' ? 'active' : ''}`}
-                onClick={() => onTravelDirectionChange('to')}
+                className={`travel-direction-btn ${travelConfig.direction === 'to' ? 'active' : ''}`}
+                onClick={() => onTravelConfigChange({ direction: 'to' })}
                 data-tooltip="Compare first class of the day"
               >
                 TO School
               </button>
               <button
-                className={`travel-direction-btn ${travelDirection === 'from' ? 'active' : ''}`}
-                onClick={() => onTravelDirectionChange('from')}
+                className={`travel-direction-btn ${travelConfig.direction === 'from' ? 'active' : ''}`}
+                onClick={() => onTravelConfigChange({ direction: 'from' })}
                 data-tooltip="Compare last class of the day"
               >
                 FROM School
               </button>
               <button
-                className={`travel-direction-btn ${travelDirection === 'both' ? 'active' : ''}`}
-                onClick={() => onTravelDirectionChange('both')}
+                className={`travel-direction-btn ${travelConfig.direction === 'both' ? 'active' : ''}`}
+                onClick={() => onTravelConfigChange({ direction: 'both' })}
                 data-tooltip="Both can travel to AND from school together"
               >
                 BOTH
               </button>
               <button
-                className={`travel-direction-btn ${travelDirection === 'either' ? 'active' : ''}`}
-                onClick={() => onTravelDirectionChange('either')}
+                className={`travel-direction-btn ${travelConfig.direction === 'either' ? 'active' : ''}`}
+                onClick={() => onTravelConfigChange({ direction: 'either' })}
                 data-tooltip="Can travel to OR from school together"
               >
                 EITHER
@@ -140,8 +119,8 @@ export function CompareFilters({
               Wait time:
               <select
                 className="travel-wait-select"
-                value={waitMinutes}
-                onChange={(e) => onWaitMinutesChange(Number(e.target.value))}
+                value={travelConfig.waitMinutes}
+                onChange={(e) => onTravelConfigChange({ waitMinutes: Number(e.target.value) })}
               >
                 <option value={5}>5 min</option>
                 <option value={10}>10 min</option>
@@ -165,15 +144,15 @@ export function CompareFilters({
             <span className="eat-options-label">Meal:</span>
             <div className="eat-type-btns">
               <button
-                className={`eat-type-btn ${mealType === 'lunch' ? 'active' : ''}`}
-                onClick={() => onMealTypeChange('lunch')}
+                className={`eat-type-btn ${mealConfig.type === 'lunch' ? 'active' : ''}`}
+                onClick={() => onMealConfigChange({ type: 'lunch' })}
                 data-tooltip="Find lunch gaps only"
               >
                 Lunch
               </button>
               <button
-                className={`eat-type-btn ${mealType === 'dinner' ? 'active' : ''}`}
-                onClick={() => onMealTypeChange('dinner')}
+                className={`eat-type-btn ${mealConfig.type === 'dinner' ? 'active' : ''}`}
+                onClick={() => onMealConfigChange({ type: 'dinner' })}
                 data-tooltip="Find dinner gaps only"
               >
                 Dinner
@@ -187,8 +166,8 @@ export function CompareFilters({
                 Lunch:
                 <select
                   className="meal-time-select"
-                  value={lunchStart}
-                  onChange={(e) => onLunchStartChange(Number(e.target.value))}
+                  value={mealConfig.lunchStart}
+                  onChange={(e) => onMealConfigChange({ lunchStart: Number(e.target.value) })}
                 >
                   {Array.from({ length: 8 }, (_, i) => i + 9).map(hour => (
                     <option key={hour} value={hour}>{formatHour(hour)}</option>
@@ -197,8 +176,8 @@ export function CompareFilters({
                 <span className="meal-time-separator">to</span>
                 <select
                   className="meal-time-select"
-                  value={lunchEnd}
-                  onChange={(e) => onLunchEndChange(Number(e.target.value))}
+                  value={mealConfig.lunchEnd}
+                  onChange={(e) => onMealConfigChange({ lunchEnd: Number(e.target.value) })}
                 >
                   {Array.from({ length: 8 }, (_, i) => i + 11).map(hour => (
                     <option key={hour} value={hour}>{formatHour(hour)}</option>
@@ -212,8 +191,8 @@ export function CompareFilters({
                 Dinner:
                 <select
                   className="meal-time-select"
-                  value={dinnerStart}
-                  onChange={(e) => onDinnerStartChange(Number(e.target.value))}
+                  value={mealConfig.dinnerStart}
+                  onChange={(e) => onMealConfigChange({ dinnerStart: Number(e.target.value) })}
                 >
                   {Array.from({ length: 8 }, (_, i) => i + 15).map(hour => (
                     <option key={hour} value={hour}>{formatHour(hour)}</option>
@@ -222,8 +201,8 @@ export function CompareFilters({
                 <span className="meal-time-separator">to</span>
                 <select
                   className="meal-time-select"
-                  value={dinnerEnd}
-                  onChange={(e) => onDinnerEndChange(Number(e.target.value))}
+                  value={mealConfig.dinnerEnd}
+                  onChange={(e) => onMealConfigChange({ dinnerEnd: Number(e.target.value) })}
                 >
                   {Array.from({ length: 8 }, (_, i) => i + 17).map(hour => (
                     <option key={hour} value={hour}>{formatHour(hour)}</option>

@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Upload, Download, FileText, Share2, HelpCircle, Settings, ArrowLeft, Menu, X, GitCompare, Search } from 'lucide-react';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { parseIcs } from '../utils/parseIcs';
 import { STORAGE_KEYS } from '../utils/constants';
-import type { CompareFilter, TravelDirection, MealType } from '../utils/constants';
+import type { CompareFilter } from '../utils/constants';
+import type { TravelConfig, MealConfig } from '../utils/compareUtils';
 import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents } from '../hooks';
 import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, PrivacyNoticeModal, CompareModal, CompareFilters, EventsCompareView } from '../components';
 import HelpPage from './HelpPage';
@@ -31,13 +32,23 @@ function MainPage() {
   const [compareMode, setCompareMode] = useState(false);
   const [compareTimetables, setCompareTimetables] = useState<[string, string] | null>(null);
   const [compareFilter, setCompareFilter] = useState<CompareFilter>('none');
-  const [travelDirection, setTravelDirection] = useState<TravelDirection>('both');
-  const [waitMinutes, setWaitMinutes] = useState(15);
-  const [mealType, setMealType] = useState<MealType>('lunch');
-  const [lunchStart, setLunchStart] = useState(11); // 11am
-  const [lunchEnd, setLunchEnd] = useState(14); // 2pm
-  const [dinnerStart, setDinnerStart] = useState(17); // 5pm
-  const [dinnerEnd, setDinnerEnd] = useState(20); // 8pm
+  const [travelConfig, setTravelConfig] = useState<TravelConfig>({ direction: 'both', waitMinutes: 15 });
+  const [mealConfig, setMealConfig] = useState<MealConfig>({
+    type: 'lunch',
+    lunchStart: 11,
+    lunchEnd: 14,
+    dinnerStart: 17,
+    dinnerEnd: 20,
+  });
+
+  // Config change handlers
+  const handleTravelConfigChange = useCallback((update: Partial<TravelConfig>) => {
+    setTravelConfig(prev => ({ ...prev, ...update }));
+  }, []);
+
+  const handleMealConfigChange = useCallback((update: Partial<MealConfig>) => {
+    setMealConfig(prev => ({ ...prev, ...update }));
+  }, []);
 
   // Check if compare is available (need at least 2 timetables)
   const canCompare = timetables.length >= 2;
@@ -202,7 +213,6 @@ function MainPage() {
     setCompareTimetables(selection);
     setCompareMode(true);
     setShowCompareModal(false);
-    // Reset compare filters when starting new comparison
     setCompareFilter('none');
   };
 
@@ -219,6 +229,16 @@ function MainPage() {
     if (timetables.length === 1) return 'Add another timetable to compare';
     return compareMode ? 'Change comparison' : 'Compare timetables';
   };
+
+  // Memoize timetable lookups to avoid recalculating on every render
+  const leftTimetable = useMemo(
+    () => compareTimetables ? getTimetable(compareTimetables[0]) : null,
+    [compareTimetables, getTimetable]
+  );
+  const rightTimetable = useMemo(
+    () => compareTimetables ? getTimetable(compareTimetables[1]) : null,
+    [compareTimetables, getTimetable]
+  );
 
   return (
     <div className={`main-page ${mobileMenuOpen ? 'menu-open' : ''}`}>
@@ -347,9 +367,8 @@ function MainPage() {
           )}
 
           {/* Compare mode view */}
-          {compareMode && compareTimetables ? (
+          {compareMode && leftTimetable && rightTimetable ? (
             <>
-              {/* Search bar for compare mode */}
               <div className="filters-section no-print">
                 <div className="search-row">
                   <div className="search-input-wrapper">
@@ -373,48 +392,32 @@ function MainPage() {
                 <CompareFilters
                   compareFilter={compareFilter}
                   onFilterChange={setCompareFilter}
-                  travelDirection={travelDirection}
-                  onTravelDirectionChange={setTravelDirection}
-                  waitMinutes={waitMinutes}
-                  onWaitMinutesChange={setWaitMinutes}
-                  mealType={mealType}
-                  onMealTypeChange={setMealType}
-                  lunchStart={lunchStart}
-                  onLunchStartChange={setLunchStart}
-                  lunchEnd={lunchEnd}
-                  onLunchEndChange={setLunchEnd}
-                  dinnerStart={dinnerStart}
-                  onDinnerStartChange={setDinnerStart}
-                  dinnerEnd={dinnerEnd}
-                  onDinnerEndChange={setDinnerEnd}
-                  leftName={getTimetable(compareTimetables[0])?.name || 'Left'}
-                  rightName={getTimetable(compareTimetables[1])?.name || 'Right'}
+                  travelConfig={travelConfig}
+                  onTravelConfigChange={handleTravelConfigChange}
+                  mealConfig={mealConfig}
+                  onMealConfigChange={handleMealConfigChange}
+                  leftName={leftTimetable.name}
+                  rightName={rightTimetable.name}
                 />
               </div>
 
-              {/* Column headers - outside scrollable area */}
               <div className="compare-headers-row no-print">
                 <div className="compare-column-header">
-                  <span className="compare-column-name">{getTimetable(compareTimetables[0])?.name || 'Left'}</span>
+                  <span className="compare-column-name">{leftTimetable.name}</span>
                 </div>
                 <div className="compare-column-header">
-                  <span className="compare-column-name">{getTimetable(compareTimetables[1])?.name || 'Right'}</span>
+                  <span className="compare-column-name">{rightTimetable.name}</span>
                 </div>
               </div>
 
               <div className="events-preview">
                 <EventsCompareView
-                  leftTimetable={getTimetable(compareTimetables[0])!}
-                  rightTimetable={getTimetable(compareTimetables[1])!}
+                  leftTimetable={leftTimetable}
+                  rightTimetable={rightTimetable}
                   searchQuery={searchQuery}
                   compareFilter={compareFilter}
-                  travelDirection={travelDirection}
-                  waitMinutes={waitMinutes}
-                  mealType={mealType}
-                  lunchStart={lunchStart}
-                  lunchEnd={lunchEnd}
-                  dinnerStart={dinnerStart}
-                  dinnerEnd={dinnerEnd}
+                  travelConfig={travelConfig}
+                  mealConfig={mealConfig}
                   showTutor={false}
                   courseColorMap={courseColorMap}
                 />
