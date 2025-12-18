@@ -2331,6 +2331,7 @@ html.dark .privacy-link:hover {
 
   .events-compare-container::before {
     display: none;
+    content: none;
   }
 
   .compare-column {
