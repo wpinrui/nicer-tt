@@ -1,6 +1,6 @@
 import { User } from 'lucide-react';
 import { formatTime12Hour, formatVenue, formatTutor, isToday } from '../utils/formatters';
-import type { EventItem, GroupedEvent } from '../utils/compareUtils';
+import type { GroupedEvent } from '../utils/compareUtils';
 
 interface EventsListProps {
   groupedByDate: GroupedEvent[];
