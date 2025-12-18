@@ -26,8 +26,6 @@ export const DEFAULT_TIMETABLE_NAMES = [
 
 // Compare mode types
 export type CompareFilter = 'none' | 'commonDays' | 'identical' | 'travel' | 'eat';
-export type TravelDirection = 'to' | 'from' | 'both' | 'either';
-export type MealType = 'lunch' | 'dinner';
 
 // Color palette for course codes (darker shades for white text)
 export const COURSE_COLORS = [
