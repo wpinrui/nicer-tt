@@ -1,6 +1,10 @@
 import { useRef, useState, useEffect } from 'react';
-import { X, Upload, RotateCcw, Sun, Moon, Shield, HelpCircle, ExternalLink, Image } from 'lucide-react';
+import { X, Upload, RotateCcw, Sun, Moon, Shield, HelpCircle, ExternalLink, Image, Trash2, Link, Pencil, Check } from 'lucide-react';
 import { STORAGE_KEYS } from '../utils/constants';
+import type { Timetable, TimetableEvent } from '../utils/parseHtml';
+import { parseHtmlTimetable } from '../utils/parseHtml';
+import { parseIcs } from '../utils/parseIcs';
+import pako from 'pako';
 
 interface OptionsPanelProps {
   fileName: string | null;
@@ -12,6 +16,44 @@ interface OptionsPanelProps {
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onReset: () => void;
   onShowPrivacy: () => void;
+  // Timetable management
+  timetables: Timetable[];
+  onAddTimetable: (events: TimetableEvent[], fileName: string | null, customName?: string) => string;
+  onRenameTimetable: (id: string, newName: string) => void;
+  onDeleteTimetable: (id: string) => boolean;
+}
+
+// Helper function to decode share link
+function decodeShareLink(url: string): { events: TimetableEvent[]; fileName: string } | null {
+  try {
+    const hashIndex = url.indexOf('#share=');
+    if (hashIndex === -1) return null;
+
+    const encoded = url.substring(hashIndex + 7);
+    const fromUrlSafeBase64 = (str: string): string => {
+      let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+      while (base64.length % 4) base64 += '=';
+      return base64;
+    };
+
+    // Try new compressed format first
+    try {
+      const binaryString = atob(fromUrlSafeBase64(encoded));
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const decompressed = pako.inflate(bytes, { to: 'string' });
+      return JSON.parse(decompressed);
+    } catch {
+      // Fall back to legacy uncompressed format
+      const decoded = atob(fromUrlSafeBase64(encoded));
+      const jsonStr = decodeURIComponent(decoded);
+      return JSON.parse(jsonStr);
+    }
+  } catch {
+    return null;
+  }
 }
 
 export function OptionsPanel({
@@ -24,8 +66,13 @@ export function OptionsPanel({
   onFileChange,
   onReset,
   onShowPrivacy,
+  timetables,
+  onAddTimetable,
+  onRenameTimetable,
+  onDeleteTimetable,
 }: OptionsPanelProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const addFileInputRef = useRef<HTMLInputElement>(null);
 
   // Custom background state
   const [customBackground, setCustomBackground] = useState<string | null>(() => {
@@ -36,7 +83,21 @@ export function OptionsPanel({
       return null;
     }
   });
-  const [backgroundInput, setBackgroundInput] = useState('');
+  const [backgroundInput, setBackgroundInput] = useState(() => {
+    // Initialize with current background URL (but not if it's 'plain')
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.CUSTOM_BACKGROUND);
+      if (stored) {
+        const value = JSON.parse(stored);
+        if (value && value !== 'plain') {
+          return value;
+        }
+      }
+    } catch {
+      // Ignore parse errors
+    }
+    return '';
+  });
   const [backgroundStatus, setBackgroundStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [backgroundToast, setBackgroundToast] = useState<string | null>(null);
 
@@ -58,13 +119,6 @@ export function OptionsPanel({
     window.dispatchEvent(new Event('customBackgroundChange'));
   };
 
-  // Initialize input with current background URL (but not if it's 'plain')
-  useEffect(() => {
-    if (customBackground && customBackground !== 'plain') {
-      setBackgroundInput(customBackground);
-    }
-  }, [customBackground]);
-
   // Auto-hide toast after 3 seconds
   useEffect(() => {
     if (backgroundToast) {
@@ -72,6 +126,87 @@ export function OptionsPanel({
       return () => clearTimeout(timer);
     }
   }, [backgroundToast]);
+
+  // Timetable management state
+  const [shareLinkInput, setShareLinkInput] = useState('');
+  const [shareLinkError, setShareLinkError] = useState<string | null>(null);
+  const [editingTimetableId, setEditingTimetableId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState('');
+  const [timetableToast, setTimetableToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  // Auto-hide timetable toast
+  useEffect(() => {
+    if (timetableToast) {
+      const timer = setTimeout(() => setTimetableToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [timetableToast]);
+
+  const handleAddFromShareLink = () => {
+    if (!shareLinkInput.trim()) return;
+
+    const data = decodeShareLink(shareLinkInput.trim());
+    if (!data) {
+      setShareLinkError('Invalid share link. Please check the URL and try again.');
+      return;
+    }
+
+    onAddTimetable(data.events, data.fileName);
+    setShareLinkInput('');
+    setShareLinkError(null);
+    setTimetableToast({ message: 'Timetable added successfully!', type: 'success' });
+  };
+
+  const handleAddFromFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      let events: TimetableEvent[];
+
+      if (file.name.toLowerCase().endsWith('.ics')) {
+        events = parseIcs(text);
+      } else {
+        events = parseHtmlTimetable(text);
+      }
+
+      onAddTimetable(events, file.name);
+      setTimetableToast({ message: 'Timetable added successfully!', type: 'success' });
+    } catch (err) {
+      setTimetableToast({
+        message: err instanceof Error ? err.message : 'Failed to parse file',
+        type: 'error'
+      });
+    }
+
+    // Reset input
+    if (addFileInputRef.current) {
+      addFileInputRef.current.value = '';
+    }
+  };
+
+  const handleStartRename = (timetable: Timetable) => {
+    setEditingTimetableId(timetable.id);
+    setEditingName(timetable.name);
+  };
+
+  const handleSaveRename = () => {
+    if (editingTimetableId && editingName.trim()) {
+      onRenameTimetable(editingTimetableId, editingName.trim());
+    }
+    setEditingTimetableId(null);
+    setEditingName('');
+  };
+
+  const handleDeleteTimetable = (id: string, name: string) => {
+    if (window.confirm(`Delete "${name}"? This cannot be undone.`)) {
+      const deleted = onDeleteTimetable(id);
+      if (deleted) {
+        setTimetableToast({ message: `"${name}" deleted.`, type: 'success' });
+      }
+    }
+  };
 
   const validateAndSetBackground = (url: string) => {
     if (!url.trim()) {
@@ -153,6 +288,128 @@ export function OptionsPanel({
               {darkMode ? 'Switch to light' : 'Switch to dark'}
             </button>
           </label>
+        </div>
+
+        <div className="options-section">
+          <h4>Timetables</h4>
+          <p className="options-privacy-desc">
+            Add timetables to compare with friends.
+          </p>
+
+          {/* List of timetables */}
+          <div className="timetable-list">
+            {timetables.map((timetable) => (
+              <div key={timetable.id} className="timetable-list-item">
+                {editingTimetableId === timetable.id ? (
+                  <div className="timetable-edit-row">
+                    <input
+                      type="text"
+                      className="timetable-name-input"
+                      value={editingName}
+                      onChange={(e) => setEditingName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleSaveRename();
+                        if (e.key === 'Escape') {
+                          setEditingTimetableId(null);
+                          setEditingName('');
+                        }
+                      }}
+                      autoFocus
+                    />
+                    <button
+                      className="timetable-action-btn"
+                      onClick={handleSaveRename}
+                      title="Save"
+                    >
+                      <Check size={14} />
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="timetable-info">
+                      <span className="timetable-name">{timetable.name}</span>
+                      {timetable.isPrimary && (
+                        <span className="timetable-badge">You</span>
+                      )}
+                    </div>
+                    <div className="timetable-actions">
+                      <button
+                        className="timetable-action-btn"
+                        onClick={() => handleStartRename(timetable)}
+                        title="Rename"
+                      >
+                        <Pencil size={14} />
+                      </button>
+                      {!timetable.isPrimary && (
+                        <button
+                          className="timetable-action-btn timetable-action-btn-danger"
+                          onClick={() => handleDeleteTimetable(timetable.id, timetable.name)}
+                          title="Delete"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Add timetable section */}
+          <div className="add-timetable-section">
+            <p className="add-timetable-label">Add another timetable:</p>
+
+            <div className="add-timetable-row">
+              <div className="add-timetable-input-wrapper">
+                <Link size={14} className="add-timetable-icon" />
+                <input
+                  type="text"
+                  className={`add-timetable-input ${shareLinkError ? 'error' : ''}`}
+                  placeholder="Paste a share link..."
+                  value={shareLinkInput}
+                  onChange={(e) => {
+                    setShareLinkInput(e.target.value);
+                    setShareLinkError(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleAddFromShareLink();
+                  }}
+                />
+              </div>
+              <button
+                className="options-btn"
+                onClick={handleAddFromShareLink}
+                disabled={!shareLinkInput.trim()}
+              >
+                Add
+              </button>
+            </div>
+            {shareLinkError && (
+              <p className="add-timetable-error">{shareLinkError}</p>
+            )}
+
+            <div className="add-timetable-divider">
+              <span>or</span>
+            </div>
+
+            <label className="options-btn" style={{ display: 'inline-flex' }}>
+              <input
+                ref={addFileInputRef}
+                type="file"
+                accept=".html,.htm,.ics"
+                onChange={handleAddFromFile}
+                className="file-input"
+              />
+              <Upload size={14} /> Upload HTML/ICS file
+            </label>
+          </div>
+
+          {timetableToast && (
+            <div className={`options-background-toast ${timetableToast.type}`}>
+              {timetableToast.message}
+            </div>
+          )}
         </div>
 
         <div className="options-section options-background-section">

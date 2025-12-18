@@ -1,4 +1,14 @@
 # Changelog
+## v1.1.0 (18 Dec 2025)
+- Add Compare Timetables feature to compare schedules side-by-side
+- Multi-timetable storage with add/rename/delete functionality
+- Add timetables via share link or file upload in Options panel
+- Compare filters: Common Days, Identical Classes, Travel Together, Eat Together
+- Travel Together filter with direction options (TO/FROM/BOTH/EITHER) and configurable wait time
+- Eat Together filter with meal type selection and customizable time windows
+- CSS-based speech bubble tooltips for filter explanations
+- Meal badges show time slots directly (e.g., "12:00 PM–1:00 PM")
+
 ## v1.0.14 (18 Dec 2025)
 - Add plain background option (white/black depending on theme)
 - Rename section from "Background Image" to "Background"

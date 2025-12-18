@@ -90,7 +90,6 @@ export function useShareData(hasExistingData: boolean, currentEvents?: Timetable
     // Listen for hash changes (when user pastes link while on page)
     window.addEventListener('hashchange', handleShareHash);
     return () => window.removeEventListener('hashchange', handleShareHash);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasExistingData, currentEvents]);
 
   const createShareLink = useCallback(async (events: TimetableEvent[], fileName: string) => {
@@ -99,10 +98,10 @@ export function useShareData(hasExistingData: boolean, currentEvents?: Timetable
 
     try {
       await navigator.clipboard.writeText(shareUrl);
-      setShareMessage('Link copied to clipboard!');
+      setShareMessage('Share link for My Timetable copied!');
       setTimeout(() => setShareMessage(null), 3000);
     } catch {
-      prompt('Copy this link to share your timetable:', shareUrl);
+      prompt('Copy this link to share My Timetable:', shareUrl);
     }
   }, []);
 

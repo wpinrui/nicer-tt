@@ -1,50 +1,188 @@
 import { useState, useCallback } from 'react';
-import type { TimetableEvent } from '../utils/parseHtml';
-import { STORAGE_KEYS } from '../utils/constants';
+import type { TimetableEvent, Timetable } from '../utils/parseHtml';
+import { STORAGE_KEYS, DEFAULT_TIMETABLE_NAMES } from '../utils/constants';
 
-interface TimetableData {
-  events: TimetableEvent[] | null;
-  fileName: string | null;
+function generateId(): string {
+  return `tt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 
-function loadFromStorage(): TimetableData {
+function getNextAvailableName(timetables: Timetable[]): string {
+  const usedNames = new Set(timetables.map(t => t.name));
+
+  for (const name of DEFAULT_TIMETABLE_NAMES) {
+    if (!usedNames.has(name)) {
+      return name;
+    }
+  }
+
+  // Fallback if all default names are used
+  let i = DEFAULT_TIMETABLE_NAMES.length + 1;
+  while (usedNames.has(`Timetable ${i}`)) {
+    i++;
+  }
+  return `Timetable ${i}`;
+}
+
+function loadFromStorage(): Timetable[] {
   try {
-    const stored = localStorage.getItem(STORAGE_KEYS.TIMETABLE_DATA);
+    // Try new format first
+    const stored = localStorage.getItem(STORAGE_KEYS.TIMETABLES_DATA);
     if (stored) {
       const data = JSON.parse(stored);
-      return { events: data.events, fileName: data.fileName };
+      if (Array.isArray(data)) {
+        return data;
+      }
+    }
+
+    // Migrate from legacy format
+    const legacy = localStorage.getItem(STORAGE_KEYS.TIMETABLE_DATA);
+    if (legacy) {
+      const data = JSON.parse(legacy);
+      if (data.events && Array.isArray(data.events)) {
+        const migrated: Timetable[] = [{
+          id: generateId(),
+          name: 'My Timetable',
+          events: data.events,
+          fileName: data.fileName || null,
+          isPrimary: true,
+        }];
+        // Save in new format and clear legacy
+        localStorage.setItem(STORAGE_KEYS.TIMETABLES_DATA, JSON.stringify(migrated));
+        localStorage.removeItem(STORAGE_KEYS.TIMETABLE_DATA);
+        return migrated;
+      }
     }
   } catch {
     // Ignore parse errors
   }
-  return { events: null, fileName: null };
+  return [];
 }
 
-function saveToStorage(events: TimetableEvent[] | null, fileName: string | null): void {
-  if (events && fileName) {
-    localStorage.setItem(STORAGE_KEYS.TIMETABLE_DATA, JSON.stringify({ events, fileName }));
+function saveToStorage(timetables: Timetable[]): void {
+  if (timetables.length > 0) {
+    localStorage.setItem(STORAGE_KEYS.TIMETABLES_DATA, JSON.stringify(timetables));
   } else {
-    localStorage.removeItem(STORAGE_KEYS.TIMETABLE_DATA);
+    localStorage.removeItem(STORAGE_KEYS.TIMETABLES_DATA);
   }
 }
 
 export function useTimetableStorage() {
-  const [data, setData] = useState<TimetableData>(loadFromStorage);
+  const [timetables, setTimetablesState] = useState<Timetable[]>(loadFromStorage);
 
-  const setTimetable = useCallback((events: TimetableEvent[] | null, fileName: string | null) => {
-    setData({ events, fileName });
-    saveToStorage(events, fileName);
+  // Get primary timetable (for backward compatibility)
+  const primaryTimetable = timetables.find(t => t.isPrimary) || null;
+  const events = primaryTimetable?.events || null;
+  const fileName = primaryTimetable?.fileName || null;
+
+  // Set or update the primary timetable (backward compatible API)
+  const setTimetable = useCallback((newEvents: TimetableEvent[] | null, newFileName: string | null) => {
+    setTimetablesState(prev => {
+      let updated: Timetable[];
+
+      if (newEvents === null) {
+        // Clear primary timetable
+        updated = prev.filter(t => !t.isPrimary);
+      } else {
+        const primaryIndex = prev.findIndex(t => t.isPrimary);
+        if (primaryIndex >= 0) {
+          // Update existing primary
+          updated = [...prev];
+          updated[primaryIndex] = {
+            ...updated[primaryIndex],
+            events: newEvents,
+            fileName: newFileName,
+          };
+        } else {
+          // Create new primary
+          updated = [{
+            id: generateId(),
+            name: 'My Timetable',
+            events: newEvents,
+            fileName: newFileName,
+            isPrimary: true,
+          }, ...prev];
+        }
+      }
+
+      saveToStorage(updated);
+      return updated;
+    });
   }, []);
 
   const clearTimetable = useCallback(() => {
-    setData({ events: null, fileName: null });
-    saveToStorage(null, null);
+    setTimetable(null, null);
+  }, [setTimetable]);
+
+  // Add a new (non-primary) timetable
+  const addTimetable = useCallback((newEvents: TimetableEvent[], newFileName: string | null, customName?: string): string => {
+    const id = generateId();
+    setTimetablesState(prev => {
+      const name = customName || getNextAvailableName(prev);
+      const newTimetable: Timetable = {
+        id,
+        name,
+        events: newEvents,
+        fileName: newFileName,
+        isPrimary: false,
+      };
+      const updated = [...prev, newTimetable];
+      saveToStorage(updated);
+      return updated;
+    });
+    return id;
   }, []);
 
+  // Rename a timetable
+  const renameTimetable = useCallback((id: string, newName: string) => {
+    setTimetablesState(prev => {
+      const updated = prev.map(t =>
+        t.id === id ? { ...t, name: newName } : t
+      );
+      saveToStorage(updated);
+      return updated;
+    });
+  }, []);
+
+  // Delete a timetable (cannot delete primary)
+  const deleteTimetable = useCallback((id: string): boolean => {
+    let deleted = false;
+    setTimetablesState(prev => {
+      const timetable = prev.find(t => t.id === id);
+      if (!timetable || timetable.isPrimary) {
+        return prev;
+      }
+      deleted = true;
+      const updated = prev.filter(t => t.id !== id);
+      saveToStorage(updated);
+      return updated;
+    });
+    return deleted;
+  }, []);
+
+  // Get a specific timetable by ID
+  const getTimetable = useCallback((id: string): Timetable | null => {
+    return timetables.find(t => t.id === id) || null;
+  }, [timetables]);
+
+  // Get next available name (for UI preview)
+  const getNextName = useCallback((): string => {
+    return getNextAvailableName(timetables);
+  }, [timetables]);
+
   return {
-    events: data.events,
-    fileName: data.fileName,
+    // Legacy API (backward compatible)
+    events,
+    fileName,
     setTimetable,
     clearTimetable,
+
+    // New multi-timetable API
+    timetables,
+    primaryTimetable,
+    addTimetable,
+    renameTimetable,
+    deleteTimetable,
+    getTimetable,
+    getNextName,
   };
 }
