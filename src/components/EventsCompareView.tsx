@@ -13,6 +13,7 @@ import {
   type TravelConfig,
   type MealConfig,
 } from '../utils/compareUtils';
+import styles from './EventsCompareView.module.scss';
 
 interface EventsCompareViewProps {
   leftTimetable: Timetable;
@@ -115,32 +116,32 @@ export function EventsCompareView({
   }, [allDates, leftByDate, rightByDate, compareFilter, travelConfig, mealConfig]);
 
   const renderEvent = (event: EventItem, index: number, isHighlighted: boolean = false) => (
-    <li key={`${event.course}-${event.group}-${event.startTime}-${index}`} className={isHighlighted ? 'event-highlighted' : ''}>
-      <span className="event-time">
-        <span className="time-start">{formatTime12Hour(event.startTime)}</span>
-        <span className="time-separator">–</span>
-        <span className="time-end">{formatTime12Hour(event.endTime)}</span>
+    <li key={`${event.course}-${event.group}-${event.startTime}-${index}`} className={isHighlighted ? styles.eventHighlighted : ''}>
+      <span className={styles.eventTime}>
+        <span className={styles.timeStart}>{formatTime12Hour(event.startTime)}</span>
+        <span className={styles.timeSeparator}>–</span>
+        <span className={styles.timeEnd}>{formatTime12Hour(event.endTime)}</span>
       </span>
-      <span className="course-tag-wrapper">
+      <span className={styles.courseTagWrapper}>
         <span
-          className="course-tag"
+          className={styles.courseTag}
           style={{ backgroundColor: courseColorMap.get(event.course) || '#666' }}
         >
           {event.course}
         </span>
       </span>
-      <span className="event-group">{event.group}</span>
+      <span className={styles.eventGroup}>{event.group}</span>
       {event.venue && (
-        <span className="event-venue">@ {formatVenue(event.venue)}</span>
+        <span className={styles.eventVenue}>@ {formatVenue(event.venue)}</span>
       )}
       {event.tutor && (
         showTutor ? (
-          <span className="event-tutor">
+          <span className={styles.eventTutor}>
             <User size={14} />
             {formatTutor(event.tutor)}
           </span>
         ) : (
-          <span className="event-tutor-icon" title={formatTutor(event.tutor)}>
+          <span className={styles.eventTutorIcon} title={formatTutor(event.tutor)}>
             <User size={14} />
           </span>
         )
@@ -149,11 +150,11 @@ export function EventsCompareView({
   );
 
   if (filteredDates.length === 0) {
-    return <div className="no-results">No events match your filters</div>;
+    return <div className={styles.noResults}>No events match your filters</div>;
   }
 
   return (
-    <div className="events-compare-container">
+    <div className={styles.container}>
       {filteredDates.map(sortKey => {
         const leftGroup = leftByDate.get(sortKey);
         const rightGroup = rightByDate.get(sortKey);
@@ -184,17 +185,17 @@ export function EventsCompareView({
         const displayDate = leftGroup?.date || rightGroup?.date || sortKey;
 
         return (
-          <div key={sortKey} className="compare-date-row">
-            <div className={`compare-date-header ${isToday(sortKey) ? 'date-header-today' : ''}`}>
+          <div key={sortKey} className={styles.dateRow}>
+            <div className={`${styles.dateHeader} ${isToday(sortKey) ? styles.dateHeaderToday : ''}`}>
               <span>
                 {displayDate}
                 {isToday(sortKey) && ' (TODAY)'}
               </span>
               {travelInfo && (
-                <div className="travel-indicator">
+                <div className={styles.travelIndicator}>
                   {travelInfo.canTravelTo && travelInfo.canTravelFrom && (
                     <span
-                      className="travel-badge travel-badge-both"
+                      className={`${styles.travelBadge} ${styles.travelBadgeBoth}`}
                       data-tooltip={`TO: ${formatTime12Hour(travelInfo.leftEarliest)} vs ${formatTime12Hour(travelInfo.rightEarliest)} (${travelInfo.toDiff} min diff) | FROM: ${formatTime12Hour(travelInfo.leftLatest)} vs ${formatTime12Hour(travelInfo.rightLatest)} (${travelInfo.fromDiff} min diff)`}
                     >
                       <ArrowLeftRight size={12} /> Both
@@ -202,7 +203,7 @@ export function EventsCompareView({
                   )}
                   {travelInfo.canTravelTo && !travelInfo.canTravelFrom && (
                     <span
-                      className="travel-badge travel-badge-to"
+                      className={`${styles.travelBadge} ${styles.travelBadgeTo}`}
                       data-tooltip={`TO school: ${formatTime12Hour(travelInfo.leftEarliest)} vs ${formatTime12Hour(travelInfo.rightEarliest)} (${travelInfo.toDiff} min diff)`}
                     >
                       <ArrowRight size={12} /> To
@@ -210,7 +211,7 @@ export function EventsCompareView({
                   )}
                   {!travelInfo.canTravelTo && travelInfo.canTravelFrom && (
                     <span
-                      className="travel-badge travel-badge-from"
+                      className={`${styles.travelBadge} ${styles.travelBadgeFrom}`}
                       data-tooltip={`FROM school: ${formatTime12Hour(travelInfo.leftLatest)} vs ${formatTime12Hour(travelInfo.rightLatest)} (${travelInfo.fromDiff} min diff)`}
                     >
                       <ArrowLeft size={12} /> From
@@ -219,14 +220,14 @@ export function EventsCompareView({
                 </div>
               )}
               {mealInfo && (
-                <div className="meal-indicator">
+                <div className={styles.mealIndicator}>
                   {mealInfo.canEatLunch && (
-                    <span className="meal-badge meal-badge-lunch">
+                    <span className={`${styles.mealBadge} ${styles.mealBadgeLunch}`}>
                       <Utensils size={12} /> {formatTime12Hour(mealInfo.lunchGapStart)} to {formatTime12Hour(mealInfo.lunchGapEnd)}
                     </span>
                   )}
                   {mealInfo.canEatDinner && (
-                    <span className="meal-badge meal-badge-dinner">
+                    <span className={`${styles.mealBadge} ${styles.mealBadgeDinner}`}>
                       <Utensils size={12} /> {formatTime12Hour(mealInfo.dinnerGapStart)} to {formatTime12Hour(mealInfo.dinnerGapEnd)}
                     </span>
                   )}
@@ -234,23 +235,23 @@ export function EventsCompareView({
               )}
             </div>
 
-            <div className="compare-column" data-name={leftTimetable.name}>
+            <div className={styles.column} data-name={leftTimetable.name}>
               {leftEvents.length > 0 ? (
                 <ul>
                   {leftEvents.map((event, i) => renderEvent(event, i, identicalLeft.has(i)))}
                 </ul>
               ) : (
-                <div className="compare-empty">No classes</div>
+                <div className={styles.empty}>No classes</div>
               )}
             </div>
 
-            <div className="compare-column" data-name={rightTimetable.name}>
+            <div className={styles.column} data-name={rightTimetable.name}>
               {rightEvents.length > 0 ? (
                 <ul>
                   {rightEvents.map((event, i) => renderEvent(event, i, identicalRight.has(i)))}
                 </ul>
               ) : (
-                <div className="compare-empty">No classes</div>
+                <div className={styles.empty}>No classes</div>
               )}
             </div>
           </div>

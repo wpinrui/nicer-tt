@@ -1,0 +1,370 @@
+@use '../styles/mixins' as *;
+
+.container {
+  display: grid;
+  gap: 0.5rem 1rem;
+  position: relative;
+
+  @media (min-width: 769px) {
+    grid-template-columns: 1fr 1fr;
+
+    // Vertical divider line between columns
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      background: var(--color-bg-hover);
+      pointer-events: none;
+    }
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  html.dark &::before {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+.dateRow {
+  display: contents;
+}
+
+.dateHeader {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: var(--color-travel-to-text);
+  font-size: 0.95rem;
+  padding: 0.75rem 0 0.25rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-top: 0.5rem;
+
+  html.dark & {
+    color: var(--color-travel-to-text);
+    border-bottom-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.dateHeaderToday {
+  color: var(--color-today);
+  border-bottom-color: rgba(216, 67, 21, 0.3);
+
+  html.dark & {
+    color: var(--color-today);
+    border-bottom-color: rgba(255, 112, 67, 0.3);
+  }
+}
+
+.column {
+  min-height: 2rem;
+
+  @include mobile {
+    &::before {
+      content: attr(data-name);
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    html.dark &::before {
+      color: var(--color-text-muted);
+    }
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    padding: 0.4rem 0;
+    font-size: 0.85rem;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+
+    html.dark & {
+      color: var(--color-text-secondary);
+    }
+  }
+}
+
+.eventHighlighted {
+  background: rgba(100, 108, 255, 0.1);
+  margin: 0 -0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+
+  html.dark & {
+    background: rgba(100, 108, 255, 0.2);
+  }
+}
+
+.empty {
+  color: var(--color-text-disabled);
+  font-style: italic;
+  font-size: 0.85rem;
+  padding: 0.5rem 0;
+
+  html.dark & {
+    color: #777;
+  }
+}
+
+.noResults {
+  text-align: center;
+  color: var(--color-text-placeholder);
+  padding: 2rem;
+  font-style: italic;
+}
+
+// Travel indicators
+.travelIndicator {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.travelBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  position: relative;
+  cursor: help;
+
+  &[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background: #333;
+    color: white;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    margin-bottom: 0.5rem;
+    z-index: 100;
+    font-style: normal;
+    font-weight: 400;
+    pointer-events: none;
+  }
+
+  &[data-tooltip]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    right: 0.6rem;
+    border: 5px solid transparent;
+    border-top-color: var(--color-text-primary);
+    margin-bottom: -0.1rem;
+    z-index: 100;
+    pointer-events: none;
+  }
+
+  html.dark &[data-tooltip]:hover::after {
+    background: #444;
+  }
+}
+
+.travelBadgeTo {
+  background: rgba(33, 150, 243, 0.15);
+  color: var(--color-travel-to-text);
+
+  html.dark & {
+    background: rgba(100, 181, 246, 0.2);
+    color: var(--color-travel-to-text);
+  }
+}
+
+.travelBadgeFrom {
+  background: rgba(255, 152, 0, 0.15);
+  color: var(--color-warning-text);
+
+  html.dark & {
+    background: rgba(255, 152, 0, 0.2);
+    color: var(--color-travel-from-text);
+  }
+}
+
+.travelBadgeBoth {
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--color-success-text);
+
+  html.dark & {
+    background: rgba(76, 175, 80, 0.2);
+    color: var(--color-success-text);
+  }
+}
+
+// Meal indicators
+.mealIndicator {
+  margin-left: auto;
+}
+
+.mealBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.mealBadgeLunch {
+  background: rgba(255, 152, 0, 0.15);
+  color: var(--color-warning-text);
+
+  html.dark & {
+    background: rgba(255, 152, 0, 0.25);
+    color: var(--color-travel-from-text);
+  }
+}
+
+.mealBadgeDinner {
+  background: rgba(156, 39, 176, 0.15);
+  color: #7b1fa2;
+
+  html.dark & {
+    background: rgba(156, 39, 176, 0.25);
+    color: var(--color-meal-dinner-text);
+  }
+}
+
+// Event styles (shared from EventsList)
+.eventTime {
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  min-width: 11rem;
+
+  html.dark & {
+    color: var(--color-text-primary);
+  }
+}
+
+.timeStart {
+  color: var(--color-text-primary);
+
+  html.dark & {
+    color: var(--color-text-primary);
+  }
+}
+
+.timeSeparator {
+  color: var(--color-text-disabled);
+  margin: 0 0.1rem;
+}
+
+.timeEnd {
+  color: var(--color-text-secondary);
+
+  html.dark & {
+    color: #bbb;
+  }
+}
+
+.courseTagWrapper {
+  min-width: 5.5rem;
+  flex-shrink: 0;
+}
+
+.courseTag {
+  color: white;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.eventGroup {
+  color: var(--color-text-primary);
+  min-width: 4rem;
+
+  html.dark & {
+    color: var(--color-text-secondary);
+  }
+}
+
+.eventVenue {
+  color: var(--color-text-placeholder);
+  font-size: 0.8rem;
+  min-width: 12rem;
+
+  html.dark & {
+    color: var(--color-text-disabled);
+  }
+}
+
+.eventTutorIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-placeholder);
+  cursor: help;
+  position: relative;
+  margin-left: auto;
+  padding: 0.2rem;
+  border-radius: 50%;
+  transition: all 0.2s;
+
+  &:hover {
+    color: var(--color-primary);
+    background: rgba(100, 108, 255, 0.1);
+  }
+
+  html.dark & {
+    color: var(--color-text-disabled);
+
+    &:hover {
+      color: var(--color-travel-to-text);
+      background: rgba(100, 108, 255, 0.2);
+    }
+  }
+
+  @include mobile {
+    display: none;
+  }
+}
+
+.eventTutor {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  margin-left: auto;
+
+  html.dark & {
+    color: var(--color-text-disabled);
+  }
+}
