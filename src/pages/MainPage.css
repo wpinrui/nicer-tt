@@ -3113,6 +3113,7 @@ html.dark .meal-range-label[data-tooltip]:hover::before {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-top: 0.5rem;
   font-size: 0.8rem;
   color: #666;
 }
