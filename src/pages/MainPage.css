@@ -2365,6 +2365,50 @@ html.dark .privacy-link:hover {
     display: none;
   }
 
+  .compare-filters-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .compare-filter-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Hide info icon on mobile (tooltips don't work) */
+  .compare-filter-info {
+    display: none;
+  }
+
+  /* Hide inline travel/eat options on mobile (use modal instead) */
+  .travel-options,
+  .eat-options {
+    display: none;
+  }
+
+  /* Mobile configure button */
+  .mobile-config-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-top: 0.5rem;
+    background: rgba(100, 108, 255, 0.1);
+    border: 1px solid rgba(100, 108, 255, 0.3);
+    border-radius: 8px;
+    color: #646cff;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .mobile-config-btn:hover {
+    background: rgba(100, 108, 255, 0.15);
+  }
+
   .filters-toggle {
     display: flex;
     align-items: center;
@@ -2875,15 +2919,19 @@ html.dark .add-timetable-error {
   margin-bottom: 0.75rem;
 }
 
-.compare-filters-row {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-/* Filters toggle - hidden on desktop, shown on mobile */
+/* Filters toggle and row - desktop styles */
 @media (min-width: 769px) {
+  .compare-filters-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
   .filters-toggle {
+    display: none;
+  }
+
+  .mobile-config-btn {
     display: none;
   }
 }
@@ -3427,6 +3475,109 @@ html.dark .meal-badge[data-tooltip]:hover::before {
   font-size: 0.75rem;
   color: #888;
   margin: 0 0.25rem;
+}
+
+/* Modal config styles (for mobile filter configuration) */
+.modal-config-section {
+  margin-bottom: 1rem;
+}
+
+.modal-config-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.modal-config-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.modal-config-btn {
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.modal-config-btn:hover {
+  background: rgba(100, 108, 255, 0.1);
+  color: #646cff;
+}
+
+.modal-config-btn.active {
+  background: #646cff;
+  color: white;
+  border-color: #646cff;
+}
+
+.modal-config-select {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.modal-time-range {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.modal-time-range select {
+  flex: 1;
+  padding: 0.75rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.modal-time-range span {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+/* Dark mode modal config */
+html.dark .modal-config-label {
+  color: #aaa;
+}
+
+html.dark .modal-config-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #aaa;
+}
+
+html.dark .modal-config-btn:hover {
+  background: rgba(100, 108, 255, 0.2);
+  color: #8b91ff;
+}
+
+html.dark .modal-config-btn.active {
+  background: #646cff;
+  color: white;
+}
+
+html.dark .modal-config-select,
+html.dark .modal-time-range select {
+  background: #2a2a2a;
+  border-color: #444;
+  color: #ddd;
 }
 
 /* Meal badges */

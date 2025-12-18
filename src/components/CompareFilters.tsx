@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Calendar, Users, Car, Info, Utensils, Filter, ChevronDown, ChevronUp, type LucideIcon } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Calendar, Users, Car, Info, Utensils, Filter, ChevronDown, ChevronUp, Settings, type LucideIcon } from 'lucide-react';
 import type { CompareFilter } from '../utils/constants';
 import type { TravelConfig, MealConfig } from '../utils/compareUtils';
+import { Modal } from './Modal';
 
 interface CompareFiltersProps {
   compareFilter: CompareFilter;
@@ -95,12 +96,33 @@ export function CompareFilters({
   rightName,
 }: CompareFiltersProps) {
   const [filtersExpanded, setFiltersExpanded] = useState(false);
+  const [showConfigModal, setShowConfigModal] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    setIsMobile(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
 
   const handleFilterClick = (filter: CompareFilter) => {
-    onFilterChange(compareFilter === filter ? 'none' : filter);
+    if (compareFilter === filter) {
+      onFilterChange('none');
+    } else {
+      onFilterChange(filter);
+      // On mobile, show config modal for filters that need configuration
+      if (isMobile && (filter === 'travel' || filter === 'eat')) {
+        setShowConfigModal(true);
+      }
+    }
   };
 
   const activeFilterLabel = FILTER_BUTTONS.find(f => f.id === compareFilter)?.label || 'None';
+  const needsConfig = compareFilter === 'travel' || compareFilter === 'eat';
 
   return (
     <div className="compare-filters">
@@ -128,6 +150,17 @@ export function CompareFilters({
           </button>
         ))}
       </div>
+
+      {/* Mobile configure button - shown only on mobile when travel/eat is active */}
+      {needsConfig && (
+        <button
+          className="mobile-config-btn"
+          onClick={() => setShowConfigModal(true)}
+        >
+          <Settings size={14} />
+          <span>Configure {compareFilter === 'travel' ? 'Travel' : 'Meal'} Options</span>
+        </button>
+      )}
 
       {compareFilter === 'travel' && (
         <div className="travel-options">
@@ -240,6 +273,148 @@ export function CompareFilters({
         <span className="compare-vs">vs</span>
         <span className="compare-name-tag">{rightName}</span>
       </div>
+
+      {/* Mobile config modal */}
+      {showConfigModal && compareFilter === 'travel' && (
+        <Modal
+          title="Travel Options"
+          onClose={() => setShowConfigModal(false)}
+          onConfirm={() => setShowConfigModal(false)}
+          confirmText="Done"
+          confirmVariant="primary"
+          cancelText=""
+        >
+          <div className="modal-config-section">
+            <label className="modal-config-label">Direction</label>
+            <div className="modal-config-buttons">
+              <button
+                className={`modal-config-btn ${travelConfig.direction === 'to' ? 'active' : ''}`}
+                onClick={() => onTravelConfigChange({ direction: 'to' })}
+              >
+                TO School
+              </button>
+              <button
+                className={`modal-config-btn ${travelConfig.direction === 'from' ? 'active' : ''}`}
+                onClick={() => onTravelConfigChange({ direction: 'from' })}
+              >
+                FROM School
+              </button>
+              <button
+                className={`modal-config-btn ${travelConfig.direction === 'both' ? 'active' : ''}`}
+                onClick={() => onTravelConfigChange({ direction: 'both' })}
+              >
+                BOTH
+              </button>
+              <button
+                className={`modal-config-btn ${travelConfig.direction === 'either' ? 'active' : ''}`}
+                onClick={() => onTravelConfigChange({ direction: 'either' })}
+              >
+                EITHER
+              </button>
+            </div>
+          </div>
+          <div className="modal-config-section">
+            <label className="modal-config-label">
+              Max wait time
+              <select
+                className="modal-config-select"
+                value={travelConfig.waitMinutes}
+                onChange={(e) => onTravelConfigChange({ waitMinutes: Number(e.target.value) })}
+              >
+                <option value={5}>5 min</option>
+                <option value={10}>10 min</option>
+                <option value={15}>15 min</option>
+                <option value={30}>30 min</option>
+                <option value={45}>45 min</option>
+                <option value={60}>1 hour</option>
+                <option value={90}>1.5 hours</option>
+                <option value={120}>2 hours</option>
+              </select>
+            </label>
+          </div>
+        </Modal>
+      )}
+
+      {showConfigModal && compareFilter === 'eat' && (
+        <Modal
+          title="Meal Options"
+          onClose={() => setShowConfigModal(false)}
+          onConfirm={() => setShowConfigModal(false)}
+          confirmText="Done"
+          confirmVariant="primary"
+          cancelText=""
+        >
+          <div className="modal-config-section">
+            <label className="modal-config-label">Meal type</label>
+            <div className="modal-config-buttons">
+              <button
+                className={`modal-config-btn ${mealConfig.type === 'lunch' ? 'active' : ''}`}
+                onClick={() => onMealConfigChange({ type: 'lunch' })}
+              >
+                Lunch
+              </button>
+              <button
+                className={`modal-config-btn ${mealConfig.type === 'dinner' ? 'active' : ''}`}
+                onClick={() => onMealConfigChange({ type: 'dinner' })}
+              >
+                Dinner
+              </button>
+            </div>
+          </div>
+          <div className="modal-config-section">
+            <label className="modal-config-label">
+              Lunch window
+              <div className="modal-time-range">
+                <select
+                  className="modal-config-select"
+                  value={mealConfig.lunchStart}
+                  onChange={(e) => onMealConfigChange({ lunchStart: Number(e.target.value) })}
+                >
+                  {Array.from({ length: 8 }, (_, i) => i + 9).map(hour => (
+                    <option key={hour} value={hour}>{formatHour(hour)}</option>
+                  ))}
+                </select>
+                <span>to</span>
+                <select
+                  className="modal-config-select"
+                  value={mealConfig.lunchEnd}
+                  onChange={(e) => onMealConfigChange({ lunchEnd: Number(e.target.value) })}
+                >
+                  {Array.from({ length: 8 }, (_, i) => i + 11).map(hour => (
+                    <option key={hour} value={hour}>{formatHour(hour)}</option>
+                  ))}
+                </select>
+              </div>
+            </label>
+          </div>
+          <div className="modal-config-section">
+            <label className="modal-config-label">
+              Dinner window
+              <div className="modal-time-range">
+                <select
+                  className="modal-config-select"
+                  value={mealConfig.dinnerStart}
+                  onChange={(e) => onMealConfigChange({ dinnerStart: Number(e.target.value) })}
+                >
+                  {Array.from({ length: 6 }, (_, i) => i + 15).map(hour => (
+                    <option key={hour} value={hour}>{formatHour(hour)}</option>
+                  ))}
+                </select>
+                <span>to</span>
+                <select
+                  className="modal-config-select"
+                  value={mealConfig.dinnerEnd}
+                  onChange={(e) => onMealConfigChange({ dinnerEnd: Number(e.target.value) })}
+                >
+                  {Array.from({ length: 5 }, (_, i) => i + 17).map(hour => (
+                    <option key={hour} value={hour}>{formatHour(hour)}</option>
+                  ))}
+                </select>
+              </div>
+            </label>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
