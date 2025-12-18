@@ -3619,6 +3619,26 @@ html.dark .modal-time-range select {
   color: #ddd;
 }
 
+/* Yellow accent for Done button in compare filter modals */
+.compare-filters .modal-confirm-primary {
+  background: #f9a825;
+  color: #333;
+  border: none;
+}
+
+.compare-filters .modal-confirm-primary:hover {
+  background: #f57f17;
+}
+
+html.dark .compare-filters .modal-confirm-primary {
+  background: #f9a825;
+  color: #333;
+}
+
+html.dark .compare-filters .modal-confirm-primary:hover {
+  background: #f57f17;
+}
+
 /* Meal badges */
 .meal-indicator {
   margin-left: auto;
