@@ -1,4 +1,5 @@
 import { Shield } from 'lucide-react';
+import styles from './PrivacyNoticeModal.module.scss';
 
 interface PrivacyNoticeModalProps {
   onClose: () => void;
@@ -6,13 +7,13 @@ interface PrivacyNoticeModalProps {
 
 export function PrivacyNoticeModal({ onClose }: PrivacyNoticeModalProps) {
   return (
-    <div className="modal-overlay">
-      <div className="privacy-notice-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="privacy-notice-header">
-          <Shield size={32} className="privacy-notice-icon" />
+    <div className={styles.overlay}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.header}>
+          <Shield size={32} className={styles.icon} />
           <h3>Privacy & Security</h3>
         </div>
-        <div className="privacy-notice-content">
+        <div className={styles.content}>
           <section>
             <h4>What we extract from your HTML file</h4>
             <p>
@@ -68,17 +69,17 @@ export function PrivacyNoticeModal({ onClose }: PrivacyNoticeModalProps) {
             </p>
           </section>
 
-          <div className="privacy-notice-warning">
-            <span className="warning-icon">⚠️</span>
-            <div>
+          <div className={styles.warning}>
+            <span className={styles.warningIcon}>⚠️</span>
+            <div className={styles.warningText}>
               <strong>General advice:</strong> Be cautious when uploading saved HTML files from
               authenticated platforms to any web app. While this app only extracts timetable data
               and processes everything locally, other tools may not be as careful.
             </div>
           </div>
         </div>
-        <div className="privacy-notice-actions">
-          <button className="privacy-notice-close" onClick={onClose}>
+        <div className={styles.actions}>
+          <button className={styles.closeBtn} onClick={onClose}>
             Close
           </button>
         </div>
