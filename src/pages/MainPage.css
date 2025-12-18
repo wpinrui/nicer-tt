@@ -2323,12 +2323,170 @@ html.dark .privacy-link:hover {
   .events-preview {
     margin-bottom: 1rem;
   }
+
+  /* Mobile compare view - stacked layout */
+  .events-compare-container {
+    grid-template-columns: 1fr;
+  }
+
+  .events-compare-container::before {
+    display: none;
+    content: none;
+  }
+
+  .compare-column {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .compare-column:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .compare-column::before {
+    content: attr(data-name);
+    display: block;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .compare-headers-row {
+    display: none;
+  }
+
+  /* Mobile compare filters */
+  .compare-filters-row.collapsed {
+    display: none;
+  }
+
+  .compare-filters-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .compare-filter-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Hide info icon on mobile (tooltips don't work) */
+  .compare-filter-info {
+    display: none;
+  }
+
+  /* Hide inline travel/eat options on mobile (use modal instead) */
+  .travel-options,
+  .eat-options {
+    display: none;
+  }
+
+  /* Mobile configure button - yellow accent for compare filters */
+  .mobile-config-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-top: 0.5rem;
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 8px;
+    color: #f9a825;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .mobile-config-btn:hover {
+    background: rgba(255, 193, 7, 0.15);
+  }
+
+  .filters-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.2);
+    border-radius: 8px;
+    color: #f9a825;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 0.75rem;
+  }
+
+  .filters-toggle:hover {
+    background: rgba(255, 193, 7, 0.15);
+  }
+
+  /* Mobile menu disabled state */
+  .mobile-menu button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Mobile timetable label (normal view) */
+  .mobile-timetable-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+    color: #666;
+  }
+
+  .mobile-timetable-name {
+    font-weight: 600;
+    color: #646cff;
+  }
+
+  /* Hide tutor icon on mobile (tooltips don't work well) */
+  .event-tutor-icon {
+    display: none;
+  }
+}
+
+/* Mobile timetable label - hidden on desktop */
+@media (min-width: 769px) {
+  .mobile-timetable-label {
+    display: none;
+  }
 }
 
 /* Compare button active state (yellow for compare mode) */
 .header-btn-active {
   background: rgba(255, 193, 7, 0.3);
   color: #f9a825;
+}
+
+/* Exit Compare button - yellow accent */
+.exit-compare-btn {
+  background: rgba(255, 193, 7, 0.15) !important;
+  border-color: rgba(255, 193, 7, 0.3) !important;
+  color: #f9a825 !important;
+}
+
+.exit-compare-btn:hover {
+  background: rgba(255, 193, 7, 0.25) !important;
+}
+
+html.dark .exit-compare-btn {
+  background: rgba(255, 193, 7, 0.2) !important;
+  border-color: rgba(255, 193, 7, 0.4) !important;
+  color: #ffc107 !important;
+}
+
+html.dark .exit-compare-btn:hover {
+  background: rgba(255, 193, 7, 0.3) !important;
 }
 
 .header-btn:disabled {
@@ -2782,10 +2940,21 @@ html.dark .add-timetable-error {
   margin-bottom: 0.75rem;
 }
 
-.compare-filters-row {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+/* Filters toggle and row - desktop styles */
+@media (min-width: 769px) {
+  .compare-filters-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .filters-toggle {
+    display: none;
+  }
+
+  .mobile-config-btn {
+    display: none;
+  }
 }
 
 .compare-filter-btn {
@@ -2887,9 +3056,14 @@ html.dark .meal-range-label[data-tooltip]:hover::before {
   border-top-color: #444;
 }
 
-/* Travel options */
+/* Travel options - desktop only (hidden on mobile via media query) */
+@media (min-width: 769px) {
+  .travel-options {
+    display: flex;
+  }
+}
+
 .travel-options {
-  display: flex;
   gap: 1rem;
   flex-wrap: wrap;
   padding: 0.75rem;
@@ -3003,6 +3177,16 @@ html.dark .compare-filter-btn.active {
   color: #ffc107;
 }
 
+html.dark .filters-toggle {
+  background: rgba(255, 193, 7, 0.15);
+  border-color: rgba(255, 193, 7, 0.3);
+  color: #ffc107;
+}
+
+html.dark .filters-toggle:hover {
+  background: rgba(255, 193, 7, 0.25);
+}
+
 html.dark .travel-options {
   background: rgba(255, 193, 7, 0.12);
 }
@@ -3071,24 +3255,32 @@ html.dark .compare-vs {
   color: #555;
 }
 
+/* Compare container - 2 columns on desktop, 1 on mobile */
 .events-compare-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 0.5rem 1rem;
   position: relative;
 }
 
-/* Vertical divider line between columns */
-.events-compare-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1px;
-  background: rgba(0, 0, 0, 0.12);
-  pointer-events: none;
+@media (min-width: 769px) {
+  .events-compare-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Vertical divider line between columns - desktop only */
+@media (min-width: 769px) {
+  .events-compare-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    background: rgba(0, 0, 0, 0.12);
+    pointer-events: none;
+  }
 }
 
 .compare-date-row {
@@ -3228,9 +3420,14 @@ html.dark .meal-badge[data-tooltip]:hover::before {
   border-top-color: #444;
 }
 
-/* Eat Together filter options */
+/* Eat Together filter options - desktop only (hidden on mobile via media query) */
+@media (min-width: 769px) {
+  .eat-options {
+    display: flex;
+  }
+}
+
 .eat-options {
-  display: flex;
   gap: 1rem;
   flex-wrap: wrap;
   padding: 0.75rem;
@@ -3319,6 +3516,129 @@ html.dark .meal-badge[data-tooltip]:hover::before {
   margin: 0 0.25rem;
 }
 
+/* Modal config styles (for mobile filter configuration) */
+.modal-config-section {
+  margin-bottom: 1rem;
+}
+
+.modal-config-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.modal-config-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.modal-config-btn {
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.modal-config-btn:hover {
+  background: rgba(255, 193, 7, 0.15);
+  color: #f9a825;
+}
+
+.modal-config-btn.active {
+  background: #f9a825;
+  color: #333;
+  border-color: #f9a825;
+}
+
+.modal-config-select {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.modal-time-range {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.modal-time-range select {
+  flex: 1;
+  padding: 0.75rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.modal-time-range span {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+/* Dark mode modal config */
+html.dark .modal-config-label {
+  color: #aaa;
+}
+
+html.dark .modal-config-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #aaa;
+}
+
+html.dark .modal-config-btn:hover {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+html.dark .modal-config-btn.active {
+  background: #f9a825;
+  color: #333;
+}
+
+html.dark .modal-config-select,
+html.dark .modal-time-range select {
+  background: #2a2a2a;
+  border-color: #444;
+  color: #ddd;
+}
+
+/* Yellow accent for Done button in compare filter modals */
+.compare-filters .modal-confirm-primary {
+  background: #f9a825;
+  color: #333;
+  border: none;
+}
+
+.compare-filters .modal-confirm-primary:hover {
+  background: #f57f17;
+}
+
+html.dark .compare-filters .modal-confirm-primary {
+  background: #f9a825;
+  color: #333;
+}
+
+html.dark .compare-filters .modal-confirm-primary:hover {
+  background: #f57f17;
+}
+
 /* Meal badges */
 .meal-indicator {
   margin-left: auto;
@@ -3382,6 +3702,27 @@ html.dark .compare-column li.event-highlighted {
 
 html.dark .compare-empty {
   color: #777;
+}
+
+/* Dark mode mobile styles */
+@media (max-width: 768px) {
+  html.dark .compare-column::before {
+    color: #aaa;
+  }
+
+  html.dark .mobile-timetable-label {
+    color: #999;
+  }
+
+  html.dark .mobile-config-btn {
+    background: rgba(255, 193, 7, 0.15);
+    border-color: rgba(255, 193, 7, 0.35);
+    color: #ffc107;
+  }
+
+  html.dark .mobile-config-btn:hover {
+    background: rgba(255, 193, 7, 0.25);
+  }
 }
 
 html.dark .travel-badge-to {

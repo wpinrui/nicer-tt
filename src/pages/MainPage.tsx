@@ -297,6 +297,12 @@ function MainPage() {
           </button>
           {mobileMenuOpen && (
             <div className="mobile-menu">
+              <button
+                onClick={() => { handleCompareClick(); setMobileMenuOpen(false); }}
+                disabled={timetables.length === 0}
+              >
+                <GitCompare size={18} /> Compare
+              </button>
               <button onClick={() => { handleDownload(); setMobileMenuOpen(false); }}>
                 <Download size={18} /> Download .ics
               </button>
@@ -400,7 +406,7 @@ function MainPage() {
                     />
                   </div>
                   <button
-                    className="header-btn"
+                    className="header-btn exit-compare-btn"
                     onClick={handleExitCompare}
                     title="Exit compare mode"
                   >
@@ -444,6 +450,12 @@ function MainPage() {
           ) : (
             <>
               {/* Normal view */}
+              {activeTimetable && (
+                <div className="mobile-timetable-label">
+                  <span>Showing:</span>
+                  <span className="mobile-timetable-name">{activeTimetable.name}</span>
+                </div>
+              )}
               <FilterSection
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}

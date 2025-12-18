@@ -486,7 +486,7 @@ export function OptionsPanel({
         <div className="options-section">
           <h4>Help</h4>
           <p className="options-privacy-desc">
-            Refer to the User Guide for usage instructions.
+            Version {__APP_VERSION__}. Refer to the User Guide for usage instructions.
           </p>
           <div className="options-buttons">
             <a
