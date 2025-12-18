@@ -40,9 +40,43 @@ export function OptionsPanel({
   const [backgroundStatus, setBackgroundStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [backgroundToast, setBackgroundToast] = useState<string | null>(null);
 
-  // Initialize input with current background URL
+  // Card opacity state
+  const [cardOpacity, setCardOpacity] = useState<number>(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.CARD_OPACITY);
+      return stored ? JSON.parse(stored) : 0.85;
+    } catch {
+      return 0.85;
+    }
+  });
+
+  const handleOpacityChange = (value: number) => {
+    setCardOpacity(value);
+    localStorage.setItem(STORAGE_KEYS.CARD_OPACITY, JSON.stringify(value));
+    window.dispatchEvent(new Event('cardOpacityChange'));
+  };
+
+  // Check if using plain background (custom background set to 'plain')
+  const isPlainBackground = customBackground === 'plain';
+
+  const handlePlainBackgroundToggle = () => {
+    if (isPlainBackground) {
+      // Turn off plain background - reset to default
+      setCustomBackground(null);
+      setBackgroundInput('');
+      localStorage.removeItem(STORAGE_KEYS.CUSTOM_BACKGROUND);
+    } else {
+      // Turn on plain background
+      setCustomBackground('plain');
+      setBackgroundInput('');
+      localStorage.setItem(STORAGE_KEYS.CUSTOM_BACKGROUND, JSON.stringify('plain'));
+    }
+    window.dispatchEvent(new Event('customBackgroundChange'));
+  };
+
+  // Initialize input with current background URL (but not if it's 'plain')
   useEffect(() => {
-    if (customBackground) {
+    if (customBackground && customBackground !== 'plain') {
       setBackgroundInput(customBackground);
     }
   }, [customBackground]);
@@ -138,46 +172,73 @@ export function OptionsPanel({
         </div>
 
         <div className="options-section options-background-section">
-          <h4>Background Image</h4>
-          <p className="options-privacy-desc">
-            Paste an image URL to set a custom background.
-          </p>
-          <div className="options-background-input-row">
-            <div className="options-background-input-wrapper">
-              <Image size={16} className="options-background-icon" />
-              <input
-                type="text"
-                className={`options-background-input ${backgroundStatus === 'error' ? 'error' : ''}`}
-                placeholder="https://example.com/image.jpg"
-                value={backgroundInput}
-                onChange={(e) => setBackgroundInput(e.target.value)}
-                onBlur={handleBackgroundBlur}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.currentTarget.blur();
-                  }
-                }}
-              />
-              {backgroundStatus === 'loading' && (
-                <span className="options-background-status loading">Loading...</span>
+          <h4>Background</h4>
+          <label className="options-toggle">
+            <span>Use plain background</span>
+            <input
+              type="checkbox"
+              checked={isPlainBackground}
+              onChange={handlePlainBackgroundToggle}
+            />
+          </label>
+          {!isPlainBackground && (
+            <>
+              <p className="options-privacy-desc" style={{ marginTop: '0.75rem' }}>
+                Or paste an image URL for a custom background.
+              </p>
+              <div className="options-background-input-row">
+                <div className="options-background-input-wrapper">
+                  <Image size={16} className="options-background-icon" />
+                  <input
+                    type="text"
+                    className={`options-background-input ${backgroundStatus === 'error' ? 'error' : ''}`}
+                    placeholder="https://example.com/image.jpg"
+                    value={backgroundInput}
+                    onChange={(e) => setBackgroundInput(e.target.value)}
+                    onBlur={handleBackgroundBlur}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.currentTarget.blur();
+                      }
+                    }}
+                  />
+                  {backgroundStatus === 'loading' && (
+                    <span className="options-background-status loading">Loading...</span>
+                  )}
+                </div>
+              </div>
+              {customBackground && customBackground !== 'plain' && (
+                <div className="options-background-preview">
+                  <img
+                    src={customBackground}
+                    alt="Custom background preview"
+                    className="options-background-thumbnail"
+                  />
+                  <button
+                    className="options-btn options-btn-danger"
+                    onClick={handleResetBackground}
+                  >
+                    <RotateCcw size={14} /> Reset to Default
+                  </button>
+                </div>
               )}
-            </div>
-          </div>
-          {customBackground && (
-            <div className="options-background-preview">
-              <img
-                src={customBackground}
-                alt="Custom background preview"
-                className="options-background-thumbnail"
-              />
-              <button
-                className="options-btn options-btn-danger"
-                onClick={handleResetBackground}
-              >
-                <RotateCcw size={14} /> Reset to Default
-              </button>
-            </div>
+            </>
           )}
+          <div className="options-opacity-row">
+            <label className="options-opacity-label">
+              <span>Card opacity</span>
+              <span className="options-opacity-value">{Math.round(cardOpacity * 100)}%</span>
+            </label>
+            <input
+              type="range"
+              min="0.3"
+              max="1"
+              step="0.05"
+              value={cardOpacity}
+              onChange={(e) => handleOpacityChange(parseFloat(e.target.value))}
+              className="options-opacity-slider"
+            />
+          </div>
           {backgroundToast && (
             <div className={`options-background-toast ${backgroundStatus === 'error' ? 'error' : 'success'}`}>
               {backgroundToast}

@@ -1,4 +1,10 @@
 # Changelog
+## v1.0.14 (18 Dec 2025)
+- Add card opacity slider in Options (30%-100%)
+- Add plain background option (white/black depending on theme)
+- Rename section from "Background Image" to "Background"
+- Desktop only (hidden on mobile like other background options)
+
 ## v1.0.13 (18 Dec 2025)
 - Add custom background image option in Options modal (paste image URL)
 - Image validation on blur with success/error toast feedback

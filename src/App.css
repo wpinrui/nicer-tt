@@ -1,4 +1,5 @@
 .app {
+  --plain-bg-color: #f5f5f5;
   min-height: 100vh;
   display: flex;
   align-items: flex-start;
@@ -6,6 +7,10 @@
   padding: 3.5rem 2rem 2rem;
   background: url('/mihai-moisa-Jsxfie_bUyw-unsplash.jpg') center/cover fixed;
   position: relative;
+}
+
+html.dark .app {
+  --plain-bg-color: #1a1a1a;
 }
 
 .app::before {
@@ -17,7 +22,8 @@
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.85);
+  --card-opacity: 0.85;
+  background: rgb(255 255 255 / var(--card-opacity));
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 20px;
@@ -118,7 +124,7 @@
 
 /* Dark mode styles */
 html.dark .card {
-  background: rgba(30, 30, 30, 0.7);
+  background: rgb(30 30 30 / var(--card-opacity));
   border-color: rgba(255, 255, 255, 0.1);
 }
 
