@@ -40,7 +40,7 @@ export function EventsList({
                 <span className="course-tag-wrapper">
                   <span
                     className="course-tag clickable"
-                    style={{ backgroundColor: courseColorMap.get(event.course) }}
+                    style={{ backgroundColor: courseColorMap.get(event.course) || '#666' }}
                     onClick={() => onCourseClick(event.course)}
                     title={`Filter by ${event.course}`}
                   >
