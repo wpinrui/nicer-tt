@@ -450,6 +450,12 @@ function MainPage() {
           ) : (
             <>
               {/* Normal view */}
+              {activeTimetable && (
+                <div className="mobile-timetable-label">
+                  <span>Showing:</span>
+                  <span className="mobile-timetable-name">{activeTimetable.name}</span>
+                </div>
+              )}
               <FilterSection
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}

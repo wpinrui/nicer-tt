@@ -2389,6 +2389,31 @@ html.dark .privacy-link:hover {
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  /* Mobile timetable label (normal view) */
+  .mobile-timetable-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+    color: #666;
+  }
+
+  .mobile-timetable-name {
+    font-weight: 600;
+    color: #646cff;
+  }
+
+  /* Hide tutor icon on mobile (tooltips don't work well) */
+  .event-tutor-icon {
+    display: none;
+  }
+}
+
+/* Hidden on desktop */
+.mobile-timetable-label {
+  display: none;
 }
 
 /* Compare button active state (yellow for compare mode) */
@@ -3465,10 +3490,14 @@ html.dark .compare-empty {
   color: #777;
 }
 
-/* Dark mode mobile compare view */
+/* Dark mode mobile styles */
 @media (max-width: 768px) {
   html.dark .compare-column::before {
     color: #aaa;
+  }
+
+  html.dark .mobile-timetable-label {
+    color: #999;
   }
 }
 
