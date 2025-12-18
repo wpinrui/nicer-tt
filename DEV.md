@@ -1,4 +1,7 @@
 # Changelog
+## v1.1.1 (18 Dec 2025)
+- Disable modal close on overlay click
+
 ## v1.1.0 (18 Dec 2025)
 - Add Compare Timetables feature to compare schedules side-by-side
 - Multi-timetable storage with add/rename/delete functionality
