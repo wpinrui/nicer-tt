@@ -222,12 +222,12 @@ export function EventsCompareView({
                 <div className="meal-indicator">
                   {mealInfo.canEatLunch && (
                     <span className="meal-badge meal-badge-lunch">
-                      <Utensils size={12} /> {formatTime12Hour(mealInfo.lunchGapStart)}–{formatTime12Hour(mealInfo.lunchGapEnd)}
+                      <Utensils size={12} /> {formatTime12Hour(mealInfo.lunchGapStart)} to {formatTime12Hour(mealInfo.lunchGapEnd)}
                     </span>
                   )}
                   {mealInfo.canEatDinner && (
                     <span className="meal-badge meal-badge-dinner">
-                      <Utensils size={12} /> {formatTime12Hour(mealInfo.dinnerGapStart)}–{formatTime12Hour(mealInfo.dinnerGapEnd)}
+                      <Utensils size={12} /> {formatTime12Hour(mealInfo.dinnerGapStart)} to {formatTime12Hour(mealInfo.dinnerGapEnd)}
                     </span>
                   )}
                 </div>
