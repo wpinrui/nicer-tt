@@ -9,6 +9,14 @@ export interface TimetableEvent {
   tutor: string;
 }
 
+export interface Timetable {
+  id: string;
+  name: string;
+  events: TimetableEvent[];
+  fileName: string | null;
+  isPrimary: boolean;
+}
+
 export function parseHtmlTimetable(html: string): TimetableEvent[] {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');

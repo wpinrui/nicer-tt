@@ -2,12 +2,30 @@
 export const TIMETABLE_YEAR = 2026;
 
 export const STORAGE_KEYS = {
-  TIMETABLE_DATA: 'nie-timetable-data',
+  TIMETABLE_DATA: 'nie-timetable-data', // Legacy, for migration
+  TIMETABLES_DATA: 'nie-timetables-data', // New multi-timetable storage
   DARK_MODE: 'nie-dark-mode',
   SHOW_TUTOR: 'nie-show-tutor',
   HAS_SEEN_SHARE_TIP: 'nie-has-seen-share-tip',
   CUSTOM_BACKGROUND: 'nie-custom-background',
 } as const;
+
+// Default name sequence for added timetables
+export const DEFAULT_TIMETABLE_NAMES = [
+  "Someone's Timetable",
+  "Sometwo's Timetable",
+  "Somethree's Timetable",
+  "Somefour's Timetable",
+  "Somefive's Timetable",
+  "Somesix's Timetable",
+  "Someseven's Timetable",
+  "Someeight's Timetable",
+  "Somenine's Timetable",
+  "Someten's Timetable",
+] as const;
+
+// Compare mode types
+export type CompareFilter = 'none' | 'commonDays' | 'identical' | 'travel' | 'eat';
 
 // Color palette for course codes (darker shades for white text)
 export const COURSE_COLORS = [

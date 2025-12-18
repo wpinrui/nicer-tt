@@ -1,20 +1,6 @@
 import { User } from 'lucide-react';
 import { formatTime12Hour, formatVenue, formatTutor, isToday } from '../utils/formatters';
-
-interface EventItem {
-  course: string;
-  group: string;
-  startTime: string;
-  endTime: string;
-  venue: string;
-  tutor: string;
-}
-
-interface GroupedEvent {
-  date: string;
-  sortKey: string;
-  events: EventItem[];
-}
+import type { GroupedEvent } from '../utils/compareUtils';
 
 interface EventsListProps {
   groupedByDate: GroupedEvent[];
@@ -54,7 +40,7 @@ export function EventsList({
                 <span className="course-tag-wrapper">
                   <span
                     className="course-tag clickable"
-                    style={{ backgroundColor: courseColorMap.get(event.course) }}
+                    style={{ backgroundColor: courseColorMap.get(event.course) || '#666' }}
                     onClick={() => onCourseClick(event.course)}
                     title={`Filter by ${event.course}`}
                   >
@@ -86,4 +72,4 @@ export function EventsList({
   );
 }
 
-export type { GroupedEvent, EventItem };
+export type { GroupedEvent, EventItem } from '../utils/compareUtils';

@@ -4,4 +4,7 @@ export { FilterSection } from './FilterSection';
 export { EventsList } from './EventsList';
 export { ShareWelcomeModal } from './ShareWelcomeModal';
 export { PrivacyNoticeModal } from './PrivacyNoticeModal';
+export { CompareModal } from './CompareModal';
+export { CompareFilters } from './CompareFilters';
+export { EventsCompareView } from './EventsCompareView';
 export type { GroupedEvent, EventItem } from './EventsList';

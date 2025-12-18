@@ -1,16 +1,18 @@
-import { useState, useRef, useEffect } from 'react';
-import { Upload, Download, FileText, Share2, HelpCircle, Settings, ArrowLeft, Menu, X } from 'lucide-react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { Upload, Download, FileText, Share2, HelpCircle, Settings, ArrowLeft, Menu, X, GitCompare, Search } from 'lucide-react';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { parseIcs } from '../utils/parseIcs';
 import { STORAGE_KEYS } from '../utils/constants';
+import type { CompareFilter } from '../utils/constants';
+import type { TravelConfig, MealConfig } from '../utils/compareUtils';
 import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents } from '../hooks';
-import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, PrivacyNoticeModal } from '../components';
+import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, PrivacyNoticeModal, CompareModal, CompareFilters, EventsCompareView } from '../components';
 import HelpPage from './HelpPage';
 import './MainPage.css';
 
 function MainPage() {
-  const { events, fileName, setTimetable, clearTimetable } = useTimetableStorage();
+  const { events, fileName, setTimetable, clearTimetable, timetables, addTimetable, renameTimetable, deleteTimetable, getTimetable } = useTimetableStorage();
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set());
@@ -24,6 +26,32 @@ function MainPage() {
   const [darkMode, setDarkMode] = useLocalStorage(STORAGE_KEYS.DARK_MODE, true);
   const [showTutor, setShowTutor] = useLocalStorage(STORAGE_KEYS.SHOW_TUTOR, true);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Compare mode state
+  const [showCompareModal, setShowCompareModal] = useState(false);
+  const [compareMode, setCompareMode] = useState(false);
+  const [compareTimetables, setCompareTimetables] = useState<[string, string] | null>(null);
+  const [compareFilter, setCompareFilter] = useState<CompareFilter>('none');
+  const [travelConfig, setTravelConfig] = useState<TravelConfig>({ direction: 'both', waitMinutes: 15 });
+  const [mealConfig, setMealConfig] = useState<MealConfig>({
+    type: 'lunch',
+    lunchStart: 11,
+    lunchEnd: 14,
+    dinnerStart: 17,
+    dinnerEnd: 20,
+  });
+
+  // Config change handlers
+  const handleTravelConfigChange = useCallback((update: Partial<TravelConfig>) => {
+    setTravelConfig(prev => ({ ...prev, ...update }));
+  }, []);
+
+  const handleMealConfigChange = useCallback((update: Partial<MealConfig>) => {
+    setMealConfig(prev => ({ ...prev, ...update }));
+  }, []);
+
+  // Check if compare is available (need at least 2 timetables)
+  const canCompare = timetables.length >= 2;
 
   const hasExistingData = Boolean(events && events.length > 0);
   const {
@@ -180,6 +208,38 @@ function MainPage() {
 
   const hasActiveFilters = selectedCourses.size > 0 || searchQuery.length > 0 || selectedDate !== null;
 
+  // Compare mode handlers
+  const handleCompare = (selection: [string, string]) => {
+    setCompareTimetables(selection);
+    setCompareMode(true);
+    setShowCompareModal(false);
+    setCompareFilter('none');
+  };
+
+  const handleExitCompare = () => {
+    setCompareMode(false);
+    setCompareTimetables(null);
+    setCompareFilter('none');
+    setShowCompareModal(false);
+  };
+
+  // Get compare tooltip based on state
+  const getCompareTooltip = () => {
+    if (timetables.length === 0) return 'Add a timetable first';
+    if (timetables.length === 1) return 'Add another timetable to compare';
+    return compareMode ? 'Change comparison' : 'Compare timetables';
+  };
+
+  // Memoize timetable lookups to avoid recalculating on every render
+  const leftTimetable = useMemo(
+    () => compareTimetables ? getTimetable(compareTimetables[0]) : null,
+    [compareTimetables, getTimetable]
+  );
+  const rightTimetable = useMemo(
+    () => compareTimetables ? getTimetable(compareTimetables[1]) : null,
+    [compareTimetables, getTimetable]
+  );
+
   return (
     <div className={`main-page ${mobileMenuOpen ? 'menu-open' : ''}`}>
       {events ? (
@@ -193,6 +253,14 @@ function MainPage() {
             <span className="brand-small">r</span> Timetable
           </h1>
           <div className="header-actions desktop-only">
+            <button
+              onClick={() => setShowCompareModal(true)}
+              className={`header-btn ${compareMode ? 'header-btn-active' : ''}`}
+              disabled={!canCompare}
+              title={getCompareTooltip()}
+            >
+              <GitCompare size={14} /> {compareMode ? 'Comparing' : 'Compare'}
+            </button>
             <button onClick={handleDownload} className="header-btn">
               <Download size={16} /> Download .ics
             </button>
@@ -297,36 +365,99 @@ function MainPage() {
               </button>
             </div>
           )}
-          <FilterSection
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            selectedDate={selectedDate}
-            onDateChange={setSelectedDate}
-            hidePastDates={hidePastDates}
-            onHidePastChange={setHidePastDates}
-            uniqueCourses={uniqueCourses}
-            selectedCourses={selectedCourses}
-            courseColorMap={courseColorMap}
-            onToggleCourse={toggleCourse}
-            onClearFilters={clearFilters}
-            hasActiveFilters={hasActiveFilters}
-          />
 
-          <p className="events-count no-print">
-            Showing <strong>{filteredCount}</strong>
-            {hasActiveFilters && ` of ${totalEvents}`} events
-            {` across ${groupedByDate.length} days`}
-          </p>
+          {/* Compare mode view */}
+          {compareMode && leftTimetable && rightTimetable ? (
+            <>
+              <div className="filters-section no-print">
+                <div className="search-row">
+                  <div className="search-input-wrapper">
+                    <Search size={16} className="search-icon" />
+                    <input
+                      type="text"
+                      className="search-input"
+                      placeholder="Search both timetables..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  <button
+                    className="header-btn"
+                    onClick={handleExitCompare}
+                    title="Exit compare mode"
+                  >
+                    Exit Compare
+                  </button>
+                </div>
+                <CompareFilters
+                  compareFilter={compareFilter}
+                  onFilterChange={setCompareFilter}
+                  travelConfig={travelConfig}
+                  onTravelConfigChange={handleTravelConfigChange}
+                  mealConfig={mealConfig}
+                  onMealConfigChange={handleMealConfigChange}
+                  leftName={leftTimetable.name}
+                  rightName={rightTimetable.name}
+                />
+              </div>
 
-          <div className="events-preview">
-            <h2 className="print-title print-only">NIcEr Timetable</h2>
-            <EventsList
-              groupedByDate={groupedByDate}
-              courseColorMap={courseColorMap}
-              showTutor={showTutor}
-              onCourseClick={handleCourseClick}
-            />
-          </div>
+              <div className="compare-headers-row no-print">
+                <div className="compare-column-header">
+                  <span className="compare-column-name">{leftTimetable.name}</span>
+                </div>
+                <div className="compare-column-header">
+                  <span className="compare-column-name">{rightTimetable.name}</span>
+                </div>
+              </div>
+
+              <div className="events-preview">
+                <EventsCompareView
+                  leftTimetable={leftTimetable}
+                  rightTimetable={rightTimetable}
+                  searchQuery={searchQuery}
+                  compareFilter={compareFilter}
+                  travelConfig={travelConfig}
+                  mealConfig={mealConfig}
+                  showTutor={false}
+                  courseColorMap={courseColorMap}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Normal view */}
+              <FilterSection
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                selectedDate={selectedDate}
+                onDateChange={setSelectedDate}
+                hidePastDates={hidePastDates}
+                onHidePastChange={setHidePastDates}
+                uniqueCourses={uniqueCourses}
+                selectedCourses={selectedCourses}
+                courseColorMap={courseColorMap}
+                onToggleCourse={toggleCourse}
+                onClearFilters={clearFilters}
+                hasActiveFilters={hasActiveFilters}
+              />
+
+              <p className="events-count no-print">
+                Showing <strong>{filteredCount}</strong>
+                {hasActiveFilters && ` of ${totalEvents}`} events
+                {` across ${groupedByDate.length} days`}
+              </p>
+
+              <div className="events-preview">
+                <h2 className="print-title print-only">NIcEr Timetable</h2>
+                <EventsList
+                  groupedByDate={groupedByDate}
+                  courseColorMap={courseColorMap}
+                  showTutor={showTutor}
+                  onCourseClick={handleCourseClick}
+                />
+              </div>
+            </>
+          )}
 
         </div>
       )}
@@ -372,6 +503,10 @@ function MainPage() {
           onFileChange={handleAnyFileChange}
           onReset={handleReset}
           onShowPrivacy={() => setShowPrivacyNotice(true)}
+          timetables={timetables}
+          onAddTimetable={addTimetable}
+          onRenameTimetable={renameTimetable}
+          onDeleteTimetable={deleteTimetable}
         />
       )}
 
@@ -381,6 +516,17 @@ function MainPage() {
 
       {showPrivacyNotice && (
         <PrivacyNoticeModal onClose={() => setShowPrivacyNotice(false)} />
+      )}
+
+      {showCompareModal && (
+        <CompareModal
+          timetables={timetables}
+          currentSelection={compareTimetables}
+          isCompareMode={compareMode}
+          onCompare={handleCompare}
+          onReset={handleExitCompare}
+          onClose={() => setShowCompareModal(false)}
+        />
       )}
     </div>
   );

@@ -1,53 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import pako from 'pako';
 import type { TimetableEvent } from '../utils/parseHtml';
-
-interface ShareData {
-  events: TimetableEvent[];
-  fileName: string;
-}
-
-// URL-safe base64 encoding
-function toUrlSafeBase64(bytes: Uint8Array): string {
-  const binary = String.fromCharCode(...bytes);
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-
-function fromUrlSafeBase64(str: string): Uint8Array {
-  // Restore standard base64
-  let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
-  // Add padding if needed
-  while (base64.length % 4) base64 += '=';
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return bytes;
-}
-
-function encodeShareData(events: TimetableEvent[], fileName: string): string {
-  const data = JSON.stringify({ events, fileName });
-  const compressed = pako.deflate(data);
-  return toUrlSafeBase64(compressed);
-}
-
-function decodeShareData(encoded: string): ShareData | null {
-  // Try compressed format first (new)
-  try {
-    const bytes = fromUrlSafeBase64(encoded);
-    const decompressed = pako.inflate(bytes, { to: 'string' });
-    return JSON.parse(decompressed);
-  } catch {
-    // Fall back to legacy uncompressed format
-    try {
-      const data = decodeURIComponent(atob(encoded));
-      return JSON.parse(data);
-    } catch {
-      return null;
-    }
-  }
-}
+import { encodeShareData, decodeShareData, type ShareData } from '../utils/shareUtils';
 
 export function useShareData(hasExistingData: boolean, currentEvents?: TimetableEvent[] | null) {
   const [pendingShareData, setPendingShareData] = useState<ShareData | null>(null);
@@ -90,7 +43,6 @@ export function useShareData(hasExistingData: boolean, currentEvents?: Timetable
     // Listen for hash changes (when user pastes link while on page)
     window.addEventListener('hashchange', handleShareHash);
     return () => window.removeEventListener('hashchange', handleShareHash);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasExistingData, currentEvents]);
 
   const createShareLink = useCallback(async (events: TimetableEvent[], fileName: string) => {
@@ -99,10 +51,10 @@ export function useShareData(hasExistingData: boolean, currentEvents?: Timetable
 
     try {
       await navigator.clipboard.writeText(shareUrl);
-      setShareMessage('Link copied to clipboard!');
+      setShareMessage('Share link for My Timetable copied!');
       setTimeout(() => setShareMessage(null), 3000);
     } catch {
-      prompt('Copy this link to share your timetable:', shareUrl);
+      prompt('Copy this link to share My Timetable:', shareUrl);
     }
   }, []);
 
