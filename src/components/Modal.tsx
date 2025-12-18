@@ -26,7 +26,7 @@ export function Modal({
   const confirmClass = confirmVariant === 'primary' ? 'modal-confirm-primary' : 'modal-confirm';
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay">
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <h3>{title}</h3>
         {children}

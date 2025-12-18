@@ -6,7 +6,7 @@ interface ShareWelcomeModalProps {
 
 export function ShareWelcomeModal({ onClose }: ShareWelcomeModalProps) {
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay">
       <div className="share-welcome-modal" onClick={(e) => e.stopPropagation()}>
         <div className="share-welcome-header">
           <Share2 size={32} className="share-welcome-icon" />

@@ -6,7 +6,7 @@ interface PrivacyNoticeModalProps {
 
 export function PrivacyNoticeModal({ onClose }: PrivacyNoticeModalProps) {
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay">
       <div className="privacy-notice-modal" onClick={(e) => e.stopPropagation()}>
         <div className="privacy-notice-header">
           <Shield size={32} className="privacy-notice-icon" />
