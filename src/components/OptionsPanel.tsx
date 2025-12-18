@@ -174,7 +174,14 @@ export function OptionsPanel({
 
   const confirmDeleteTimetable = () => {
     if (deleteConfirm) {
+      const isLastTimetable = timetables.length === 1;
       const deleted = onDeleteTimetable(deleteConfirm.id);
+      if (deleted && isLastTimetable) {
+        // Close options panel when last timetable is deleted
+        setDeleteConfirm(null);
+        onClose();
+        return;
+      }
       if (deleted) {
         setTimetableToast({ message: `"${deleteConfirm.name}" deleted.`, type: 'success' });
       }
