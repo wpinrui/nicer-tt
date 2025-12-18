@@ -1,4 +1,4 @@
-import { Calendar, Users, Car, Info, Utensils } from 'lucide-react';
+import { Calendar, Users, Car, Info, Utensils, type LucideIcon } from 'lucide-react';
 import type { CompareFilter } from '../utils/constants';
 import type { TravelConfig, MealConfig } from '../utils/compareUtils';
 
@@ -13,11 +13,74 @@ interface CompareFiltersProps {
   rightName: string;
 }
 
+interface FilterButtonConfig {
+  id: CompareFilter;
+  icon: LucideIcon;
+  label: string;
+  tooltip: string;
+}
+
+const FILTER_BUTTONS: FilterButtonConfig[] = [
+  { id: 'commonDays', icon: Calendar, label: 'Common Days', tooltip: 'Show only days where both timetables have classes' },
+  { id: 'identical', icon: Users, label: 'Identical Classes', tooltip: 'Show classes with matching course, group, AND time' },
+  { id: 'travel', icon: Car, label: 'Travel Together', tooltip: 'See which days you can commute together' },
+  { id: 'eat', icon: Utensils, label: 'Eat Together', tooltip: 'Find 1-hour gaps during lunch or dinner where both can eat together' },
+];
+
 function formatHour(hour: number): string {
   if (hour === 0) return '12am';
   if (hour === 12) return '12pm';
   if (hour < 12) return `${hour}am`;
   return `${hour - 12}pm`;
+}
+
+interface MealTimeRangeProps {
+  label: string;
+  tooltip: string;
+  startValue: number;
+  endValue: number;
+  startOptions: number[];
+  endOptions: number[];
+  onStartChange: (value: number) => void;
+  onEndChange: (value: number) => void;
+}
+
+function MealTimeRange({
+  label,
+  tooltip,
+  startValue,
+  endValue,
+  startOptions,
+  endOptions,
+  onStartChange,
+  onEndChange,
+}: MealTimeRangeProps) {
+  return (
+    <div className="meal-range-group">
+      <label className="meal-range-label" data-tooltip={tooltip}>
+        {label}:
+        <select
+          className="meal-time-select"
+          value={startValue}
+          onChange={(e) => onStartChange(Number(e.target.value))}
+        >
+          {startOptions.map(hour => (
+            <option key={hour} value={hour}>{formatHour(hour)}</option>
+          ))}
+        </select>
+        <span className="meal-time-separator">to</span>
+        <select
+          className="meal-time-select"
+          value={endValue}
+          onChange={(e) => onEndChange(Number(e.target.value))}
+        >
+          {endOptions.map(hour => (
+            <option key={hour} value={hour}>{formatHour(hour)}</option>
+          ))}
+        </select>
+      </label>
+    </div>
+  );
 }
 
 export function CompareFilters({
@@ -37,45 +100,18 @@ export function CompareFilters({
   return (
     <div className="compare-filters">
       <div className="compare-filters-row">
-        <button
-          className={`compare-filter-btn ${compareFilter === 'commonDays' ? 'active' : ''}`}
-          onClick={() => handleFilterClick('commonDays')}
-          data-tooltip="Show only days where both timetables have classes"
-        >
-          <Calendar size={14} />
-          <span>Common Days</span>
-          <Info size={12} className="compare-filter-info" />
-        </button>
-
-        <button
-          className={`compare-filter-btn ${compareFilter === 'identical' ? 'active' : ''}`}
-          onClick={() => handleFilterClick('identical')}
-          data-tooltip="Show classes with matching course, group, AND time"
-        >
-          <Users size={14} />
-          <span>Identical Classes</span>
-          <Info size={12} className="compare-filter-info" />
-        </button>
-
-        <button
-          className={`compare-filter-btn ${compareFilter === 'travel' ? 'active' : ''}`}
-          onClick={() => handleFilterClick('travel')}
-          data-tooltip="See which days you can commute together"
-        >
-          <Car size={14} />
-          <span>Travel Together</span>
-          <Info size={12} className="compare-filter-info" />
-        </button>
-
-        <button
-          className={`compare-filter-btn ${compareFilter === 'eat' ? 'active' : ''}`}
-          onClick={() => handleFilterClick('eat')}
-          data-tooltip="Find 1-hour gaps during lunch or dinner where both can eat together"
-        >
-          <Utensils size={14} />
-          <span>Eat Together</span>
-          <Info size={12} className="compare-filter-info" />
-        </button>
+        {FILTER_BUTTONS.map(({ id, icon: Icon, label, tooltip }) => (
+          <button
+            key={id}
+            className={`compare-filter-btn ${compareFilter === id ? 'active' : ''}`}
+            onClick={() => handleFilterClick(id)}
+            data-tooltip={tooltip}
+          >
+            <Icon size={14} />
+            <span>{label}</span>
+            <Info size={12} className="compare-filter-info" />
+          </button>
+        ))}
       </div>
 
       {compareFilter === 'travel' && (
@@ -161,55 +197,26 @@ export function CompareFilters({
           </div>
 
           <div className="meal-time-ranges">
-            <div className="meal-range-group">
-              <label className="meal-range-label" data-tooltip="Set the lunch time window">
-                Lunch:
-                <select
-                  className="meal-time-select"
-                  value={mealConfig.lunchStart}
-                  onChange={(e) => onMealConfigChange({ lunchStart: Number(e.target.value) })}
-                >
-                  {Array.from({ length: 8 }, (_, i) => i + 9).map(hour => (
-                    <option key={hour} value={hour}>{formatHour(hour)}</option>
-                  ))}
-                </select>
-                <span className="meal-time-separator">to</span>
-                <select
-                  className="meal-time-select"
-                  value={mealConfig.lunchEnd}
-                  onChange={(e) => onMealConfigChange({ lunchEnd: Number(e.target.value) })}
-                >
-                  {Array.from({ length: 8 }, (_, i) => i + 11).map(hour => (
-                    <option key={hour} value={hour}>{formatHour(hour)}</option>
-                  ))}
-                </select>
-              </label>
-            </div>
-
-            <div className="meal-range-group">
-              <label className="meal-range-label" data-tooltip="Set the dinner time window">
-                Dinner:
-                <select
-                  className="meal-time-select"
-                  value={mealConfig.dinnerStart}
-                  onChange={(e) => onMealConfigChange({ dinnerStart: Number(e.target.value) })}
-                >
-                  {Array.from({ length: 8 }, (_, i) => i + 15).map(hour => (
-                    <option key={hour} value={hour}>{formatHour(hour)}</option>
-                  ))}
-                </select>
-                <span className="meal-time-separator">to</span>
-                <select
-                  className="meal-time-select"
-                  value={mealConfig.dinnerEnd}
-                  onChange={(e) => onMealConfigChange({ dinnerEnd: Number(e.target.value) })}
-                >
-                  {Array.from({ length: 8 }, (_, i) => i + 17).map(hour => (
-                    <option key={hour} value={hour}>{formatHour(hour)}</option>
-                  ))}
-                </select>
-              </label>
-            </div>
+            <MealTimeRange
+              label="Lunch"
+              tooltip="Set the lunch time window"
+              startValue={mealConfig.lunchStart}
+              endValue={mealConfig.lunchEnd}
+              startOptions={Array.from({ length: 8 }, (_, i) => i + 9)}
+              endOptions={Array.from({ length: 8 }, (_, i) => i + 11)}
+              onStartChange={(v) => onMealConfigChange({ lunchStart: v })}
+              onEndChange={(v) => onMealConfigChange({ lunchEnd: v })}
+            />
+            <MealTimeRange
+              label="Dinner"
+              tooltip="Set the dinner time window"
+              startValue={mealConfig.dinnerStart}
+              endValue={mealConfig.dinnerEnd}
+              startOptions={Array.from({ length: 8 }, (_, i) => i + 15)}
+              endOptions={Array.from({ length: 8 }, (_, i) => i + 17)}
+              onStartChange={(v) => onMealConfigChange({ dinnerStart: v })}
+              onEndChange={(v) => onMealConfigChange({ dinnerEnd: v })}
+            />
           </div>
         </div>
       )}
