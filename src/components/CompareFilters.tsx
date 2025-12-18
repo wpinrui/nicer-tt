@@ -55,6 +55,78 @@ const DINNER_END_HOURS = Array.from({ length: 5 }, (_, i) => i + 17);
 
 const MOBILE_BREAKPOINT = '(max-width: 768px)';
 
+const TRAVEL_DIRECTIONS = ['to', 'from', 'both', 'either'] as const;
+const TRAVEL_DIRECTION_LABELS: Record<TravelConfig['direction'], string> = {
+  to: 'TO School',
+  from: 'FROM School',
+  both: 'BOTH',
+  either: 'EITHER',
+};
+const TRAVEL_DIRECTION_TOOLTIPS: Record<TravelConfig['direction'], string> = {
+  to: 'Compare first class of the day',
+  from: 'Compare last class of the day',
+  both: 'Both can travel to AND from school together',
+  either: 'Can travel to OR from school together',
+};
+
+interface TravelDirectionButtonsProps {
+  value: TravelConfig['direction'];
+  onChange: (direction: TravelConfig['direction']) => void;
+  buttonClassName: string;
+  showTooltips?: boolean;
+}
+
+function TravelDirectionButtons({ value, onChange, buttonClassName, showTooltips }: TravelDirectionButtonsProps) {
+  return (
+    <>
+      {TRAVEL_DIRECTIONS.map(dir => (
+        <button
+          key={dir}
+          className={`${buttonClassName} ${value === dir ? 'active' : ''}`}
+          onClick={() => onChange(dir)}
+          data-tooltip={showTooltips ? TRAVEL_DIRECTION_TOOLTIPS[dir] : undefined}
+        >
+          {TRAVEL_DIRECTION_LABELS[dir]}
+        </button>
+      ))}
+    </>
+  );
+}
+
+const MEAL_TYPES = ['lunch', 'dinner'] as const;
+const MEAL_TYPE_LABELS: Record<MealConfig['type'], string> = {
+  lunch: 'Lunch',
+  dinner: 'Dinner',
+};
+const MEAL_TYPE_TOOLTIPS: Record<MealConfig['type'], string> = {
+  lunch: 'Find lunch gaps only',
+  dinner: 'Find dinner gaps only',
+};
+
+interface MealTypeButtonsProps {
+  value: MealConfig['type'];
+  onChange: (type: MealConfig['type']) => void;
+  buttonClassName: string;
+  showTooltips?: boolean;
+}
+
+function MealTypeButtons({ value, onChange, buttonClassName, showTooltips }: MealTypeButtonsProps) {
+  return (
+    <>
+      {MEAL_TYPES.map(type => (
+        <button
+          key={type}
+          className={`${buttonClassName} ${value === type ? 'active' : ''}`}
+          onClick={() => onChange(type)}
+          data-tooltip={showTooltips ? MEAL_TYPE_TOOLTIPS[type] : undefined}
+        >
+          {MEAL_TYPE_LABELS[type]}
+        </button>
+      ))}
+    </>
+  );
+}
+
 interface MealTimeRangeProps {
   label: string;
   tooltip: string;
@@ -186,34 +258,12 @@ export function CompareFilters({
           <div className="travel-direction-group">
             <span className="travel-options-label">Direction:</span>
             <div className="travel-direction-btns">
-              <button
-                className={`travel-direction-btn ${travelConfig.direction === 'to' ? 'active' : ''}`}
-                onClick={() => onTravelConfigChange({ direction: 'to' })}
-                data-tooltip="Compare first class of the day"
-              >
-                TO School
-              </button>
-              <button
-                className={`travel-direction-btn ${travelConfig.direction === 'from' ? 'active' : ''}`}
-                onClick={() => onTravelConfigChange({ direction: 'from' })}
-                data-tooltip="Compare last class of the day"
-              >
-                FROM School
-              </button>
-              <button
-                className={`travel-direction-btn ${travelConfig.direction === 'both' ? 'active' : ''}`}
-                onClick={() => onTravelConfigChange({ direction: 'both' })}
-                data-tooltip="Both can travel to AND from school together"
-              >
-                BOTH
-              </button>
-              <button
-                className={`travel-direction-btn ${travelConfig.direction === 'either' ? 'active' : ''}`}
-                onClick={() => onTravelConfigChange({ direction: 'either' })}
-                data-tooltip="Can travel to OR from school together"
-              >
-                EITHER
-              </button>
+              <TravelDirectionButtons
+                value={travelConfig.direction}
+                onChange={(direction) => onTravelConfigChange({ direction })}
+                buttonClassName="travel-direction-btn"
+                showTooltips
+              />
             </div>
           </div>
 
@@ -239,20 +289,12 @@ export function CompareFilters({
           <div className="eat-type-group">
             <span className="eat-options-label">Meal:</span>
             <div className="eat-type-btns">
-              <button
-                className={`eat-type-btn ${mealConfig.type === 'lunch' ? 'active' : ''}`}
-                onClick={() => onMealConfigChange({ type: 'lunch' })}
-                data-tooltip="Find lunch gaps only"
-              >
-                Lunch
-              </button>
-              <button
-                className={`eat-type-btn ${mealConfig.type === 'dinner' ? 'active' : ''}`}
-                onClick={() => onMealConfigChange({ type: 'dinner' })}
-                data-tooltip="Find dinner gaps only"
-              >
-                Dinner
-              </button>
+              <MealTypeButtons
+                value={mealConfig.type}
+                onChange={(type) => onMealConfigChange({ type })}
+                buttonClassName="eat-type-btn"
+                showTooltips
+              />
             </div>
           </div>
 
@@ -301,30 +343,11 @@ export function CompareFilters({
           <div className="modal-config-section">
             <label className="modal-config-label">Direction</label>
             <div className="modal-config-buttons">
-              <button
-                className={`modal-config-btn ${travelConfig.direction === 'to' ? 'active' : ''}`}
-                onClick={() => onTravelConfigChange({ direction: 'to' })}
-              >
-                TO School
-              </button>
-              <button
-                className={`modal-config-btn ${travelConfig.direction === 'from' ? 'active' : ''}`}
-                onClick={() => onTravelConfigChange({ direction: 'from' })}
-              >
-                FROM School
-              </button>
-              <button
-                className={`modal-config-btn ${travelConfig.direction === 'both' ? 'active' : ''}`}
-                onClick={() => onTravelConfigChange({ direction: 'both' })}
-              >
-                BOTH
-              </button>
-              <button
-                className={`modal-config-btn ${travelConfig.direction === 'either' ? 'active' : ''}`}
-                onClick={() => onTravelConfigChange({ direction: 'either' })}
-              >
-                EITHER
-              </button>
+              <TravelDirectionButtons
+                value={travelConfig.direction}
+                onChange={(direction) => onTravelConfigChange({ direction })}
+                buttonClassName="modal-config-btn"
+              />
             </div>
           </div>
           <div className="modal-config-section">
@@ -356,18 +379,11 @@ export function CompareFilters({
           <div className="modal-config-section">
             <label className="modal-config-label">Meal type</label>
             <div className="modal-config-buttons">
-              <button
-                className={`modal-config-btn ${mealConfig.type === 'lunch' ? 'active' : ''}`}
-                onClick={() => onMealConfigChange({ type: 'lunch' })}
-              >
-                Lunch
-              </button>
-              <button
-                className={`modal-config-btn ${mealConfig.type === 'dinner' ? 'active' : ''}`}
-                onClick={() => onMealConfigChange({ type: 'dinner' })}
-              >
-                Dinner
-              </button>
+              <MealTypeButtons
+                value={mealConfig.type}
+                onChange={(type) => onMealConfigChange({ type })}
+                buttonClassName="modal-config-btn"
+              />
             </div>
           </div>
           <div className="modal-config-section">
