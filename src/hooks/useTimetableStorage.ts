@@ -3,7 +3,7 @@ import type { TimetableEvent, Timetable } from '../utils/parseHtml';
 import { STORAGE_KEYS, DEFAULT_TIMETABLE_NAMES } from '../utils/constants';
 
 function generateId(): string {
-  return `tt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `tt_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 }
 
 function getNextAvailableName(timetables: Timetable[]): string {

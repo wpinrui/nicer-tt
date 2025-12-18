@@ -1,20 +1,6 @@
 import { User } from 'lucide-react';
 import { formatTime12Hour, formatVenue, formatTutor, isToday } from '../utils/formatters';
-
-interface EventItem {
-  course: string;
-  group: string;
-  startTime: string;
-  endTime: string;
-  venue: string;
-  tutor: string;
-}
-
-interface GroupedEvent {
-  date: string;
-  sortKey: string;
-  events: EventItem[];
-}
+import type { EventItem, GroupedEvent } from '../utils/compareUtils';
 
 interface EventsListProps {
   groupedByDate: GroupedEvent[];
@@ -86,4 +72,4 @@ export function EventsList({
   );
 }
 
-export type { GroupedEvent, EventItem };
+export type { GroupedEvent, EventItem } from '../utils/compareUtils';
