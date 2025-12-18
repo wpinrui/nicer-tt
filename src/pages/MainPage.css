@@ -3268,8 +3268,9 @@ html.dark .compare-vs {
     left: 50%;
     transform: translateX(-50%);
     width: 1px;
-  background: rgba(0, 0, 0, 0.12);
-  pointer-events: none;
+    background: rgba(0, 0, 0, 0.12);
+    pointer-events: none;
+  }
 }
 
 .compare-date-row {
