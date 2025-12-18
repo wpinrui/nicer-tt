@@ -2323,6 +2323,71 @@ html.dark .privacy-link:hover {
   .events-preview {
     margin-bottom: 1rem;
   }
+
+  /* Mobile compare view - stacked layout */
+  .events-compare-container {
+    grid-template-columns: 1fr;
+  }
+
+  .events-compare-container::before {
+    display: none;
+  }
+
+  .compare-column {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .compare-column:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .compare-column::before {
+    content: attr(data-name);
+    display: block;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .compare-headers-row {
+    display: none;
+  }
+
+  /* Mobile compare filters */
+  .compare-filters-row.collapsed {
+    display: none;
+  }
+
+  .filters-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(100, 108, 255, 0.1);
+    border: 1px solid rgba(100, 108, 255, 0.2);
+    border-radius: 8px;
+    color: #646cff;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 0.75rem;
+  }
+
+  .filters-toggle:hover {
+    background: rgba(100, 108, 255, 0.15);
+  }
+
+  /* Mobile menu disabled state */
+  .mobile-menu button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 /* Compare button active state (yellow for compare mode) */
@@ -2788,6 +2853,11 @@ html.dark .add-timetable-error {
   flex-wrap: wrap;
 }
 
+/* Hidden on desktop, shown on mobile via media query */
+.filters-toggle {
+  display: none;
+}
+
 .compare-filter-btn {
   display: inline-flex;
   align-items: center;
@@ -3001,6 +3071,16 @@ html.dark .compare-filter-btn.active {
   background: rgba(255, 193, 7, 0.25);
   border-color: #f9a825;
   color: #ffc107;
+}
+
+html.dark .filters-toggle {
+  background: rgba(100, 108, 255, 0.15);
+  border-color: rgba(100, 108, 255, 0.3);
+  color: #a5a8ff;
+}
+
+html.dark .filters-toggle:hover {
+  background: rgba(100, 108, 255, 0.25);
 }
 
 html.dark .travel-options {
@@ -3382,6 +3462,17 @@ html.dark .compare-column li.event-highlighted {
 
 html.dark .compare-empty {
   color: #777;
+}
+
+/* Dark mode mobile compare view */
+@media (max-width: 768px) {
+  html.dark .compare-column {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  html.dark .compare-column::before {
+    color: #aaa;
+  }
 }
 
 html.dark .travel-badge-to {

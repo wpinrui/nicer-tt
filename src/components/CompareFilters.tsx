@@ -1,4 +1,5 @@
-import { Calendar, Users, Car, Info, Utensils, type LucideIcon } from 'lucide-react';
+import { useState } from 'react';
+import { Calendar, Users, Car, Info, Utensils, Filter, ChevronDown, ChevronUp, type LucideIcon } from 'lucide-react';
 import type { CompareFilter } from '../utils/constants';
 import type { TravelConfig, MealConfig } from '../utils/compareUtils';
 
@@ -93,13 +94,27 @@ export function CompareFilters({
   leftName,
   rightName,
 }: CompareFiltersProps) {
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
+
   const handleFilterClick = (filter: CompareFilter) => {
     onFilterChange(compareFilter === filter ? 'none' : filter);
   };
 
+  const activeFilterLabel = FILTER_BUTTONS.find(f => f.id === compareFilter)?.label || 'None';
+
   return (
     <div className="compare-filters">
-      <div className="compare-filters-row">
+      {/* Mobile toggle button - hidden on desktop via CSS */}
+      <button
+        className="filters-toggle"
+        onClick={() => setFiltersExpanded(!filtersExpanded)}
+      >
+        <Filter size={14} />
+        <span>Filters{compareFilter !== 'none' ? `: ${activeFilterLabel}` : ''}</span>
+        {filtersExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+      </button>
+
+      <div className={`compare-filters-row ${filtersExpanded ? '' : 'collapsed'}`}>
         {FILTER_BUTTONS.map(({ id, icon: Icon, label, tooltip }) => (
           <button
             key={id}

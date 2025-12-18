@@ -1,4 +1,10 @@
 # Changelog
+## v1.3.0 (19 Dec 2025)
+- Add mobile support for Compare view with stacked layout
+- Add Compare button to mobile hamburger menu
+- Add collapsible filter toggle on mobile
+- Show timetable names as labels in stacked view
+
 ## v1.2.1 (18 Dec 2025)
 - Show explanation modal for Compare feature when user has only one timetable
 

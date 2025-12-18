@@ -234,7 +234,7 @@ export function EventsCompareView({
               )}
             </div>
 
-            <div className="compare-column">
+            <div className="compare-column" data-name={leftTimetable.name}>
               {leftEvents.length > 0 ? (
                 <ul>
                   {leftEvents.map((event, i) => renderEvent(event, i, identicalLeft.has(i)))}
@@ -244,7 +244,7 @@ export function EventsCompareView({
               )}
             </div>
 
-            <div className="compare-column">
+            <div className="compare-column" data-name={rightTimetable.name}>
               {rightEvents.length > 0 ? (
                 <ul>
                   {rightEvents.map((event, i) => renderEvent(event, i, identicalRight.has(i)))}

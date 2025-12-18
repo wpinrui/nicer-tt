@@ -297,6 +297,12 @@ function MainPage() {
           </button>
           {mobileMenuOpen && (
             <div className="mobile-menu">
+              <button
+                onClick={() => { handleCompareClick(); setMobileMenuOpen(false); }}
+                disabled={timetables.length === 0}
+              >
+                <GitCompare size={18} /> Compare
+              </button>
               <button onClick={() => { handleDownload(); setMobileMenuOpen(false); }}>
                 <Download size={18} /> Download .ics
               </button>
