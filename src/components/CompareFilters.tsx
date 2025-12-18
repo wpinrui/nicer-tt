@@ -173,7 +173,7 @@ export function CompareFilters({
       {/* Mobile configure button - shown only on mobile when travel/eat is active */}
       {needsConfig && (
         <button
-          className={`mobile-config-btn ${compareFilter === 'travel' ? 'mobile-config-btn-travel' : 'mobile-config-btn-meal'}`}
+          className="mobile-config-btn"
           onClick={() => setShowConfigModal(true)}
         >
           <Settings size={14} />
