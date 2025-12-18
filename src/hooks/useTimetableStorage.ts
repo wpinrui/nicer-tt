@@ -192,13 +192,12 @@ export function useTimetableStorage() {
   }, [activeTimetableId]);
 
   // Set the active timetable being viewed
+  // Note: No validation - allows setting ID immediately after addTimetable before state updates.
+  // The activeTimetable derivation handles invalid IDs gracefully by falling back to primary.
   const setActiveTimetable = useCallback((id: string) => {
-    const timetable = timetables.find(t => t.id === id);
-    if (timetable) {
-      setActiveTimetableIdState(id);
-      saveActiveId(id);
-    }
-  }, [timetables]);
+    setActiveTimetableIdState(id);
+    saveActiveId(id);
+  }, []);
 
   // Get a specific timetable by ID
   const getTimetable = useCallback((id: string): Timetable | null => {
