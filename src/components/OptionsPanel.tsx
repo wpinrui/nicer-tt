@@ -40,22 +40,6 @@ export function OptionsPanel({
   const [backgroundStatus, setBackgroundStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [backgroundToast, setBackgroundToast] = useState<string | null>(null);
 
-  // Card opacity state
-  const [cardOpacity, setCardOpacity] = useState<number>(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEYS.CARD_OPACITY);
-      return stored ? JSON.parse(stored) : 0.85;
-    } catch {
-      return 0.85;
-    }
-  });
-
-  const handleOpacityChange = (value: number) => {
-    setCardOpacity(value);
-    localStorage.setItem(STORAGE_KEYS.CARD_OPACITY, JSON.stringify(value));
-    window.dispatchEvent(new Event('cardOpacityChange'));
-  };
-
   // Check if using plain background (custom background set to 'plain')
   const isPlainBackground = customBackground === 'plain';
 
@@ -224,21 +208,6 @@ export function OptionsPanel({
               )}
             </>
           )}
-          <div className="options-opacity-row">
-            <label className="options-opacity-label">
-              <span>Card opacity</span>
-              <span className="options-opacity-value">{Math.round(cardOpacity * 100)}%</span>
-            </label>
-            <input
-              type="range"
-              min="0.3"
-              max="1"
-              step="0.05"
-              value={cardOpacity}
-              onChange={(e) => handleOpacityChange(parseFloat(e.target.value))}
-              className="options-opacity-slider"
-            />
-          </div>
           {backgroundToast && (
             <div className={`options-background-toast ${backgroundStatus === 'error' ? 'error' : 'success'}`}>
               {backgroundToast}

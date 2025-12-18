@@ -21,9 +21,12 @@ html.dark .app {
   pointer-events: none;
 }
 
+.app.plain-bg::before {
+  display: none;
+}
+
 .card {
-  --card-opacity: 0.85;
-  background: rgb(255 255 255 / var(--card-opacity));
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 20px;
@@ -124,7 +127,7 @@ html.dark .app {
 
 /* Dark mode styles */
 html.dark .card {
-  background: rgb(30 30 30 / var(--card-opacity));
+  background: rgba(30, 30, 30, 0.85);
   border-color: rgba(255, 255, 255, 0.1);
 }
 

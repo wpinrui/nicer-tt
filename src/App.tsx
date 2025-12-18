@@ -14,15 +14,6 @@ function App() {
     }
   });
 
-  const [cardOpacity, setCardOpacity] = useState<number>(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEYS.CARD_OPACITY);
-      return stored ? JSON.parse(stored) : 0.85;
-    } catch {
-      return 0.85;
-    }
-  });
-
   // Listen for localStorage changes (from OptionsPanel)
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
@@ -31,13 +22,6 @@ function App() {
           setCustomBackground(e.newValue ? JSON.parse(e.newValue) : null);
         } catch {
           setCustomBackground(null);
-        }
-      }
-      if (e.key === STORAGE_KEYS.CARD_OPACITY) {
-        try {
-          setCardOpacity(e.newValue ? JSON.parse(e.newValue) : 0.85);
-        } catch {
-          setCardOpacity(0.85);
         }
       }
     };
@@ -52,22 +36,11 @@ function App() {
       }
     };
 
-    const handleOpacityEvent = () => {
-      try {
-        const stored = localStorage.getItem(STORAGE_KEYS.CARD_OPACITY);
-        setCardOpacity(stored ? JSON.parse(stored) : 0.85);
-      } catch {
-        setCardOpacity(0.85);
-      }
-    };
-
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('customBackgroundChange', handleCustomEvent);
-    window.addEventListener('cardOpacityChange', handleOpacityEvent);
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('customBackgroundChange', handleCustomEvent);
-      window.removeEventListener('cardOpacityChange', handleOpacityEvent);
     };
   }, []);
 
@@ -77,13 +50,11 @@ function App() {
       : { background: `url('${customBackground}') center/cover fixed` }
     : undefined;
 
-  const cardStyle = {
-    '--card-opacity': cardOpacity,
-  } as React.CSSProperties;
+  const isPlainBackground = customBackground === 'plain';
 
   return (
-    <div className="app" style={backgroundStyle}>
-      <div className="card" style={cardStyle}>
+    <div className={`app${isPlainBackground ? ' plain-bg' : ''}`} style={backgroundStyle}>
+      <div className="card">
         <div className="card-content">
           <MainPage />
         </div>
