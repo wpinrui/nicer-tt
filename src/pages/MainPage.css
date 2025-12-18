@@ -2369,6 +2369,7 @@ html.dark .privacy-link:hover {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 
   .compare-filter-btn {
@@ -2407,6 +2408,17 @@ html.dark .privacy-link:hover {
 
   .mobile-config-btn:hover {
     background: rgba(100, 108, 255, 0.15);
+  }
+
+  /* Travel config button - yellow accent */
+  .mobile-config-btn-travel {
+    background: rgba(255, 193, 7, 0.1);
+    border-color: rgba(255, 193, 7, 0.3);
+    color: #f9a825;
+  }
+
+  .mobile-config-btn-travel:hover {
+    background: rgba(255, 193, 7, 0.15);
   }
 
   .filters-toggle {
@@ -3113,7 +3125,6 @@ html.dark .meal-range-label[data-tooltip]:hover::before {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.5rem;
   font-size: 0.8rem;
   color: #666;
 }
