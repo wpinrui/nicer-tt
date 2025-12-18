@@ -2451,6 +2451,21 @@ html.dark .header-btn:disabled {
   cursor: not-allowed;
 }
 
+/* Compare explanation modal list */
+.compare-explanation-list {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+  color: #555;
+}
+
+.compare-explanation-list li {
+  margin-bottom: 0.35rem;
+}
+
+html.dark .compare-explanation-list {
+  color: #aaa;
+}
+
 /* Dark mode compare modal */
 html.dark .compare-modal {
   background: #2a2a2a;

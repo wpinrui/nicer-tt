@@ -31,6 +31,7 @@ function MainPage() {
 
   // Compare mode state
   const [showCompareModal, setShowCompareModal] = useState(false);
+  const [showCompareExplanation, setShowCompareExplanation] = useState(false);
   const [compareMode, setCompareMode] = useState(false);
   const [compareTimetables, setCompareTimetables] = useState<[string, string] | null>(null);
   const [compareFilter, setCompareFilter] = useState<CompareFilter>('none');
@@ -51,9 +52,6 @@ function MainPage() {
   const handleMealConfigChange = useCallback((update: Partial<MealConfig>) => {
     setMealConfig(prev => ({ ...prev, ...update }));
   }, []);
-
-  // Check if compare is available (need at least 2 timetables)
-  const canCompare = timetables.length >= 2;
 
   const hasExistingData = Boolean(events && events.length > 0);
   const {
@@ -234,10 +232,19 @@ function MainPage() {
     setShowCompareModal(false);
   };
 
+  // Handle compare button click
+  const handleCompareClick = () => {
+    if (timetables.length < 2) {
+      setShowCompareExplanation(true);
+    } else {
+      setShowCompareModal(true);
+    }
+  };
+
   // Get compare tooltip based on state
   const getCompareTooltip = () => {
     if (timetables.length === 0) return 'Add a timetable first';
-    if (timetables.length === 1) return 'Add another timetable to compare';
+    if (timetables.length === 1) return 'Learn about comparing timetables';
     return compareMode ? 'Change comparison' : 'Compare timetables';
   };
 
@@ -265,9 +272,9 @@ function MainPage() {
           </h1>
           <div className="header-actions desktop-only">
             <button
-              onClick={() => setShowCompareModal(true)}
+              onClick={handleCompareClick}
               className={`header-btn ${compareMode ? 'header-btn-active' : ''}`}
-              disabled={!canCompare}
+              disabled={timetables.length === 0}
               title={getCompareTooltip()}
             >
               <GitCompare size={14} /> {compareMode ? 'Comparing' : 'Compare'}
@@ -555,6 +562,28 @@ function MainPage() {
           onReset={handleExitCompare}
           onClose={() => setShowCompareModal(false)}
         />
+      )}
+
+      {showCompareExplanation && (
+        <Modal
+          title="Compare Timetables"
+          onClose={() => setShowCompareExplanation(false)}
+          onConfirm={() => {
+            setShowCompareExplanation(false);
+            setShowOptions(true);
+          }}
+          confirmText="Go to Options"
+          confirmVariant="primary"
+        >
+          <p>Compare your timetable side-by-side with a friend's to find:</p>
+          <ul className="compare-explanation-list">
+            <li>Days you're both on campus</li>
+            <li>Identical free slots</li>
+            <li>Time to travel together</li>
+            <li>Lunch or dinner breaks together</li>
+          </ul>
+          <p>To get started, add another timetable in <strong>Options → Timetables</strong> using a share link or file.</p>
+        </Modal>
       )}
     </div>
   );

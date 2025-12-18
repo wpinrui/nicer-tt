@@ -1,4 +1,7 @@
 # Changelog
+## v1.2.1 (18 Dec 2025)
+- Show explanation modal for Compare feature when user has only one timetable
+
 ## v1.2.0 (18 Dec 2025)
 - Add active timetable switching with eye icon in Options panel
 - Show "Viewing" badge and colored styling for active timetable
