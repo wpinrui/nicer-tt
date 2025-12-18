@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { X, Upload, RotateCcw, Sun, Moon, Shield, HelpCircle, ExternalLink, Image, Trash2, Link, Pencil, Check, Eye } from 'lucide-react';
-import { STORAGE_KEYS } from '../utils/constants';
+import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
 import type { Timetable, TimetableEvent } from '../utils/parseHtml';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { parseIcs } from '../utils/parseIcs';
@@ -86,10 +86,10 @@ export function OptionsPanel({
     window.dispatchEvent(new Event('customBackgroundChange'));
   };
 
-  // Auto-hide toast after 3 seconds
+  // Auto-hide toast
   useEffect(() => {
     if (backgroundToast) {
-      const timer = setTimeout(() => setBackgroundToast(null), 3000);
+      const timer = setTimeout(() => setBackgroundToast(null), TOAST_DURATION_MS);
       return () => clearTimeout(timer);
     }
   }, [backgroundToast]);
@@ -108,7 +108,7 @@ export function OptionsPanel({
   // Auto-hide timetable toast
   useEffect(() => {
     if (timetableToast) {
-      const timer = setTimeout(() => setTimetableToast(null), 3000);
+      const timer = setTimeout(() => setTimetableToast(null), TOAST_DURATION_MS);
       return () => clearTimeout(timer);
     }
   }, [timetableToast]);

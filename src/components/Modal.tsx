@@ -5,7 +5,7 @@ interface ModalProps {
   children: ReactNode;
   onClose: () => void;
   onConfirm: () => void;
-  confirmText?: string;
+  confirmText?: ReactNode;
   confirmVariant?: 'danger' | 'primary';
   cancelText?: string;
   onSecondary?: () => void;

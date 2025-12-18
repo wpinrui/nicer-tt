@@ -3,7 +3,7 @@ import { Upload, Download, FileText, Share2, HelpCircle, Settings, ArrowLeft, Me
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { parseIcs } from '../utils/parseIcs';
-import { STORAGE_KEYS } from '../utils/constants';
+import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
 import type { CompareFilter } from '../utils/constants';
 import type { TravelConfig, MealConfig } from '../utils/compareUtils';
 import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents } from '../hooks';
@@ -100,7 +100,7 @@ function MainPage() {
       // Defer toast to avoid synchronous setState in effect
       queueMicrotask(() => {
         setSwitchedToast(`Switched to "${matchedTimetable.name}"`);
-        setTimeout(() => setSwitchedToast(null), 3000);
+        setTimeout(() => setSwitchedToast(null), TOAST_DURATION_MS);
       });
     }
   }, [matchedTimetable, setActiveTimetable, clearMatchedTimetable]);
@@ -179,7 +179,7 @@ function MainPage() {
 
   const handleViewingToast = (name: string) => {
     setSwitchedToast(`Now viewing "${name}"`);
-    setTimeout(() => setSwitchedToast(null), 3000);
+    setTimeout(() => setSwitchedToast(null), TOAST_DURATION_MS);
   };
 
   const handleAddShareData = () => {

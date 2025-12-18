@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Share2 } from 'lucide-react';
 import type { Timetable } from '../utils/parseHtml';
+import { Modal } from './Modal';
 
 interface ShareSelectModalProps {
   timetables: Timetable[];
@@ -19,36 +20,31 @@ export function ShareSelectModal({ timetables, onShare, onClose }: ShareSelectMo
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <h3>Share Timetable</h3>
-        <p>Which timetable would you like to share?</p>
-        <div className="share-select-list">
-          {timetables.map((timetable) => (
-            <label key={timetable.id} className="share-select-item">
-              <input
-                type="radio"
-                name="share-timetable"
-                value={timetable.id}
-                checked={selectedId === timetable.id}
-                onChange={() => setSelectedId(timetable.id)}
-              />
-              <span className="share-select-name">
-                {timetable.name}
-                {timetable.isPrimary && <span className="share-select-badge">You</span>}
-              </span>
-            </label>
-          ))}
-        </div>
-        <div className="modal-actions">
-          <button className="modal-cancel" onClick={onClose}>
-            Cancel
-          </button>
-          <button className="modal-confirm-primary" onClick={handleShare}>
-            <Share2 size={14} /> Copy Share Link
-          </button>
-        </div>
+    <Modal
+      title="Share Timetable"
+      onClose={onClose}
+      onConfirm={handleShare}
+      confirmText={<><Share2 size={14} /> Copy Share Link</>}
+      confirmVariant="primary"
+    >
+      <p>Which timetable would you like to share?</p>
+      <div className="share-select-list">
+        {timetables.map((timetable) => (
+          <label key={timetable.id} className="share-select-item">
+            <input
+              type="radio"
+              name="share-timetable"
+              value={timetable.id}
+              checked={selectedId === timetable.id}
+              onChange={() => setSelectedId(timetable.id)}
+            />
+            <span className="share-select-name">
+              {timetable.name}
+              {timetable.isPrimary && <span className="share-select-badge">You</span>}
+            </span>
+          </label>
+        ))}
       </div>
-    </div>
+    </Modal>
   );
 }
