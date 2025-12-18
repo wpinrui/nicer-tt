@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Timetable } from '../utils/parseHtml';
+import styles from './CompareModal.module.scss';
 
 interface CompareModalProps {
   timetables: Timetable[];
@@ -68,59 +69,59 @@ export function CompareModal({
 
   return (
     <div className="modal-overlay">
-      <div className="compare-modal" onClick={(e) => e.stopPropagation()}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>Compare Timetables</h3>
-        <p className="compare-modal-desc">
+        <p className={styles.desc}>
           Select two timetables to compare side by side
         </p>
 
-        <div className="compare-panes">
-          <div className="compare-pane">
+        <div className={styles.panes}>
+          <div className={styles.pane}>
             <h4>Left Column</h4>
-            <div className="compare-pane-list">
+            <div className={styles.paneList}>
               {timetables.map((t) => (
                 <button
                   key={t.id}
-                  className={`compare-pane-item ${leftSelection === t.id ? 'selected' : ''}`}
+                  className={`${styles.paneItem} ${leftSelection === t.id ? styles.selected : ''}`}
                   onClick={() => handleLeftSelect(t.id)}
                 >
-                  <span className="compare-pane-name">{t.name}</span>
-                  {t.isPrimary && <span className="compare-pane-badge">You</span>}
+                  <span className={styles.paneName}>{t.name}</span>
+                  {t.isPrimary && <span className={styles.paneBadge}>You</span>}
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="compare-pane-divider" />
+          <div className={styles.paneDivider} />
 
-          <div className="compare-pane">
+          <div className={styles.pane}>
             <h4>Right Column</h4>
-            <div className="compare-pane-list">
+            <div className={styles.paneList}>
               {timetables.map((t) => (
                 <button
                   key={t.id}
-                  className={`compare-pane-item ${rightSelection === t.id ? 'selected' : ''}`}
+                  className={`${styles.paneItem} ${rightSelection === t.id ? styles.selected : ''}`}
                   onClick={() => handleRightSelect(t.id)}
                 >
-                  <span className="compare-pane-name">{t.name}</span>
-                  {t.isPrimary && <span className="compare-pane-badge">You</span>}
+                  <span className={styles.paneName}>{t.name}</span>
+                  {t.isPrimary && <span className={styles.paneBadge}>You</span>}
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="modal-actions">
-          <button className="modal-cancel" onClick={onClose}>
+        <div className={styles.actions}>
+          <button className={styles.cancel} onClick={onClose}>
             Cancel
           </button>
           {isCompareMode && (
-            <button className="modal-secondary exit-compare-btn" onClick={onReset}>
+            <button className={styles.secondary} onClick={onReset}>
               Exit Compare
             </button>
           )}
           <button
-            className="modal-confirm-primary"
+            className={styles.confirm}
             onClick={handleConfirm}
             disabled={!canCompare}
           >

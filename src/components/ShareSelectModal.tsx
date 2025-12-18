@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Share2 } from 'lucide-react';
 import type { Timetable } from '../utils/parseHtml';
 import { Modal } from './Modal';
+import styles from './ShareSelectModal.module.scss';
 
 interface ShareSelectModalProps {
   timetables: Timetable[];
@@ -28,9 +29,9 @@ export function ShareSelectModal({ timetables, onShare, onClose }: ShareSelectMo
       confirmVariant="primary"
     >
       <p>Which timetable would you like to share?</p>
-      <div className="share-select-list">
+      <div className={styles.list}>
         {timetables.map((timetable) => (
-          <label key={timetable.id} className="share-select-item">
+          <label key={timetable.id} className={styles.item}>
             <input
               type="radio"
               name="share-timetable"
@@ -38,9 +39,9 @@ export function ShareSelectModal({ timetables, onShare, onClose }: ShareSelectMo
               checked={selectedId === timetable.id}
               onChange={() => setSelectedId(timetable.id)}
             />
-            <span className="share-select-name">
+            <span className={styles.name}>
               {timetable.name}
-              {timetable.isPrimary && <span className="share-select-badge">You</span>}
+              {timetable.isPrimary && <span className={styles.badge}>You</span>}
             </span>
           </label>
         ))}
