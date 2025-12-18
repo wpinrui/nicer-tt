@@ -1,4 +1,15 @@
 # Changelog
+## v1.2.0 (18 Dec 2025)
+- Add active timetable switching with eye icon in Options panel
+- Show "Viewing" badge and colored styling for active timetable
+- Display active timetable name in events count
+- Allow deleting primary timetable (My Timetable)
+- Remove Data section (functionality moved to Timetables)
+- Add Factory Reset button in Help section
+- Share button asks which timetable to share when multiple exist
+- Smart share link handling: auto-switches if timetable already saved
+- "Add to Timetables" option when receiving share links
+
 ## v1.1.2 (18 Dec 2025)
 - Cap travel wait time at 2 hours
 - Cap dinner end time at 9pm

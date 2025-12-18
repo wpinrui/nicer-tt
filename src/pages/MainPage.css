@@ -466,6 +466,11 @@ header h1 {
   text-align: left;
 }
 
+.events-count-timetable {
+  color: #646cff;
+  font-weight: 500;
+}
+
 .events-preview {
   background: rgba(0, 0, 0, 0.04);
   padding: 1rem 1.25rem;
@@ -1007,6 +1012,52 @@ header h1 {
   background: rgba(0, 0, 0, 0.12);
 }
 
+/* Share select modal */
+.share-select-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.share-select-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.share-select-item:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.share-select-item input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #646cff;
+}
+
+.share-select-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.share-select-badge {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.4rem;
+  background: rgba(100, 108, 255, 0.15);
+  color: #646cff;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
 /* Options panel styles */
 .options-button {
   display: inline-flex;
@@ -1480,6 +1531,10 @@ html.dark .events-count {
   color: #aaa;
 }
 
+html.dark .events-count-timetable {
+  color: #a5a8ff;
+}
+
 html.dark .events-preview {
   background: rgba(0, 0, 0, 0.3);
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
@@ -1590,6 +1645,23 @@ html.dark .modal-secondary {
 
 html.dark .modal-secondary:hover {
   background: rgba(255, 255, 255, 0.15);
+}
+
+html.dark .share-select-item {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+html.dark .share-select-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+html.dark .share-select-name {
+  color: #e0e0e0;
+}
+
+html.dark .share-select-badge {
+  background: rgba(100, 108, 255, 0.3);
+  color: #a5a8ff;
 }
 
 html.dark .temp-view-banner {
@@ -2465,6 +2537,25 @@ html.dark .compare-pane-badge {
   color: #c62828;
 }
 
+.timetable-action-btn-view {
+  color: #1976d2;
+}
+
+.timetable-action-btn-view:hover {
+  background: rgba(25, 118, 210, 0.1);
+  color: #1565c0;
+}
+
+.timetable-list-item-active {
+  background: rgba(100, 108, 255, 0.12);
+  border: 1px solid rgba(100, 108, 255, 0.3);
+}
+
+.timetable-badge-active {
+  background: rgba(100, 108, 255, 0.2);
+  color: #646cff;
+}
+
 .timetable-edit-row {
   display: flex;
   align-items: center;
@@ -2585,6 +2676,25 @@ html.dark .timetable-action-btn:hover {
 html.dark .timetable-action-btn-danger:hover {
   background: rgba(198, 40, 40, 0.2);
   color: #ef5350;
+}
+
+html.dark .timetable-action-btn-view {
+  color: #64b5f6;
+}
+
+html.dark .timetable-action-btn-view:hover {
+  background: rgba(100, 181, 246, 0.15);
+  color: #90caf9;
+}
+
+html.dark .timetable-list-item-active {
+  background: rgba(100, 108, 255, 0.2);
+  border-color: rgba(100, 108, 255, 0.4);
+}
+
+html.dark .timetable-badge-active {
+  background: rgba(100, 108, 255, 0.3);
+  color: #a5a8ff;
 }
 
 html.dark .timetable-name-input {
