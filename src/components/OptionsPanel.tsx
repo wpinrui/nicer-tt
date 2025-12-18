@@ -21,6 +21,7 @@ interface OptionsPanelProps {
   onAddTimetable: (events: TimetableEvent[], fileName: string | null, customName?: string) => string;
   onRenameTimetable: (id: string, newName: string) => void;
   onDeleteTimetable: (id: string) => boolean;
+  onViewingToast: (name: string) => void;
 }
 
 export function OptionsPanel({
@@ -36,6 +37,7 @@ export function OptionsPanel({
   onAddTimetable,
   onRenameTimetable,
   onDeleteTimetable,
+  onViewingToast,
 }: OptionsPanelProps) {
   const addFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -191,7 +193,7 @@ export function OptionsPanel({
 
   const handleSetActiveTimetable = (id: string, name: string) => {
     onSetActiveTimetable(id);
-    setTimetableToast({ message: `Now viewing "${name}"`, type: 'success' });
+    onViewingToast(name);
   };
 
   const validateAndSetBackground = (url: string) => {

@@ -177,6 +177,11 @@ function MainPage() {
     createShareLink(timetable.events, timetable.fileName || timetable.name);
   };
 
+  const handleViewingToast = (name: string) => {
+    setSwitchedToast(`Now viewing "${name}"`);
+    setTimeout(() => setSwitchedToast(null), 3000);
+  };
+
   const handleAddShareData = () => {
     const sharedData = confirmShare();
     if (sharedData) {
@@ -521,6 +526,7 @@ function MainPage() {
           onAddTimetable={addTimetable}
           onRenameTimetable={renameTimetable}
           onDeleteTimetable={deleteTimetable}
+          onViewingToast={handleViewingToast}
         />
       )}
 
