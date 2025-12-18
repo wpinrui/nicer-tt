@@ -9,7 +9,7 @@ import type { TravelConfig, MealConfig } from '../utils/compareUtils';
 import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents } from '../hooks';
 import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, ShareSelectModal, PrivacyNoticeModal, CompareModal, CompareFilters, EventsCompareView } from '../components';
 import HelpPage from './HelpPage';
-import './MainPage.css';
+import './MainPage.scss';
 
 function MainPage() {
   const { events, setTimetable, clearTimetable, timetables, activeTimetable, setActiveTimetable, addTimetable, renameTimetable, deleteTimetable, getTimetable } = useTimetableStorage();
