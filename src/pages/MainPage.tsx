@@ -576,12 +576,12 @@ function MainPage() {
           confirmVariant="primary"
         >
           <p>Compare your timetable side-by-side with a friend's to find:</p>
-          <ul className="compare-explanation-list">
+          <ol className="compare-explanation-list">
             <li>Days you're both on campus</li>
             <li>Identical free slots</li>
             <li>Time to travel together</li>
             <li>Lunch or dinner breaks together</li>
-          </ul>
+          </ol>
           <p>To get started, add another timetable in <strong>Options → Timetables</strong> using a share link or file.</p>
         </Modal>
       )}

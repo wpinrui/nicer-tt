@@ -2456,10 +2456,12 @@ html.dark .header-btn:disabled {
   margin: 0.75rem 0;
   padding-left: 1.5rem;
   color: #555;
+  text-align: left;
 }
 
 .compare-explanation-list li {
   margin-bottom: 0.35rem;
+  text-align: left;
 }
 
 html.dark .compare-explanation-list {
