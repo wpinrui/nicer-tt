@@ -1,13 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Users, Car, Info, Utensils, Filter, ChevronDown, ChevronUp, Settings, type LucideIcon } from 'lucide-react';
 import type { CompareFilter, TravelConfig, MealConfig } from '../types';
-import { Modal } from './Modal';
-import {
-  LUNCH_START_HOURS,
-  LUNCH_END_HOURS,
-  DINNER_START_HOURS,
-  DINNER_END_HOURS,
-} from '../shared/constants';
+import { TravelConfigForm, MealConfigForm, MobileCompareSheet } from './compare';
 import styles from './CompareFilters.module.scss';
 
 interface CompareFiltersProps {
@@ -35,197 +29,7 @@ const FILTER_BUTTONS: FilterButtonConfig[] = [
   { id: 'eat', icon: Utensils, label: 'Eat Together', tooltip: 'Find 1-hour gaps during lunch or dinner where both can eat together' },
 ];
 
-function formatHour(hour: number): string {
-  if (hour === 0) return '12am';
-  if (hour === 12) return '12pm';
-  if (hour < 12) return `${hour}am`;
-  return `${hour - 12}pm`;
-}
-
-// Shared configuration options
-const WAIT_TIME_OPTIONS = [
-  { value: 5, label: '5 min' },
-  { value: 10, label: '10 min' },
-  { value: 15, label: '15 min' },
-  { value: 30, label: '30 min' },
-  { value: 45, label: '45 min' },
-  { value: 60, label: '1 hour' },
-  { value: 90, label: '1.5 hours' },
-  { value: 120, label: '2 hours' },
-];
-
-
 const MOBILE_BREAKPOINT = '(max-width: 768px)';
-
-const TRAVEL_DIRECTIONS = ['to', 'from', 'both', 'either'] as const;
-const TRAVEL_DIRECTION_LABELS: Record<TravelConfig['direction'], string> = {
-  to: 'TO School',
-  from: 'FROM School',
-  both: 'BOTH',
-  either: 'EITHER',
-};
-const TRAVEL_DIRECTION_TOOLTIPS: Record<TravelConfig['direction'], string> = {
-  to: 'Compare first class of the day',
-  from: 'Compare last class of the day',
-  both: 'Both can travel to AND from school together',
-  either: 'Can travel to OR from school together',
-};
-
-interface TravelDirectionButtonsProps {
-  value: TravelConfig['direction'];
-  onChange: (direction: TravelConfig['direction']) => void;
-  buttonClassName: string;
-  showTooltips?: boolean;
-}
-
-function TravelDirectionButtons({ value, onChange, buttonClassName, showTooltips }: TravelDirectionButtonsProps) {
-  return (
-    <>
-      {TRAVEL_DIRECTIONS.map(dir => (
-        <button
-          key={dir}
-          className={`${buttonClassName} ${value === dir ? styles.active : ''}`}
-          onClick={() => onChange(dir)}
-          data-tooltip={showTooltips ? TRAVEL_DIRECTION_TOOLTIPS[dir] : undefined}
-        >
-          {TRAVEL_DIRECTION_LABELS[dir]}
-        </button>
-      ))}
-    </>
-  );
-}
-
-const MEAL_TYPES = ['lunch', 'dinner'] as const;
-const MEAL_TYPE_LABELS: Record<MealConfig['type'], string> = {
-  lunch: 'Lunch',
-  dinner: 'Dinner',
-};
-const MEAL_TYPE_TOOLTIPS: Record<MealConfig['type'], string> = {
-  lunch: 'Find lunch gaps only',
-  dinner: 'Find dinner gaps only',
-};
-
-interface MealTypeButtonsProps {
-  value: MealConfig['type'];
-  onChange: (type: MealConfig['type']) => void;
-  buttonClassName: string;
-  showTooltips?: boolean;
-}
-
-function MealTypeButtons({ value, onChange, buttonClassName, showTooltips }: MealTypeButtonsProps) {
-  return (
-    <>
-      {MEAL_TYPES.map(type => (
-        <button
-          key={type}
-          className={`${buttonClassName} ${value === type ? styles.active : ''}`}
-          onClick={() => onChange(type)}
-          data-tooltip={showTooltips ? MEAL_TYPE_TOOLTIPS[type] : undefined}
-        >
-          {MEAL_TYPE_LABELS[type]}
-        </button>
-      ))}
-    </>
-  );
-}
-
-interface ModalTimeRangeProps {
-  label: string;
-  startValue: number;
-  endValue: number;
-  startOptions: number[];
-  endOptions: number[];
-  onStartChange: (value: number) => void;
-  onEndChange: (value: number) => void;
-}
-
-function ModalTimeRange({
-  label,
-  startValue,
-  endValue,
-  startOptions,
-  endOptions,
-  onStartChange,
-  onEndChange,
-}: ModalTimeRangeProps) {
-  return (
-    <div className={styles.modalConfigSection}>
-      <label className={styles.modalConfigLabel}>
-        {label}
-        <div className={styles.modalTimeRange}>
-          <select
-            className={styles.modalConfigSelect}
-            value={startValue}
-            onChange={(e) => onStartChange(Number(e.target.value))}
-          >
-            {startOptions.map(hour => (
-              <option key={hour} value={hour}>{formatHour(hour)}</option>
-            ))}
-          </select>
-          <span>to</span>
-          <select
-            className={styles.modalConfigSelect}
-            value={endValue}
-            onChange={(e) => onEndChange(Number(e.target.value))}
-          >
-            {endOptions.map(hour => (
-              <option key={hour} value={hour}>{formatHour(hour)}</option>
-            ))}
-          </select>
-        </div>
-      </label>
-    </div>
-  );
-}
-
-interface MealTimeRangeProps {
-  label: string;
-  tooltip: string;
-  startValue: number;
-  endValue: number;
-  startOptions: number[];
-  endOptions: number[];
-  onStartChange: (value: number) => void;
-  onEndChange: (value: number) => void;
-}
-
-function MealTimeRange({
-  label,
-  tooltip,
-  startValue,
-  endValue,
-  startOptions,
-  endOptions,
-  onStartChange,
-  onEndChange,
-}: MealTimeRangeProps) {
-  return (
-    <div className={styles.mealRangeGroup}>
-      <label className={styles.mealRangeLabel} data-tooltip={tooltip}>
-        {label}:
-        <select
-          className={styles.mealTimeSelect}
-          value={startValue}
-          onChange={(e) => onStartChange(Number(e.target.value))}
-        >
-          {startOptions.map(hour => (
-            <option key={hour} value={hour}>{formatHour(hour)}</option>
-          ))}
-        </select>
-        <span className={styles.mealTimeSeparator}>to</span>
-        <select
-          className={styles.mealTimeSelect}
-          value={endValue}
-          onChange={(e) => onEndChange(Number(e.target.value))}
-        >
-          {endOptions.map(hour => (
-            <option key={hour} value={hour}>{formatHour(hour)}</option>
-          ))}
-        </select>
-      </label>
-    </div>
-  );
-}
 
 export function CompareFilters({
   compareFilter,
@@ -243,7 +47,6 @@ export function CompareFilters({
     () => window.matchMedia(MOBILE_BREAKPOINT).matches
   );
 
-  // Subscribe to viewport changes
   useEffect(() => {
     const mediaQuery = window.matchMedia(MOBILE_BREAKPOINT);
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
@@ -256,7 +59,6 @@ export function CompareFilters({
       onFilterChange('none');
     } else {
       onFilterChange(filter);
-      // On mobile, show config modal for filters that need configuration
       if (isMobile && (filter === 'travel' || filter === 'eat')) {
         setShowConfigModal(true);
       }
@@ -268,7 +70,6 @@ export function CompareFilters({
 
   return (
     <div className={styles.container}>
-      {/* Mobile toggle button - hidden on desktop via CSS */}
       <button
         className={styles.filtersToggle}
         onClick={() => setFiltersExpanded(!filtersExpanded)}
@@ -293,7 +94,6 @@ export function CompareFilters({
         ))}
       </div>
 
-      {/* Mobile configure button - shown only on mobile when travel/eat is active */}
       {needsConfig && (
         <button
           className={styles.mobileConfigBtn}
@@ -305,73 +105,11 @@ export function CompareFilters({
       )}
 
       {compareFilter === 'travel' && (
-        <div className={styles.travelOptions}>
-          <div className={styles.travelDirectionGroup}>
-            <span className={styles.travelOptionsLabel}>Direction:</span>
-            <div className={styles.travelDirectionBtns}>
-              <TravelDirectionButtons
-                value={travelConfig.direction}
-                onChange={(direction) => onTravelConfigChange({ direction })}
-                buttonClassName={styles.travelDirectionBtn}
-                showTooltips
-              />
-            </div>
-          </div>
-
-          <div className={styles.travelWaitGroup}>
-            <label className={styles.travelOptionsLabel} data-tooltip="Maximum time willing to wait for each other">
-              Wait time:
-              <select
-                className={styles.travelWaitSelect}
-                value={travelConfig.waitMinutes}
-                onChange={(e) => onTravelConfigChange({ waitMinutes: Number(e.target.value) })}
-              >
-                {WAIT_TIME_OPTIONS.map(({ value, label }) => (
-                  <option key={value} value={value}>{label}</option>
-                ))}
-              </select>
-            </label>
-          </div>
-        </div>
+        <TravelConfigForm config={travelConfig} onChange={onTravelConfigChange} />
       )}
 
       {compareFilter === 'eat' && (
-        <div className={styles.eatOptions}>
-          <div className={styles.eatTypeGroup}>
-            <span className={styles.eatOptionsLabel}>Meal:</span>
-            <div className={styles.eatTypeBtns}>
-              <MealTypeButtons
-                value={mealConfig.type}
-                onChange={(type) => onMealConfigChange({ type })}
-                buttonClassName={styles.eatTypeBtn}
-                showTooltips
-              />
-            </div>
-          </div>
-
-          <div className={styles.mealTimeRanges}>
-            <MealTimeRange
-              label="Lunch"
-              tooltip="Set the lunch time window"
-              startValue={mealConfig.lunchStart}
-              endValue={mealConfig.lunchEnd}
-              startOptions={LUNCH_START_HOURS}
-              endOptions={LUNCH_END_HOURS}
-              onStartChange={(v) => onMealConfigChange({ lunchStart: v })}
-              onEndChange={(v) => onMealConfigChange({ lunchEnd: v })}
-            />
-            <MealTimeRange
-              label="Dinner"
-              tooltip="Set the dinner time window"
-              startValue={mealConfig.dinnerStart}
-              endValue={mealConfig.dinnerEnd}
-              startOptions={DINNER_START_HOURS}
-              endOptions={DINNER_END_HOURS}
-              onStartChange={(v) => onMealConfigChange({ dinnerStart: v })}
-              onEndChange={(v) => onMealConfigChange({ dinnerEnd: v })}
-            />
-          </div>
-        </div>
+        <MealConfigForm config={mealConfig} onChange={onMealConfigChange} />
       )}
 
       <div className={styles.compareNamesRow}>
@@ -381,82 +119,15 @@ export function CompareFilters({
         <span className={styles.compareNameTag}>{rightName}</span>
       </div>
 
-      {/* Mobile config modal */}
-      {showConfigModal && compareFilter === 'travel' && (
-        <Modal
-          title="Travel Options"
-          onClose={() => setShowConfigModal(false)}
-          onConfirm={() => setShowConfigModal(false)}
-          confirmText="Done"
-          confirmVariant="primary"
-          cancelText=""
-        >
-          <div className={styles.modalConfigSection}>
-            <label className={styles.modalConfigLabel}>Direction</label>
-            <div className={styles.modalConfigButtons}>
-              <TravelDirectionButtons
-                value={travelConfig.direction}
-                onChange={(direction) => onTravelConfigChange({ direction })}
-                buttonClassName={styles.modalConfigBtn}
-              />
-            </div>
-          </div>
-          <div className={styles.modalConfigSection}>
-            <label className={styles.modalConfigLabel}>
-              Max wait time
-              <select
-                className={styles.modalConfigSelect}
-                value={travelConfig.waitMinutes}
-                onChange={(e) => onTravelConfigChange({ waitMinutes: Number(e.target.value) })}
-              >
-                {WAIT_TIME_OPTIONS.map(({ value, label }) => (
-                  <option key={value} value={value}>{label}</option>
-                ))}
-              </select>
-            </label>
-          </div>
-        </Modal>
-      )}
-
-      {showConfigModal && compareFilter === 'eat' && (
-        <Modal
-          title="Meal Options"
-          onClose={() => setShowConfigModal(false)}
-          onConfirm={() => setShowConfigModal(false)}
-          confirmText="Done"
-          confirmVariant="primary"
-          cancelText=""
-        >
-          <div className={styles.modalConfigSection}>
-            <label className={styles.modalConfigLabel}>Meal type</label>
-            <div className={styles.modalConfigButtons}>
-              <MealTypeButtons
-                value={mealConfig.type}
-                onChange={(type) => onMealConfigChange({ type })}
-                buttonClassName={styles.modalConfigBtn}
-              />
-            </div>
-          </div>
-          <ModalTimeRange
-            label="Lunch window"
-            startValue={mealConfig.lunchStart}
-            endValue={mealConfig.lunchEnd}
-            startOptions={LUNCH_START_HOURS}
-            endOptions={LUNCH_END_HOURS}
-            onStartChange={(v) => onMealConfigChange({ lunchStart: v })}
-            onEndChange={(v) => onMealConfigChange({ lunchEnd: v })}
-          />
-          <ModalTimeRange
-            label="Dinner window"
-            startValue={mealConfig.dinnerStart}
-            endValue={mealConfig.dinnerEnd}
-            startOptions={DINNER_START_HOURS}
-            endOptions={DINNER_END_HOURS}
-            onStartChange={(v) => onMealConfigChange({ dinnerStart: v })}
-            onEndChange={(v) => onMealConfigChange({ dinnerEnd: v })}
-          />
-        </Modal>
-      )}
+      <MobileCompareSheet
+        compareFilter={compareFilter}
+        showConfigModal={showConfigModal}
+        onClose={() => setShowConfigModal(false)}
+        travelConfig={travelConfig}
+        onTravelConfigChange={onTravelConfigChange}
+        mealConfig={mealConfig}
+        onMealConfigChange={onMealConfigChange}
+      />
     </div>
   );
 }
