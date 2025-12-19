@@ -4,6 +4,7 @@ import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
 import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents, useMainPageState } from '../hooks';
 import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, ShareSelectModal, PrivacyNoticeModal, CompareModal, CompareFilters, EventsCompareView, UploadSection } from '../components';
+import type { UploadSectionHandle } from '../components/UploadSection';
 import HelpPage from './HelpPage';
 import './MainPage.scss';
 
@@ -13,7 +14,7 @@ function MainPage() {
   const [darkMode, setDarkMode] = useLocalStorage(STORAGE_KEYS.DARK_MODE, true);
   const [showTutor, setShowTutor] = useLocalStorage(STORAGE_KEYS.SHOW_TUTOR, true);
   const [switchedToast, setSwitchedToast] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const uploadRef = useRef<UploadSectionHandle>(null);
 
   const {
     filterState, setSearchQuery, setSelectedDate, setHidePastDates,
@@ -140,8 +141,8 @@ function MainPage() {
             </h1>
             <p className="subtitle">View, export, and share your NIE timetable</p>
           </header>
-          <UploadSection onUpload={handleUpload} onError={setError} onClear={clearTimetable} onFirstUpload={() => setShowShareWelcome(true)} />
-          <HelpPage onUploadClick={() => fileInputRef.current?.click()} onPrivacyClick={() => setShowPrivacyNotice(true)} />
+          <UploadSection ref={uploadRef} onUpload={handleUpload} onError={setError} onClear={clearTimetable} onFirstUpload={() => setShowShareWelcome(true)} />
+          <HelpPage onUploadClick={() => uploadRef.current?.triggerUpload()} onPrivacyClick={() => setShowPrivacyNotice(true)} />
         </>
       )}
 

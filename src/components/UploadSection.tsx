@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useImperativeHandle, forwardRef } from 'react';
 import { Upload, FileText } from 'lucide-react';
 import type { TimetableEvent } from '../types';
 import { parseHtmlTimetable } from '../utils/parseHtml';
@@ -13,8 +13,17 @@ interface UploadSectionProps {
   onFirstUpload: () => void;
 }
 
-export function UploadSection({ onUpload, onError, onClear, onFirstUpload }: UploadSectionProps) {
+export interface UploadSectionHandle {
+  triggerUpload: () => void;
+}
+
+export const UploadSection = forwardRef<UploadSectionHandle, UploadSectionProps>(
+  function UploadSection({ onUpload, onError, onClear, onFirstUpload }, ref) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    triggerUpload: () => fileInputRef.current?.click(),
+  }));
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -81,4 +90,4 @@ export function UploadSection({ onUpload, onError, onClear, onFirstUpload }: Upl
       </label>
     </div>
   );
-}
+});
