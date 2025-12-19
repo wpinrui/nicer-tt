@@ -28,9 +28,6 @@ export const DEFAULT_TIMETABLE_NAMES = [
   "Someten's Timetable",
 ] as const;
 
-// Re-export CompareFilter for backward compatibility
-export type { CompareFilter } from '../types';
-
 // Color palette for course codes (darker shades for white text)
 export const COURSE_COLORS = [
   '#b71c1c', '#880e4f', '#4a148c', '#311b92', '#1a237e',

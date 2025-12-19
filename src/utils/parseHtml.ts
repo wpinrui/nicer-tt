@@ -1,8 +1,5 @@
 import type { TimetableEvent } from '../types';
 
-// Re-export types for backward compatibility
-export type { TimetableEvent, Timetable } from '../types';
-
 export function parseHtmlTimetable(html: string): TimetableEvent[] {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');

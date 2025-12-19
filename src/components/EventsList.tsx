@@ -72,6 +72,3 @@ export function EventsList({
     </>
   );
 }
-
-// Re-export types for backward compatibility
-export type { GroupedEvent, EventItem } from '../types';

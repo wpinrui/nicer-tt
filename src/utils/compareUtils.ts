@@ -1,15 +1,5 @@
 import { createSortKey, getDateSearchString } from './formatters';
-import type { TimetableEvent, EventItem, GroupedEvent } from '../types';
-
-// Re-export types for backward compatibility
-export type {
-  EventItem,
-  GroupedEvent,
-  TravelInfo,
-  MealInfo,
-  TravelConfig,
-  MealConfig,
-} from '../types';
+import type { TimetableEvent, EventItem, GroupedEvent, TravelInfo, MealInfo } from '../types';
 
 // Convert time string "HHMM" to minutes since midnight
 export function timeToMinutes(time: string): number {
