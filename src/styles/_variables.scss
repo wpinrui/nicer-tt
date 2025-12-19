@@ -1,0 +1,168 @@
+// Theme Variables
+// This file defines CSS custom properties for light and dark themes
+// Usage: var(--color-name)
+
+:root {
+  // Primary brand colors
+  --color-primary: #646cff;
+  --color-primary-hover: #535bf2;
+  --color-primary-light: rgba(100, 108, 255, 0.1);
+  --color-primary-light-hover: rgba(100, 108, 255, 0.2);
+
+  // Text colors
+  --color-text-primary: #333;
+  --color-text-secondary: #555;
+  --color-text-muted: #666;
+  --color-text-placeholder: #888;
+  --color-text-disabled: #999;
+
+  // Background colors
+  --color-bg-primary: #fff;
+  --color-bg-secondary: #f5f5f5;
+  --color-bg-tertiary: rgba(0, 0, 0, 0.08);
+  --color-bg-hover: rgba(0, 0, 0, 0.12);
+  --color-input-bg: #fff;
+  --color-select-bg: #fff;
+
+  // Border colors
+  --color-border: rgba(0, 0, 0, 0.15);
+  --color-border-light: rgba(0, 0, 0, 0.1);
+  --color-border-focus: #646cff;
+
+  // Status colors
+  --color-success: #4caf50;
+  --color-success-hover: #43a047;
+  --color-success-light: rgba(76, 175, 80, 0.1);
+  --color-success-text: #2e7d32;
+
+  --color-error: #c62828;
+  --color-error-hover: #b71c1c;
+  --color-error-light: rgba(198, 40, 40, 0.1);
+  --color-error-text: #c62828;
+
+  --color-info: #2196f3;
+  --color-info-hover: #1976d2;
+  --color-info-light: rgba(33, 150, 243, 0.1);
+
+  --color-warning: #ff9800;
+  --color-warning-hover: #f57c00;
+  --color-warning-light: rgba(255, 152, 0, 0.1);
+  --color-warning-text: #e65100;
+
+  // Accent colors for events
+  --color-accent-purple: #9c27b0;
+  --color-accent-purple-hover: #7b1fa2;
+
+  // Today highlight
+  --color-today: #d84315;
+  --color-today-bg: rgba(100, 108, 255, 0.1);
+
+  // Modal/overlay
+  --color-overlay: rgba(0, 0, 0, 0.5);
+  --color-modal-bg: #fff;
+  --color-modal-shadow: rgba(0, 0, 0, 0.2);
+
+  // Scrollbar
+  --color-scrollbar-track: #f0f0f0;
+  --color-scrollbar-thumb: #ccc;
+  --color-scrollbar-thumb-hover: #bbb;
+
+  // Toast
+  --color-toast-bg: #333;
+  --color-toast-text: #fff;
+
+  // Tooltip
+  --color-tooltip-bg: #333;
+  --color-tooltip-text: #fff;
+
+  // Compare view specific
+  --color-compare-border: rgba(0, 0, 0, 0.1);
+  --color-compare-highlight: rgba(100, 108, 255, 0.15);
+
+  // Badges
+  --color-badge-bg: rgba(100, 108, 255, 0.15);
+  --color-badge-text: #646cff;
+
+  // Travel badges
+  --color-travel-to-bg: rgba(33, 150, 243, 0.15);
+  --color-travel-to-text: #1976d2;
+  --color-travel-from-bg: rgba(255, 152, 0, 0.15);
+  --color-travel-from-text: #e65100;
+  --color-travel-both-bg: rgba(76, 175, 80, 0.15);
+  --color-travel-both-text: #2e7d32;
+
+  // Meal badges
+  --color-meal-lunch-bg: rgba(255, 152, 0, 0.15);
+  --color-meal-lunch-text: #e65100;
+  --color-meal-dinner-bg: rgba(156, 39, 176, 0.15);
+  --color-meal-dinner-text: #7b1fa2;
+  --color-meal-both-bg: rgba(76, 175, 80, 0.15);
+  --color-meal-both-text: #2e7d32;
+}
+
+// Dark theme overrides
+html.dark {
+  --color-primary: #646cff;
+  --color-primary-hover: #7577ff;
+  --color-primary-light: rgba(100, 108, 255, 0.2);
+  --color-primary-light-hover: rgba(100, 108, 255, 0.3);
+
+  --color-text-primary: #e0e0e0;
+  --color-text-secondary: #ccc;
+  --color-text-muted: #aaa;
+  --color-text-placeholder: #888;
+  --color-text-disabled: #777;
+
+  --color-bg-primary: #1a1a1a;
+  --color-bg-secondary: #242424;
+  --color-bg-tertiary: rgba(255, 255, 255, 0.08);
+  --color-bg-hover: rgba(255, 255, 255, 0.12);
+  --color-input-bg: rgba(255, 255, 255, 0.1);
+  --color-select-bg: #3a3a3a;
+
+  --color-border: rgba(255, 255, 255, 0.15);
+  --color-border-light: rgba(255, 255, 255, 0.1);
+  --color-border-focus: #646cff;
+
+  --color-success-light: rgba(76, 175, 80, 0.2);
+  --color-success-text: #81c784;
+
+  --color-error-light: rgba(198, 40, 40, 0.2);
+  --color-error-text: #ef5350;
+
+  --color-info-light: rgba(33, 150, 243, 0.2);
+
+  --color-warning-light: rgba(255, 152, 0, 0.2);
+  --color-warning-text: #ffb74d;
+
+  --color-today: #ff8a65;
+  --color-today-bg: rgba(100, 108, 255, 0.2);
+
+  --color-overlay: rgba(0, 0, 0, 0.7);
+  --color-modal-bg: #2a2a2a;
+  --color-modal-shadow: rgba(0, 0, 0, 0.4);
+
+  --color-scrollbar-track: #2a2a2a;
+  --color-scrollbar-thumb: #555;
+  --color-scrollbar-thumb-hover: #666;
+
+  --color-compare-border: rgba(255, 255, 255, 0.1);
+  --color-compare-highlight: rgba(100, 108, 255, 0.25);
+
+  --color-badge-bg: rgba(100, 108, 255, 0.25);
+  --color-badge-text: #a5a8ff;
+
+  --color-travel-to-bg: rgba(33, 150, 243, 0.25);
+  --color-travel-to-text: #64b5f6;
+  --color-travel-from-bg: rgba(255, 152, 0, 0.25);
+  --color-travel-from-text: #ffa726;
+  --color-travel-both-bg: rgba(76, 175, 80, 0.25);
+  --color-travel-both-text: #81c784;
+
+  --color-meal-lunch-bg: rgba(255, 152, 0, 0.25);
+  --color-meal-lunch-text: #ffa726;
+  --color-meal-dinner-bg: rgba(156, 39, 176, 0.25);
+  --color-meal-dinner-text: #ce93d8;
+  --color-meal-both-bg: rgba(76, 175, 80, 0.25);
+  --color-meal-both-text: #81c784;
+}

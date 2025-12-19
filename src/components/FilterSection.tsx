@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { Search, X, Filter, ChevronDown, ChevronUp, Calendar } from 'lucide-react';
+import styles from './FilterSection.module.scss';
 
 interface FilterSectionProps {
   searchQuery: string;
@@ -49,18 +50,18 @@ export function FilterSection({
   };
 
   return (
-    <div className="filters-section no-print">
-      <div className="search-row">
-        <div className={`search-input-wrapper ${selectedDate ? 'has-date-pill' : ''}`}>
-          <Search size={16} className="search-icon" />
+    <div className={`${styles.section} no-print`}>
+      <div className={styles.searchRow}>
+        <div className={`${styles.searchInputWrapper} ${selectedDate ? styles.hasDatePill : ''}`}>
+          <Search size={16} className={styles.searchIcon} />
           {selectedDate && (
             <button
-              className="date-pill"
+              className={styles.datePill}
               onClick={handleDateClear}
               title="Clear date filter"
             >
               <span>{formatDatePill(selectedDate)}</span>
-              <X size={12} className="date-pill-x" />
+              <X size={12} className={styles.datePillX} />
             </button>
           )}
           <input
@@ -68,17 +69,17 @@ export function FilterSection({
             placeholder={selectedDate ? "Search..." : "Search courses, venues, tutors..."}
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="search-input"
+            className={styles.searchInput}
           />
           <input
             ref={dateInputRef}
             type="date"
-            className="date-input-hidden"
+            className={styles.dateInputHidden}
             value={selectedDate || ''}
             onChange={(e) => onDateChange(e.target.value || null)}
           />
           <button
-            className="date-picker-btn"
+            className={styles.datePickerBtn}
             onClick={handleDatePickerClick}
             title="Filter by date"
           >
@@ -87,17 +88,17 @@ export function FilterSection({
         </div>
         {/* Mobile: expand filters button */}
         <button
-          className="expand-filters-btn"
+          className={styles.expandFiltersBtn}
           onClick={() => setFiltersExpanded(!filtersExpanded)}
         >
           <Filter size={14} />
           {filtersExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           {selectedCourses.size > 0 && (
-            <span className="filter-badge">{selectedCourses.size}</span>
+            <span className={styles.filterBadge}>{selectedCourses.size}</span>
           )}
         </button>
         {/* Desktop: inline controls */}
-        <label className="hide-past-toggle desktop-only">
+        <label className={`${styles.hidePastToggle} ${styles.desktopOnly}`}>
           <input
             type="checkbox"
             checked={hidePastDates}
@@ -106,17 +107,17 @@ export function FilterSection({
           <span>Hide past</span>
         </label>
         {hasActiveFilters && (
-          <button onClick={onClearFilters} className="clear-filters-btn desktop-only">
+          <button onClick={onClearFilters} className={`${styles.clearFiltersBtn} ${styles.desktopOnly}`}>
             <X size={14} /> Clear
           </button>
         )}
       </div>
       {/* Desktop: always visible course filters */}
-      <div className="course-filters desktop-only">
+      <div className={`${styles.courseFilters} ${styles.desktopOnly}`}>
         {uniqueCourses.map((course) => (
           <button
             key={course}
-            className={`course-filter-btn ${selectedCourses.has(course) ? 'active' : ''}`}
+            className={styles.courseFilterBtn}
             style={{
               backgroundColor:
                 selectedCourses.has(course) || selectedCourses.size === 0
@@ -132,8 +133,8 @@ export function FilterSection({
       </div>
       {/* Mobile: expandable filters panel */}
       {filtersExpanded && (
-        <div className="mobile-filters-panel">
-          <label className="hide-past-toggle">
+        <div className={styles.mobileFiltersPanel}>
+          <label className={styles.hidePastToggle}>
             <input
               type="checkbox"
               checked={hidePastDates}
@@ -142,15 +143,15 @@ export function FilterSection({
             <span>Hide past</span>
           </label>
           {hasActiveFilters && (
-            <button onClick={onClearFilters} className="clear-filters-btn">
+            <button onClick={onClearFilters} className={styles.clearFiltersBtn}>
               <X size={14} /> Clear
             </button>
           )}
-          <div className="course-filters">
+          <div className={styles.courseFilters}>
             {uniqueCourses.map((course) => (
               <button
                 key={course}
-                className={`course-filter-btn ${selectedCourses.has(course) ? 'active' : ''}`}
+                className={styles.courseFilterBtn}
                 style={{
                   backgroundColor:
                     selectedCourses.has(course) || selectedCourses.size === 0

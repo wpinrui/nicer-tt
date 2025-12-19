@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import styles from './Modal.module.scss';
 
 interface ModalProps {
   title: string;
@@ -23,21 +24,21 @@ export function Modal({
   onSecondary,
   secondaryText,
 }: ModalProps) {
-  const confirmClass = confirmVariant === 'primary' ? 'modal-confirm-primary' : 'modal-confirm';
+  const confirmClass = confirmVariant === 'primary' ? styles.confirmPrimary : styles.confirm;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+    <div className={styles.overlay}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>{title}</h3>
         {children}
-        <div className="modal-actions">
+        <div className={styles.actions}>
           {cancelText && (
-            <button className="modal-cancel" onClick={onClose}>
+            <button className={styles.cancel} onClick={onClose}>
               {cancelText}
             </button>
           )}
           {onSecondary && secondaryText && (
-            <button className="modal-secondary" onClick={onSecondary}>
+            <button className={styles.secondary} onClick={onSecondary}>
               {secondaryText}
             </button>
           )}

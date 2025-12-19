@@ -1,5 +1,7 @@
+@use './styles/mixins' as *;
+
 .app {
-  --plain-bg-color: #f5f5f5;
+  --plain-bg-color: var(--color-bg-secondary);
   min-height: 100vh;
   display: flex;
   align-items: flex-start;
@@ -7,22 +9,18 @@
   padding: 3.5rem 2rem 2rem;
   background: url('/mihai-moisa-Jsxfie_bUyw-unsplash.jpg') center/cover fixed;
   position: relative;
-}
 
-html.dark .app {
-  --plain-bg-color: #1a1a1a;
-}
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.4) 100%);
+    pointer-events: none;
+  }
 
-.app::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.4) 100%);
-  pointer-events: none;
-}
-
-.app.plain-bg::before {
-  display: none;
+  &.plain-bg::before {
+    display: none;
+  }
 }
 
 .card {
@@ -30,7 +28,7 @@ html.dark .app {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px var(--color-modal-shadow);
   width: 100%;
   min-width: 1200px;
   max-width: 1200px;
@@ -39,6 +37,11 @@ html.dark .app {
   flex-direction: column;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.3);
+
+  html.dark & {
+    background: rgba(30, 30, 30, 0.85);
+    border-color: var(--color-border-light);
+  }
 }
 
 .card-content {
@@ -50,6 +53,63 @@ html.dark .app {
   overflow: hidden;
 }
 
+.page-footer {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.5);
+
+  a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: underline;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  html.dark & {
+    color: rgba(255, 255, 255, 0.7);
+
+    a {
+      color: rgba(255, 255, 255, 0.85);
+    }
+  }
+}
+
+.made-by {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none !important;
+  color: inherit;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: rgba(255, 255, 255, 0.9);
+  }
+
+  &:hover svg {
+    fill: #fff;
+  }
+}
+
+// Print styles
 @media print {
   .app {
     background: none !important;
@@ -77,69 +137,7 @@ html.dark .app {
   }
 }
 
-.page-footer {
-  position: fixed;
-  bottom: 1rem;
-  left: 1rem;
-  right: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.95);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.5);
-}
-
-.page-footer a {
-  color: rgba(255, 255, 255, 0.9);
-  text-decoration: underline;
-}
-
-.page-footer a:hover {
-  color: #fff;
-}
-
-.made-by {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  text-decoration: none !important;
-  color: inherit;
-}
-
-.made-by a {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  color: inherit;
-}
-
-.made-by svg {
-  width: 18px;
-  height: 18px;
-  fill: rgba(255, 255, 255, 0.9);
-}
-
-.made-by:hover svg {
-  fill: #fff;
-}
-
-/* Dark mode styles */
-html.dark .card {
-  background: rgba(30, 30, 30, 0.85);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-html.dark .page-footer {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-html.dark .page-footer a {
-  color: rgba(255, 255, 255, 0.85);
-}
-
-/* Tablet - make card fluid */
+// Tablet - make card fluid
 @media (max-width: 1280px) {
   .app {
     padding: 1.5rem;
@@ -151,8 +149,8 @@ html.dark .page-footer a {
   }
 }
 
-/* Mobile - full screen layout */
-@media (max-width: 768px) {
+// Mobile - full screen layout
+@include mobile {
   .app {
     padding: 0;
     align-items: stretch;
@@ -160,14 +158,14 @@ html.dark .page-footer a {
     height: 100vh;
     height: 100svh;
     overflow: hidden;
-  }
 
-  html.dark .app {
-    background: linear-gradient(to bottom, #1a1a1a 0%, #0d0d0d 100%);
-  }
+    html.dark & {
+      background: linear-gradient(to bottom, #1a1a1a 0%, #0d0d0d 100%);
+    }
 
-  .app::before {
-    display: none;
+    &::before {
+      display: none;
+    }
   }
 
   .card {
@@ -181,10 +179,10 @@ html.dark .page-footer a {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     overflow: hidden;
-  }
 
-  html.dark .card {
-    background: transparent;
+    html.dark & {
+      background: transparent;
+    }
   }
 
   .card-content {

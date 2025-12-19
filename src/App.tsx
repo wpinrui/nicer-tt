@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import MainPage from './pages/MainPage';
 import { Analytics } from '@vercel/analytics/react';
 import { STORAGE_KEYS } from './utils/constants';
-import './App.css';
+import './App.scss';
 
 function App() {
   const [customBackground, setCustomBackground] = useState<string | null>(() => {

@@ -1,0 +1,559 @@
+@use '../styles/mixins' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+// Filters toggle button (mobile only)
+.filtersToggle {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.2);
+  border-radius: 8px;
+  color: #f9a825;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+
+  &:hover {
+    background: rgba(255, 193, 7, 0.15);
+  }
+
+  @include mobile {
+    display: flex;
+  }
+
+  html.dark & {
+    background: rgba(255, 193, 7, 0.15);
+    border-color: rgba(255, 193, 7, 0.3);
+    color: #ffc107;
+
+    &:hover {
+      background: rgba(255, 193, 7, 0.25);
+    }
+  }
+}
+
+// Filter buttons row
+.filtersRow {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  @include mobile {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    &.collapsed {
+      display: none;
+    }
+  }
+}
+
+.filterBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.06);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+
+  &:hover {
+    background: rgba(255, 193, 7, 0.15);
+    color: #f9a825;
+  }
+
+  &.active {
+    background: rgba(255, 193, 7, 0.2);
+    border-color: #f9a825;
+    color: #f9a825;
+  }
+
+  @include mobile {
+    width: 100%;
+    justify-content: center;
+  }
+
+  html.dark & {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-secondary);
+
+    &:hover {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+    }
+
+    &.active {
+      background: rgba(255, 193, 7, 0.25);
+      border-color: #f9a825;
+      color: #ffc107;
+    }
+  }
+}
+
+.filterInfo {
+  opacity: 0.5;
+
+  @include mobile {
+    display: none;
+  }
+}
+
+.filterBtn:hover .filterInfo {
+  opacity: 0.8;
+}
+
+// Tooltip styles
+.filterBtn[data-tooltip],
+.travelDirectionBtn[data-tooltip],
+.eatTypeBtn[data-tooltip],
+.travelOptionsLabel[data-tooltip],
+.mealRangeLabel[data-tooltip] {
+  position: relative;
+
+  &:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    margin-bottom: 0.5rem;
+    z-index: 100;
+    font-style: normal;
+    font-weight: 400;
+    pointer-events: none;
+  }
+
+  &:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--color-text-primary);
+    margin-bottom: -0.1rem;
+    z-index: 100;
+    pointer-events: none;
+  }
+
+  html.dark &:hover::after {
+    background: #444;
+  }
+}
+
+// Mobile configure button
+.mobileConfigBtn {
+  display: none;
+
+  @include mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-top: 0.5rem;
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 8px;
+    color: #f9a825;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 193, 7, 0.15);
+    }
+
+    html.dark & {
+      background: rgba(255, 193, 7, 0.15);
+      border-color: rgba(255, 193, 7, 0.4);
+      color: #ffc107;
+
+      &:hover {
+        background: rgba(255, 193, 7, 0.25);
+      }
+    }
+  }
+}
+
+// Travel options
+.travelOptions {
+  display: none;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem;
+  background: rgba(255, 193, 7, 0.08);
+  border-radius: 8px;
+
+  @media (min-width: 769px) {
+    display: flex;
+  }
+
+  html.dark & {
+    background: rgba(255, 193, 7, 0.12);
+  }
+}
+
+.travelDirectionGroup,
+.travelWaitGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.travelOptionsLabel {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  html.dark & {
+    color: var(--color-text-muted);
+  }
+}
+
+.travelDirectionBtns {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.travelDirectionBtn {
+  padding: 0.35rem 0.6rem;
+  background: rgba(0, 0, 0, 0.06);
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: rgba(255, 193, 7, 0.15);
+    color: #f9a825;
+  }
+
+  &.active {
+    background: #f9a825;
+    color: var(--color-text-primary);
+  }
+
+  html.dark & {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-secondary);
+
+    &:hover {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+    }
+
+    &.active {
+      background: #f9a825;
+      color: var(--color-text-primary);
+    }
+  }
+}
+
+.travelWaitSelect {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  background: var(--color-select-bg);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  outline: none;
+
+  &:focus {
+    border-color: var(--color-primary);
+  }
+
+  option {
+    background: var(--color-select-bg);
+    color: var(--color-text-primary);
+  }
+}
+
+// Eat options
+.eatOptions {
+  display: none;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem;
+  background: rgba(255, 193, 7, 0.08);
+  border-radius: 8px;
+
+  @media (min-width: 769px) {
+    display: flex;
+  }
+
+  html.dark & {
+    background: rgba(255, 193, 7, 0.12);
+  }
+}
+
+.eatTypeGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eatOptionsLabel {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+
+  html.dark & {
+    color: var(--color-text-muted);
+  }
+}
+
+.eatTypeBtns {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.eatTypeBtn {
+  padding: 0.35rem 0.6rem;
+  background: rgba(0, 0, 0, 0.06);
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: rgba(255, 193, 7, 0.15);
+    color: #f9a825;
+  }
+
+  &.active {
+    background: #f9a825;
+    color: var(--color-text-primary);
+  }
+
+  html.dark & {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-secondary);
+
+    &:hover {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+    }
+
+    &.active {
+      background: #f9a825;
+      color: var(--color-text-primary);
+    }
+  }
+}
+
+.mealTimeRanges {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.mealRangeGroup {
+  display: flex;
+  align-items: center;
+}
+
+.mealRangeLabel {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  html.dark & {
+    color: var(--color-text-muted);
+  }
+}
+
+.mealTimeSelect {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  background: var(--color-select-bg);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  outline: none;
+
+  option {
+    background: var(--color-select-bg);
+    color: var(--color-text-primary);
+  }
+}
+
+.mealTimeSeparator {
+  font-size: 0.75rem;
+  color: var(--color-text-placeholder);
+  margin: 0 0.25rem;
+
+  html.dark & {
+    color: var(--color-text-placeholder);
+  }
+}
+
+// Compare names row
+.compareNamesRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+
+  html.dark & {
+    color: var(--color-text-muted);
+  }
+}
+
+.compareNameLabel {
+  font-weight: 500;
+}
+
+.compareNameTag {
+  padding: 0.2rem 0.5rem;
+  background: rgba(255, 193, 7, 0.2);
+  color: #f9a825;
+  font-weight: 600;
+  border-radius: 4px;
+
+  html.dark & {
+    background: rgba(255, 193, 7, 0.25);
+    color: #ffc107;
+  }
+}
+
+.compareVs {
+  color: var(--color-text-disabled);
+  font-style: italic;
+
+  html.dark & {
+    color: #777;
+  }
+}
+
+// Modal config styles
+.modalConfigSection {
+  margin-bottom: 1rem;
+}
+
+.modalConfigLabel {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.5rem;
+
+  html.dark & {
+    color: var(--color-text-muted);
+  }
+}
+
+.modalConfigButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.modalConfigBtn {
+  padding: 0.75rem 1rem;
+  background: var(--color-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: rgba(255, 193, 7, 0.15);
+    color: #f9a825;
+  }
+
+  &.active {
+    background: #f9a825;
+    color: var(--color-text-primary);
+    border-color: #f9a825;
+  }
+
+  html.dark & {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-muted);
+
+    &:hover {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+    }
+
+    &.active {
+      background: #f9a825;
+      color: var(--color-text-primary);
+    }
+  }
+}
+
+.modalConfigSelect {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  background: var(--color-select-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+}
+
+.modalTimeRange {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+
+  select {
+    flex: 1;
+    padding: 0.75rem;
+    background: var(--color-select-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+  }
+
+  span {
+    color: var(--color-text-placeholder);
+    font-size: 0.85rem;
+  }
+}

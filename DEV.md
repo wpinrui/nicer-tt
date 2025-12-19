@@ -1,4 +1,9 @@
 # Changelog
+## v1.3.1 (19 Dec 2025)
+- Migrate styling from CSS to SCSS with CSS variables
+- Add centralized theme variables for light/dark mode
+- Add SCSS mixins for responsive breakpoints
+
 ## v1.3.0 (19 Dec 2025)
 - Add mobile support for Compare view with stacked layout
 - Add Compare button to mobile hamburger menu

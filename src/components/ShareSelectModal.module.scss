@@ -1,0 +1,44 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-bg-tertiary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: var(--color-bg-hover);
+  }
+
+  input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary);
+  }
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.badge {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.4rem;
+  background: var(--color-badge-bg);
+  color: var(--color-primary);
+  border-radius: 4px;
+  font-weight: 600;
+}

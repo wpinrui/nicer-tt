@@ -1,0 +1,164 @@
+@use '../styles/mixins' as *;
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease-out;
+
+  html.dark & {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal {
+  background: var(--color-modal-bg);
+  border-radius: 16px;
+  padding: 2rem;
+  width: 550px;
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: modalSlideIn 0.2s ease-out;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--color-text-primary);
+
+    html.dark & {
+      color: var(--color-text-primary);
+    }
+  }
+}
+
+.icon {
+  color: var(--color-warning-text);
+  flex-shrink: 0;
+}
+
+.content {
+  text-align: left;
+
+  section {
+    margin-bottom: 1.25rem;
+  }
+
+  h4 {
+    margin: 0 0 0.35rem 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+
+    html.dark & {
+      color: var(--color-text-primary);
+    }
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+
+    html.dark & {
+      color: #bbb;
+    }
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+.warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(230, 81, 0, 0.08);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+  border-left: 3px solid #e65100;
+
+  html.dark & {
+    background: rgba(230, 81, 0, 0.15);
+  }
+}
+
+.warningIcon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.warningText {
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+
+  html.dark & {
+    color: var(--color-text-secondary);
+  }
+}
+
+.actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.closeBtn {
+  padding: 0.75rem 2rem;
+  background: #e65100;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #bf360c;
+  }
+}

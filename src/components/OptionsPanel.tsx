@@ -6,6 +6,7 @@ import { parseHtmlTimetable } from '../utils/parseHtml';
 import { parseIcs } from '../utils/parseIcs';
 import { decodeShareUrl } from '../utils/shareUtils';
 import { Modal } from './Modal';
+import styles from './OptionsPanel.module.scss';
 
 interface OptionsPanelProps {
   darkMode: boolean;
@@ -246,19 +247,19 @@ export function OptionsPanel({
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="options-panel" onClick={(e) => e.stopPropagation()}>
-        <div className="options-header">
+    <div className={styles.overlay}>
+      <div className={styles.panel} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.header}>
           <h3>Options</h3>
-          <button className="options-close" onClick={onClose}>
+          <button className={styles.closeBtn} onClick={onClose}>
             <X size={18} />
           </button>
         </div>
 
-        <div className="options-content">
-        <div className="options-section">
+        <div className={styles.content}>
+        <div className={styles.section}>
           <h4>Display</h4>
-          <label className="options-toggle">
+          <label className={styles.toggle}>
             <span>Show tutor names</span>
             <input
               type="checkbox"
@@ -266,10 +267,10 @@ export function OptionsPanel({
               onChange={(e) => onShowTutorChange(e.target.checked)}
             />
           </label>
-          <label className="options-toggle">
+          <label className={styles.toggle}>
             <span>{darkMode ? 'Dark mode' : 'Light mode'}</span>
             <button
-              className="options-theme-btn"
+              className={styles.themeBtn}
               onClick={() => onDarkModeChange(!darkMode)}
             >
               {darkMode ? <Sun size={16} /> : <Moon size={16} />}
@@ -278,23 +279,23 @@ export function OptionsPanel({
           </label>
         </div>
 
-        <div className="options-section">
+        <div className={styles.section}>
           <h4>Timetables</h4>
-          <p className="options-privacy-desc">
+          <p className={styles.privacyDesc}>
             Add timetables to compare with friends.
           </p>
 
           {/* List of timetables */}
-          <div className="timetable-list">
+          <div className={styles.timetableList}>
             {timetables.map((timetable) => {
               const isActive = timetable.id === activeTimetableId;
               return (
-                <div key={timetable.id} className={`timetable-list-item ${isActive ? 'timetable-list-item-active' : ''}`}>
+                <div key={timetable.id} className={`${styles.timetableListItem} ${isActive ? styles.timetableListItemActive : ''}`}>
                   {editingTimetableId === timetable.id ? (
-                    <div className="timetable-edit-row">
+                    <div className={styles.timetableEditRow}>
                       <input
                         type="text"
-                        className="timetable-name-input"
+                        className={styles.timetableNameInput}
                         value={editingName}
                         onChange={(e) => setEditingName(e.target.value)}
                         onKeyDown={(e) => {
@@ -307,7 +308,7 @@ export function OptionsPanel({
                         autoFocus
                       />
                       <button
-                        className="timetable-action-btn"
+                        className={styles.timetableActionBtn}
                         onClick={handleSaveRename}
                         title="Save"
                       >
@@ -316,19 +317,19 @@ export function OptionsPanel({
                     </div>
                   ) : (
                     <>
-                      <div className="timetable-info">
-                        <span className="timetable-name">{timetable.name}</span>
+                      <div className={styles.timetableInfo}>
+                        <span className={styles.timetableName}>{timetable.name}</span>
                         {timetable.isPrimary && (
-                          <span className="timetable-badge">You</span>
+                          <span className={styles.timetableBadge}>You</span>
                         )}
                         {isActive && (
-                          <span className="timetable-badge timetable-badge-active">Viewing</span>
+                          <span className={`${styles.timetableBadge} ${styles.timetableBadgeActive}`}>Viewing</span>
                         )}
                       </div>
-                      <div className="timetable-actions">
+                      <div className={styles.timetableActions}>
                         {!isActive && (
                           <button
-                            className="timetable-action-btn timetable-action-btn-view"
+                            className={`${styles.timetableActionBtn} ${styles.timetableActionBtnView}`}
                             onClick={() => handleSetActiveTimetable(timetable.id, timetable.name)}
                             title="View this timetable"
                           >
@@ -336,14 +337,14 @@ export function OptionsPanel({
                           </button>
                         )}
                         <button
-                          className="timetable-action-btn"
+                          className={styles.timetableActionBtn}
                           onClick={() => handleStartRename(timetable)}
                           title="Rename"
                         >
                           <Pencil size={14} />
                         </button>
                         <button
-                          className="timetable-action-btn timetable-action-btn-danger"
+                          className={`${styles.timetableActionBtn} ${styles.timetableActionBtnDanger}`}
                           onClick={() => handleDeleteTimetable(timetable.id, timetable.name, timetable.isPrimary)}
                           title="Delete"
                         >
@@ -358,15 +359,15 @@ export function OptionsPanel({
           </div>
 
           {/* Add timetable section */}
-          <div className="add-timetable-section">
-            <p className="add-timetable-label">Add another timetable:</p>
+          <div className={styles.addTimetableSection}>
+            <p className={styles.addTimetableLabel}>Add another timetable:</p>
 
-            <div className="add-timetable-row">
-              <div className="add-timetable-input-wrapper">
-                <Link size={14} className="add-timetable-icon" />
+            <div className={styles.addTimetableRow}>
+              <div className={styles.addTimetableInputWrapper}>
+                <Link size={14} className={styles.addTimetableIcon} />
                 <input
                   type="text"
-                  className={`add-timetable-input ${shareLinkError ? 'error' : ''}`}
+                  className={`${styles.addTimetableInput} ${shareLinkError ? styles.error : ''}`}
                   placeholder="Paste a share link..."
                   value={shareLinkInput}
                   onChange={(e) => {
@@ -379,7 +380,7 @@ export function OptionsPanel({
                 />
               </div>
               <button
-                className="options-btn"
+                className={styles.btn}
                 onClick={handleAddFromShareLink}
                 disabled={!shareLinkInput.trim()}
               >
@@ -387,14 +388,14 @@ export function OptionsPanel({
               </button>
             </div>
             {shareLinkError && (
-              <p className="add-timetable-error">{shareLinkError}</p>
+              <p className={styles.addTimetableError}>{shareLinkError}</p>
             )}
 
-            <div className="add-timetable-divider">
+            <div className={styles.addTimetableDivider}>
               <span>or</span>
             </div>
 
-            <label className="options-btn" style={{ display: 'inline-flex' }}>
+            <label className={styles.btn} style={{ display: 'inline-flex' }}>
               <input
                 ref={addFileInputRef}
                 type="file"
@@ -407,15 +408,15 @@ export function OptionsPanel({
           </div>
 
           {timetableToast && (
-            <div className={`options-background-toast ${timetableToast.type}`}>
+            <div className={`${styles.backgroundToast} ${timetableToast.type === 'success' ? styles.success : styles.error}`}>
               {timetableToast.message}
             </div>
           )}
         </div>
 
-        <div className="options-section options-background-section">
+        <div className={`${styles.section} ${styles.backgroundSection}`}>
           <h4>Background</h4>
-          <label className="options-toggle">
+          <label className={styles.toggle}>
             <span>Use plain background</span>
             <input
               type="checkbox"
@@ -425,15 +426,15 @@ export function OptionsPanel({
           </label>
           {!isPlainBackground && (
             <>
-              <p className="options-privacy-desc" style={{ marginTop: '0.75rem' }}>
+              <p className={styles.privacyDesc} style={{ marginTop: '0.75rem' }}>
                 Or paste an image URL for a custom background.
               </p>
-              <div className="options-background-input-row">
-                <div className="options-background-input-wrapper">
-                  <Image size={16} className="options-background-icon" />
+              <div className={styles.backgroundInputRow}>
+                <div className={styles.backgroundInputWrapper}>
+                  <Image size={16} className={styles.backgroundIcon} />
                   <input
                     type="text"
-                    className={`options-background-input ${backgroundStatus === 'error' ? 'error' : ''}`}
+                    className={`${styles.backgroundInput} ${backgroundStatus === 'error' ? styles.error : ''}`}
                     placeholder="https://example.com/image.jpg"
                     value={backgroundInput}
                     onChange={(e) => setBackgroundInput(e.target.value)}
@@ -445,19 +446,19 @@ export function OptionsPanel({
                     }}
                   />
                   {backgroundStatus === 'loading' && (
-                    <span className="options-background-status loading">Loading...</span>
+                    <span className={`${styles.backgroundStatus} ${styles.loading}`}>Loading...</span>
                   )}
                 </div>
               </div>
               {customBackground && customBackground !== 'plain' && (
-                <div className="options-background-preview">
+                <div className={styles.backgroundPreview}>
                   <img
                     src={customBackground}
                     alt="Custom background preview"
-                    className="options-background-thumbnail"
+                    className={styles.backgroundThumbnail}
                   />
                   <button
-                    className="options-btn options-btn-danger"
+                    className={`${styles.btn} ${styles.btnDanger}`}
                     onClick={handleResetBackground}
                   >
                     <RotateCcw size={14} /> Reset to Default
@@ -467,33 +468,33 @@ export function OptionsPanel({
             </>
           )}
           {backgroundToast && (
-            <div className={`options-background-toast ${backgroundStatus === 'error' ? 'error' : 'success'}`}>
+            <div className={`${styles.backgroundToast} ${backgroundStatus === 'error' ? styles.error : styles.success}`}>
               {backgroundToast}
             </div>
           )}
         </div>
 
-        <div className="options-section">
+        <div className={styles.section}>
           <h4>Privacy & Security</h4>
-          <p className="options-privacy-desc">
+          <p className={styles.privacyDesc}>
             Learn how your data is processed and stored.
           </p>
-          <button className="options-btn options-btn-privacy" onClick={onShowPrivacy}>
+          <button className={`${styles.btn} ${styles.btnPrivacy}`} onClick={onShowPrivacy}>
             <Shield size={14} /> View privacy info
           </button>
         </div>
 
-        <div className="options-section">
+        <div className={styles.section}>
           <h4>Help</h4>
-          <p className="options-privacy-desc">
+          <p className={styles.privacyDesc}>
             Version {__APP_VERSION__}. Refer to the User Guide for usage instructions.
           </p>
-          <div className="options-buttons">
+          <div className={styles.buttons}>
             <a
               href="https://github.com/wpinrui/nicer-tt/blob/main/GUIDE.md"
               target="_blank"
               rel="noopener noreferrer"
-              className="options-btn"
+              className={styles.btn}
             >
               <HelpCircle size={14} /> User Guide <ExternalLink size={12} />
             </a>
@@ -501,11 +502,11 @@ export function OptionsPanel({
               href="https://github.com/wpinrui/nicer-tt/issues"
               target="_blank"
               rel="noopener noreferrer"
-              className="options-btn"
+              className={styles.btn}
             >
               <ExternalLink size={14} /> Report an issue
             </a>
-            <button className="options-btn options-btn-danger" onClick={handleFactoryReset}>
+            <button className={`${styles.btn} ${styles.btnDanger}`} onClick={handleFactoryReset}>
               <RotateCcw size={14} /> Factory Reset
             </button>
           </div>
