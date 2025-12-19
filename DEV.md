@@ -1,5 +1,10 @@
 # Changelog
 
+**v1.3.8 (19 Dec 2025)**
+- Decompose OptionsPanel into focused section components
+- Extract TimetableManager, BackgroundSettings, AppSettings, PrivacySection
+- Reduce OptionsPanel.tsx from 552 to 126 lines
+
 **v1.3.7 (19 Dec 2025)**
 - Decompose MainPage into smaller focused components
 - Extract useMainPageState hook for filter, compare, and UI state
