@@ -237,13 +237,13 @@ export function CompareFilters({
 }: CompareFiltersProps) {
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const [showConfigModal, setShowConfigModal] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia(MOBILE_BREAKPOINT).matches
+  );
 
-  // Detect mobile viewport
+  // Subscribe to viewport changes
   useEffect(() => {
     const mediaQuery = window.matchMedia(MOBILE_BREAKPOINT);
-    setIsMobile(mediaQuery.matches);
-
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mediaQuery.addEventListener('change', handler);
     return () => mediaQuery.removeEventListener('change', handler);
