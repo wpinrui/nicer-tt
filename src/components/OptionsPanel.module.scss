@@ -371,7 +371,8 @@
   border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 0.85rem;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--color-input-bg);
+  color: var(--color-text-primary);
   outline: none;
   transition: border-color 0.2s;
   box-sizing: border-box;
@@ -385,17 +386,7 @@
   }
 
   &::placeholder {
-    color: var(--color-text-disabled);
-  }
-
-  html.dark & {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: var(--color-text-primary);
-
-    &::placeholder {
-      color: var(--color-text-placeholder);
-    }
+    color: var(--color-text-placeholder);
   }
 }
 
@@ -600,17 +591,12 @@
 .timetableNameInput {
   flex: 1;
   padding: 0.4rem 0.6rem;
-  border: 1px solid #646cff;
+  border: 1px solid var(--color-primary);
   border-radius: 6px;
   font-size: 0.9rem;
   outline: none;
-  background: white;
-
-  html.dark & {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--color-primary);
-    color: var(--color-text-primary);
-  }
+  background: var(--color-input-bg);
+  color: var(--color-text-primary);
 }
 
 // Add timetable section
@@ -660,6 +646,8 @@
   font-size: 0.85rem;
   outline: none;
   transition: border-color 0.2s;
+  background: var(--color-input-bg);
+  color: var(--color-text-primary);
 
   &:focus {
     border-color: var(--color-primary);
@@ -669,14 +657,8 @@
     border-color: var(--color-error-text);
   }
 
-  html.dark & {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: var(--color-text-primary);
-
-    &::placeholder {
-      color: var(--color-text-placeholder);
-    }
+  &::placeholder {
+    color: var(--color-text-placeholder);
   }
 }
 
