@@ -283,7 +283,7 @@
   border: 1px solid var(--color-border);
   border-radius: 6px;
   font-size: 0.8rem;
-  background: white;
+  background: var(--color-select-bg);
   color: var(--color-text-primary);
   cursor: pointer;
   outline: none;
@@ -293,19 +293,8 @@
   }
 
   option {
-    background: white;
+    background: var(--color-select-bg);
     color: var(--color-text-primary);
-  }
-
-  html.dark & {
-    background: #3a3a3a;
-    border-color: rgba(255, 255, 255, 0.2);
-    color: var(--color-text-primary);
-
-    option {
-      background: #3a3a3a;
-      color: var(--color-text-primary);
-    }
   }
 }
 
@@ -414,25 +403,14 @@
   border: 1px solid var(--color-border);
   border-radius: 6px;
   font-size: 0.8rem;
-  background: white;
+  background: var(--color-select-bg);
   color: var(--color-text-primary);
   cursor: pointer;
   outline: none;
 
   option {
-    background: white;
+    background: var(--color-select-bg);
     color: var(--color-text-primary);
-  }
-
-  html.dark & {
-    background: #3a3a3a;
-    border-color: rgba(255, 255, 255, 0.2);
-    color: var(--color-text-primary);
-
-    option {
-      background: #3a3a3a;
-      color: var(--color-text-primary);
-    }
   }
 }
 
@@ -551,17 +529,11 @@
   width: 100%;
   padding: 0.75rem;
   margin-top: 0.5rem;
-  background: white;
-  border: 1px solid #ddd;
+  background: var(--color-select-bg);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 0.9rem;
   color: var(--color-text-primary);
-
-  html.dark & {
-    background: var(--color-modal-bg);
-    border-color: var(--color-text-primary);
-    color: #ddd;
-  }
 }
 
 .modalTimeRange {
@@ -573,17 +545,11 @@
   select {
     flex: 1;
     padding: 0.75rem;
-    background: white;
-    border: 1px solid #ddd;
+    background: var(--color-select-bg);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     font-size: 0.9rem;
     color: var(--color-text-primary);
-
-    html.dark & {
-      background: var(--color-modal-bg);
-      border-color: var(--color-text-primary);
-      color: #ddd;
-    }
   }
 
   span {

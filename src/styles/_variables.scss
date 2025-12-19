@@ -22,6 +22,7 @@
   --color-bg-tertiary: rgba(0, 0, 0, 0.08);
   --color-bg-hover: rgba(0, 0, 0, 0.12);
   --color-input-bg: #fff;
+  --color-select-bg: #fff;
 
   // Border colors
   --color-border: rgba(0, 0, 0, 0.15);
@@ -117,6 +118,7 @@ html.dark {
   --color-bg-tertiary: rgba(255, 255, 255, 0.08);
   --color-bg-hover: rgba(255, 255, 255, 0.12);
   --color-input-bg: rgba(255, 255, 255, 0.1);
+  --color-select-bg: #3a3a3a;
 
   --color-border: rgba(255, 255, 255, 0.15);
   --color-border-light: rgba(255, 255, 255, 0.1);
