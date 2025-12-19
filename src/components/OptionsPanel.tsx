@@ -247,7 +247,7 @@ export function OptionsPanel({
   };
 
   return (
-    <div className="modal-overlay">
+    <div className={styles.overlay}>
       <div className={styles.panel} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h3>Options</h3>
