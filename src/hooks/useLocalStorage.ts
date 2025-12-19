@@ -1,14 +1,29 @@
 import { useState, useCallback } from 'react';
+import { logError } from '../utils/errors';
 
-export function useLocalStorage<T>(
+interface UseLocalStorageJsonOptions {
+  onError?: (error: Error) => void;
+}
+
+/**
+ * Hook for managing JSON values in localStorage with proper error handling
+ * @param key - localStorage key
+ * @param initialValue - Default value if key doesn't exist or parse fails
+ * @param options - Optional configuration including error callback
+ */
+export function useLocalStorageJson<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
+  options?: UseLocalStorageJsonOptions
 ): [T, (value: T | ((prev: T) => T)) => void] {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = localStorage.getItem(key);
       return item !== null ? JSON.parse(item) : initialValue;
-    } catch {
+    } catch (e) {
+      const error = e instanceof Error ? e : new Error(String(e));
+      logError('useLocalStorageJson:read', error, { key });
+      options?.onError?.(error);
       return initialValue;
     }
   });
@@ -18,12 +33,19 @@ export function useLocalStorage<T>(
       const valueToStore = value instanceof Function ? value(prev) : value;
       try {
         localStorage.setItem(key, JSON.stringify(valueToStore));
-      } catch {
-        // Ignore storage errors
+      } catch (e) {
+        const error = e instanceof Error ? e : new Error(String(e));
+        logError('useLocalStorageJson:write', error, { key });
+        options?.onError?.(error);
       }
       return valueToStore;
     });
-  }, [key]);
+  }, [key, options]);
 
   return [storedValue, setValue];
 }
+
+/**
+ * @deprecated Use useLocalStorageJson instead
+ */
+export const useLocalStorage = useLocalStorageJson;
