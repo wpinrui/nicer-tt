@@ -68,7 +68,7 @@ export function CompareModal({
   const canCompare = leftSelection && rightSelection && leftSelection !== rightSelection;
 
   return (
-    <div className="modal-overlay">
+    <div className={styles.overlay}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>Compare Timetables</h3>
         <p className={styles.desc}>
