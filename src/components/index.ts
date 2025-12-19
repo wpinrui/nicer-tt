@@ -8,3 +8,4 @@ export { PrivacyNoticeModal } from './PrivacyNoticeModal';
 export { CompareModal } from './CompareModal';
 export { CompareFilters } from './CompareFilters';
 export { EventsCompareView } from './EventsCompareView';
+export { UploadSection } from './UploadSection';
