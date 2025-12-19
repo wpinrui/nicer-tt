@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { TimetableEvent, Timetable } from '../utils/parseHtml';
+import type { TimetableEvent, Timetable } from '../types';
 import { encodeShareData, decodeShareData, type ShareData } from '../utils/shareUtils';
 import { TOAST_DURATION_MS } from '../utils/constants';
 

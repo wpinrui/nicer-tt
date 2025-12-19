@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
-import type { TimetableEvent } from '../utils/parseHtml';
+import type { TimetableEvent, GroupedEvent, EventItem } from '../types';
 import { COURSE_COLORS } from '../utils/constants';
 import { formatDateDisplay, getDateSearchString, createSortKey, getTodaySortKey } from '../utils/formatters';
-import type { GroupedEvent, EventItem } from '../components/EventsList';
 
 function getCourseColor(course: string, courseMap: Map<string, string>): string {
   if (!courseMap.has(course)) {

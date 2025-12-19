@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { ButtonVariant } from '../types/ui';
 import styles from './Modal.module.scss';
 
 interface ModalProps {
@@ -7,7 +8,7 @@ interface ModalProps {
   onClose: () => void;
   onConfirm: () => void;
   confirmText?: ReactNode;
-  confirmVariant?: 'danger' | 'primary';
+  confirmVariant?: ButtonVariant;
   cancelText?: string;
   onSecondary?: () => void;
   secondaryText?: string;

@@ -1,4 +1,4 @@
-import type { TimetableEvent } from './parseHtml';
+import type { TimetableEvent } from '../types';
 import { TIMETABLE_YEAR } from './constants';
 
 function unescapeIcsText(text: string): string {

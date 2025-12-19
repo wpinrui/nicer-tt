@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Upload, Download, FileText, Share2, HelpCircle, Settings, ArrowLeft, Menu, X, GitCompare, Search } from 'lucide-react';
+import type { CompareFilter, TravelConfig, MealConfig } from '../types';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { parseIcs } from '../utils/parseIcs';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
-import type { CompareFilter } from '../utils/constants';
-import type { TravelConfig, MealConfig } from '../utils/compareUtils';
 import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents } from '../hooks';
 import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, ShareSelectModal, PrivacyNoticeModal, CompareModal, CompareFilters, EventsCompareView } from '../components';
 import HelpPage from './HelpPage';

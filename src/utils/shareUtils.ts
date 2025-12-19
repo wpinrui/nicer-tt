@@ -1,5 +1,5 @@
 import pako from 'pako';
-import type { TimetableEvent } from './parseHtml';
+import type { TimetableEvent } from '../types';
 
 export interface ShareData {
   events: TimetableEvent[];

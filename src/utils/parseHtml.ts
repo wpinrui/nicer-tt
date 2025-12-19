@@ -1,21 +1,4 @@
-export interface TimetableEvent {
-  course: string;
-  group: string;
-  day: string;
-  startTime: string;
-  endTime: string;
-  dates: string[];
-  venue: string;
-  tutor: string;
-}
-
-export interface Timetable {
-  id: string;
-  name: string;
-  events: TimetableEvent[];
-  fileName: string | null;
-  isPrimary: boolean;
-}
+import type { TimetableEvent } from '../types';
 
 export function parseHtmlTimetable(html: string): TimetableEvent[] {
   const parser = new DOMParser();

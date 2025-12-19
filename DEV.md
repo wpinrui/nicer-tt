@@ -1,4 +1,10 @@
 # Changelog
+## v1.3.2 (19 Dec 2025)
+- Centralize type definitions in src/types with JSDoc documentation
+- Create src/types/index.ts for domain types (TimetableEvent, Timetable, CompareFilter, etc.)
+- Create src/types/ui.ts for UI-specific types (ButtonVariant)
+- Update all imports to use centralized types
+
 ## v1.3.1 (19 Dec 2025)
 - Migrate styling from CSS to SCSS with CSS variables
 - Add centralized theme variables for light/dark mode

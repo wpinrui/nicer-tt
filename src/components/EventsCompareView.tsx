@@ -1,17 +1,13 @@
 import { useMemo } from 'react';
 import { User, ArrowRight, ArrowLeft, ArrowLeftRight, Utensils } from 'lucide-react';
 import { formatTime12Hour, formatVenue, formatTutor, isToday } from '../utils/formatters';
-import type { Timetable } from '../utils/parseHtml';
-import type { CompareFilter } from '../utils/constants';
+import type { Timetable, CompareFilter, EventItem, TravelConfig, MealConfig } from '../types';
 import {
   processEvents,
   getAllDates,
   eventsMatch,
   calculateTravelInfo,
   calculateMealInfo,
-  type EventItem,
-  type TravelConfig,
-  type MealConfig,
 } from '../utils/compareUtils';
 import styles from './EventsCompareView.module.scss';
 
