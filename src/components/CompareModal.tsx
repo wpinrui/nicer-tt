@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Timetable } from '../utils/parseHtml';
+import type { Timetable } from '../types';
 import styles from './CompareModal.module.scss';
 
 interface CompareModalProps {

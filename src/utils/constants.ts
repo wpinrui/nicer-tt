@@ -28,8 +28,8 @@ export const DEFAULT_TIMETABLE_NAMES = [
   "Someten's Timetable",
 ] as const;
 
-// Compare mode types
-export type CompareFilter = 'none' | 'commonDays' | 'identical' | 'travel' | 'eat';
+// Re-export CompareFilter for backward compatibility
+export type { CompareFilter } from '../types';
 
 // Color palette for course codes (darker shades for white text)
 export const COURSE_COLORS = [

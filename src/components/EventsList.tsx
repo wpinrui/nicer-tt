@@ -1,6 +1,6 @@
 import { User } from 'lucide-react';
 import { formatTime12Hour, formatVenue, formatTutor, isToday } from '../utils/formatters';
-import type { GroupedEvent } from '../utils/compareUtils';
+import type { GroupedEvent } from '../types';
 import styles from './EventsList.module.scss';
 
 interface EventsListProps {
@@ -73,4 +73,5 @@ export function EventsList({
   );
 }
 
-export type { GroupedEvent, EventItem } from '../utils/compareUtils';
+// Re-export types for backward compatibility
+export type { GroupedEvent, EventItem } from '../types';

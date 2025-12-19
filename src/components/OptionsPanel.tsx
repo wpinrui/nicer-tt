@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { X, Upload, RotateCcw, Sun, Moon, Shield, HelpCircle, ExternalLink, Image, Trash2, Link, Pencil, Check, Eye } from 'lucide-react';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
-import type { Timetable, TimetableEvent } from '../utils/parseHtml';
+import type { Timetable, TimetableEvent } from '../types';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { parseIcs } from '../utils/parseIcs';
 import { decodeShareUrl } from '../utils/shareUtils';

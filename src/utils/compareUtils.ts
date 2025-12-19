@@ -1,55 +1,15 @@
 import { createSortKey, getDateSearchString } from './formatters';
-import type { TimetableEvent } from './parseHtml';
+import type { TimetableEvent, EventItem, GroupedEvent } from '../types';
 
-// Types
-export interface EventItem {
-  course: string;
-  group: string;
-  startTime: string;
-  endTime: string;
-  venue: string;
-  tutor: string;
-}
-
-export interface GroupedEvent {
-  date: string;
-  sortKey: string;
-  events: EventItem[];
-}
-
-export interface TravelInfo {
-  canTravelTo: boolean;
-  canTravelFrom: boolean;
-  leftEarliest: string;
-  rightEarliest: string;
-  leftLatest: string;
-  rightLatest: string;
-  toDiff: number;
-  fromDiff: number;
-}
-
-export interface MealInfo {
-  canEatLunch: boolean;
-  canEatDinner: boolean;
-  lunchGapStart: string;
-  lunchGapEnd: string;
-  dinnerGapStart: string;
-  dinnerGapEnd: string;
-}
-
-// Config objects for prop grouping
-export interface TravelConfig {
-  direction: 'to' | 'from' | 'both' | 'either';
-  waitMinutes: number;
-}
-
-export interface MealConfig {
-  type: 'lunch' | 'dinner';
-  lunchStart: number;
-  lunchEnd: number;
-  dinnerStart: number;
-  dinnerEnd: number;
-}
+// Re-export types for backward compatibility
+export type {
+  EventItem,
+  GroupedEvent,
+  TravelInfo,
+  MealInfo,
+  TravelConfig,
+  MealConfig,
+} from '../types';
 
 // Convert time string "HHMM" to minutes since midnight
 export function timeToMinutes(time: string): number {

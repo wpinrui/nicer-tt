@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { TimetableEvent, Timetable } from '../utils/parseHtml';
+import type { TimetableEvent, Timetable } from '../types';
 import { STORAGE_KEYS, DEFAULT_TIMETABLE_NAMES } from '../utils/constants';
 
 function generateId(): string {
