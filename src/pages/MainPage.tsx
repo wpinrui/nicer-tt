@@ -5,6 +5,7 @@ import { parseHtmlTimetable } from '../utils/parseHtml';
 import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { parseIcs } from '../utils/parseIcs';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
+import { DEFAULT_TRAVEL_WAIT_MINUTES } from '../shared/constants';
 import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents } from '../hooks';
 import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, ShareSelectModal, PrivacyNoticeModal, CompareModal, CompareFilters, EventsCompareView } from '../components';
 import HelpPage from './HelpPage';
@@ -34,7 +35,7 @@ function MainPage() {
   const [compareMode, setCompareMode] = useState(false);
   const [compareTimetables, setCompareTimetables] = useState<[string, string] | null>(null);
   const [compareFilter, setCompareFilter] = useState<CompareFilter>('none');
-  const [travelConfig, setTravelConfig] = useState<TravelConfig>({ direction: 'both', waitMinutes: 15 });
+  const [travelConfig, setTravelConfig] = useState<TravelConfig>({ direction: 'both', waitMinutes: DEFAULT_TRAVEL_WAIT_MINUTES });
   const [mealConfig, setMealConfig] = useState<MealConfig>({
     type: 'lunch',
     lunchStart: 11,

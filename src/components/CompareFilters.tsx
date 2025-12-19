@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react';
 import { Calendar, Users, Car, Info, Utensils, Filter, ChevronDown, ChevronUp, Settings, type LucideIcon } from 'lucide-react';
 import type { CompareFilter, TravelConfig, MealConfig } from '../types';
 import { Modal } from './Modal';
+import {
+  LUNCH_START_HOURS,
+  LUNCH_END_HOURS,
+  DINNER_START_HOURS,
+  DINNER_END_HOURS,
+} from '../shared/constants';
 import styles from './CompareFilters.module.scss';
 
 interface CompareFiltersProps {
@@ -48,10 +54,6 @@ const WAIT_TIME_OPTIONS = [
   { value: 120, label: '2 hours' },
 ];
 
-const LUNCH_START_HOURS = Array.from({ length: 8 }, (_, i) => i + 9);
-const LUNCH_END_HOURS = Array.from({ length: 8 }, (_, i) => i + 11);
-const DINNER_START_HOURS = Array.from({ length: 6 }, (_, i) => i + 15);
-const DINNER_END_HOURS = Array.from({ length: 5 }, (_, i) => i + 17);
 
 const MOBILE_BREAKPOINT = '(max-width: 768px)';
 
