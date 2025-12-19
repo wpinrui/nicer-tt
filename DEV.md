@@ -1,5 +1,9 @@
 # Changelog
 
+**v1.3.6 (19 Dec 2025)**
+- Extract constants and magic numbers to src/shared/constants.ts
+- Add JSDoc documentation for all compare feature constants
+
 **v1.3.5 (19 Dec 2025)**
 - Add custom scrollbar styling to Privacy & Security modal
 

@@ -1,4 +1,5 @@
 import { createSortKey, getDateSearchString } from './formatters';
+import { MEAL_BUFFER_MINUTES, DEFAULT_MEAL_GAP_DURATION } from '../shared/constants';
 import type { TimetableEvent, EventItem, GroupedEvent, TravelInfo, MealInfo } from '../types';
 
 // Convert time string "HHMM" to minutes since midnight
@@ -179,9 +180,6 @@ export function findGaps(events: EventItem[]): { start: number; end: number }[] 
   return gaps;
 }
 
-// Buffer time: willing to arrive early or stay late by this amount (30 min)
-const MEAL_BUFFER_MINUTES = 30;
-
 // Check if a person is "available" for a meal during the given window
 function isAvailableForMeal(
   events: EventItem[],
@@ -236,7 +234,7 @@ function findOverlappingGap(
   rightGaps: { start: number; end: number }[],
   windowStart: number,
   windowEnd: number,
-  minDuration: number = 60
+  minDuration: number = DEFAULT_MEAL_GAP_DURATION
 ): { start: number; end: number } | null {
   for (const leftGap of leftGaps) {
     for (const rightGap of rightGaps) {
