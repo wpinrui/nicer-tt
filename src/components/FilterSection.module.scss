@@ -39,7 +39,8 @@
   border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 0.9rem;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--color-input-bg);
+  color: var(--color-text-primary);
   outline: none;
   transition: border-color 0.2s;
   box-sizing: border-box;
@@ -52,14 +53,8 @@
     color: var(--color-text-disabled);
   }
 
-  html.dark & {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: var(--color-text-primary);
-
-    &::placeholder {
-      color: var(--color-text-placeholder);
-    }
+  html.dark &::placeholder {
+    color: var(--color-text-placeholder);
   }
 }
 
