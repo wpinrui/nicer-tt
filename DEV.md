@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.3.4 (19 Dec 2025)**
+- Fix ESLint set-state-in-effect error in CompareFilters
+
 **v1.3.3 (19 Dec 2025)**
 - Add shared utilities: useLocalStorageJson, useToast hooks
 - Add centralized ID generation (src/utils/id.ts)
