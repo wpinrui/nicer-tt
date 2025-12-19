@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { X, Upload, RotateCcw, Sun, Moon, Shield, HelpCircle, ExternalLink, Image, Trash2, Link, Pencil, Check, Eye } from 'lucide-react';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
+import { logError } from '../utils/errors';
 import type { Timetable, TimetableEvent } from '../types';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { parseIcs } from '../utils/parseIcs';
@@ -47,7 +48,8 @@ export function OptionsPanel({
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.CUSTOM_BACKGROUND);
       return stored ? JSON.parse(stored) : null;
-    } catch {
+    } catch (e) {
+      logError('OptionsPanel:initCustomBackground', e);
       return null;
     }
   });
@@ -61,8 +63,8 @@ export function OptionsPanel({
           return value;
         }
       }
-    } catch {
-      // Ignore parse errors
+    } catch (e) {
+      logError('OptionsPanel:initBackgroundInput', e);
     }
     return '';
   });

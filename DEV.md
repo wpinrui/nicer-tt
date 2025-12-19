@@ -1,4 +1,10 @@
 # Changelog
+## v1.3.3 (19 Dec 2025)
+- Add shared utilities: useLocalStorageJson, useToast hooks
+- Add centralized ID generation (src/utils/id.ts)
+- Add error handling utilities with logError and safeJsonParse (src/utils/errors.ts)
+- Add proper error logging to all catch blocks
+
 ## v1.3.2 (19 Dec 2025)
 - Centralize type definitions in src/types with JSDoc documentation
 - Create src/types/index.ts for domain types (TimetableEvent, Timetable, CompareFilter, etc.)

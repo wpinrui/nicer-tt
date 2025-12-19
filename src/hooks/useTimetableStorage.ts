@@ -1,10 +1,8 @@
 import { useState, useCallback } from 'react';
 import type { TimetableEvent, Timetable } from '../types';
 import { STORAGE_KEYS, DEFAULT_TIMETABLE_NAMES } from '../utils/constants';
-
-function generateId(): string {
-  return `tt_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-}
+import { generateId } from '../utils/id';
+import { logError } from '../utils/errors';
 
 function getNextAvailableName(timetables: Timetable[]): string {
   const usedNames = new Set(timetables.map(t => t.name));
@@ -40,7 +38,7 @@ function loadFromStorage(): Timetable[] {
       const data = JSON.parse(legacy);
       if (data.events && Array.isArray(data.events)) {
         const migrated: Timetable[] = [{
-          id: generateId(),
+          id: generateId('tt'),
           name: 'My Timetable',
           events: data.events,
           fileName: data.fileName || null,
@@ -52,8 +50,8 @@ function loadFromStorage(): Timetable[] {
         return migrated;
       }
     }
-  } catch {
-    // Ignore parse errors
+  } catch (e) {
+    logError('useTimetableStorage:loadFromStorage', e);
   }
   return [];
 }
@@ -70,7 +68,8 @@ function loadActiveId(): string | null {
   try {
     const stored = localStorage.getItem(STORAGE_KEYS.ACTIVE_TIMETABLE);
     return stored ? JSON.parse(stored) : null;
-  } catch {
+  } catch (e) {
+    logError('useTimetableStorage:loadActiveId', e);
     return null;
   }
 }
@@ -119,7 +118,7 @@ export function useTimetableStorage() {
         } else {
           // Create new primary
           updated = [{
-            id: generateId(),
+            id: generateId('tt'),
             name: 'My Timetable',
             events: newEvents,
             fileName: newFileName,
@@ -139,7 +138,7 @@ export function useTimetableStorage() {
 
   // Add a new (non-primary) timetable
   const addTimetable = useCallback((newEvents: TimetableEvent[], newFileName: string | null, customName?: string): string => {
-    const id = generateId();
+    const id = generateId('tt');
     setTimetablesState(prev => {
       const name = customName || getNextAvailableName(prev);
       const newTimetable: Timetable = {

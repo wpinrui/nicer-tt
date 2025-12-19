@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import MainPage from './pages/MainPage';
 import { Analytics } from '@vercel/analytics/react';
 import { STORAGE_KEYS } from './utils/constants';
+import { logError } from './utils/errors';
 import './App.scss';
 
 function App() {
@@ -9,7 +10,8 @@ function App() {
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.CUSTOM_BACKGROUND);
       return stored ? JSON.parse(stored) : null;
-    } catch {
+    } catch (e) {
+      logError('App:initCustomBackground', e);
       return null;
     }
   });
@@ -20,7 +22,8 @@ function App() {
       if (e.key === STORAGE_KEYS.CUSTOM_BACKGROUND) {
         try {
           setCustomBackground(e.newValue ? JSON.parse(e.newValue) : null);
-        } catch {
+        } catch (err) {
+          logError('App:handleStorageChange', err);
           setCustomBackground(null);
         }
       }
@@ -31,7 +34,8 @@ function App() {
       try {
         const stored = localStorage.getItem(STORAGE_KEYS.CUSTOM_BACKGROUND);
         setCustomBackground(stored ? JSON.parse(stored) : null);
-      } catch {
+      } catch (err) {
+        logError('App:handleCustomEvent', err);
         setCustomBackground(null);
       }
     };

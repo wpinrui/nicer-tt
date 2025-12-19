@@ -1,5 +1,6 @@
 import pako from 'pako';
 import type { TimetableEvent } from '../types';
+import { logError } from './errors';
 
 export interface ShareData {
   events: TimetableEvent[];
@@ -42,7 +43,9 @@ export function decodeShareData(encoded: string): ShareData | null {
     try {
       const data = decodeURIComponent(atob(encoded));
       return JSON.parse(data);
-    } catch {
+    } catch (e) {
+      // Log only if both formats fail (user provided invalid share data)
+      logError('decodeShareData', e, { encoded: encoded.substring(0, 50) + '...' });
       return null;
     }
   }

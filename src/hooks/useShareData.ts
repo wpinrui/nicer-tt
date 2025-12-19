@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { TimetableEvent, Timetable } from '../types';
 import { encodeShareData, decodeShareData, type ShareData } from '../utils/shareUtils';
 import { TOAST_DURATION_MS } from '../utils/constants';
+import { logError } from '../utils/errors';
 
 interface MatchedTimetable {
   id: string;
@@ -76,8 +77,9 @@ export function useShareData(
       await navigator.clipboard.writeText(shareUrl);
       setShareMessage(`Share link for "${timetableName}" copied!`);
       setTimeout(() => setShareMessage(null), TOAST_DURATION_MS);
-    } catch {
-      // Clipboard failed - show fallback modal
+    } catch (e) {
+      // Clipboard failed - show fallback modal (expected in some browsers/contexts)
+      logError('useShareData:clipboard', e);
       setShareLinkFallback({ url: shareUrl, name: timetableName });
     }
   }, []);
