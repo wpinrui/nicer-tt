@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.3.5 (19 Dec 2025)**
+- Add custom scrollbar styling to Privacy & Security modal
+
 **v1.3.4 (19 Dec 2025)**
 - Fix ESLint set-state-in-effect error in CompareFilters
 
