@@ -56,4 +56,4 @@ export const DEFAULT_MEAL_GAP_DURATION = 60;
  * If two people's first/last classes differ by less than this amount,
  * they can travel together with one waiting for the other.
  */
-export const DEFAULT_TRAVEL_WAIT_MINUTES = 30;
+export const DEFAULT_TRAVEL_WAIT_MINUTES = 15;
