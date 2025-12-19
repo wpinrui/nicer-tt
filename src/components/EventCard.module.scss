@@ -1,0 +1,198 @@
+@use '../styles/mixins' as *;
+
+.eventItem {
+  padding: 0.4rem 0;
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  html.dark & {
+    color: var(--color-text-secondary);
+  }
+}
+
+.eventHighlighted {
+  background: rgba(100, 108, 255, 0.1);
+  margin: 0 -0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+
+  html.dark & {
+    background: rgba(100, 108, 255, 0.2);
+  }
+}
+
+.eventTime {
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  min-width: 11rem;
+
+  html.dark & {
+    color: var(--color-text-primary);
+  }
+}
+
+.timeStart {
+  color: var(--color-text-primary);
+
+  html.dark & {
+    color: var(--color-text-primary);
+  }
+}
+
+.timeSeparator {
+  color: var(--color-text-disabled);
+  margin: 0 0.1rem;
+}
+
+.timeEnd {
+  color: var(--color-text-secondary);
+
+  html.dark & {
+    color: #bbb;
+  }
+}
+
+.courseTagWrapper {
+  min-width: 5.5rem;
+  flex-shrink: 0;
+}
+
+.courseTag {
+  color: white;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.courseTagClickable {
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.eventGroup {
+  color: var(--color-text-primary);
+  min-width: 4rem;
+
+  html.dark & {
+    color: var(--color-text-secondary);
+  }
+}
+
+.eventVenue {
+  color: var(--color-text-placeholder);
+  font-size: 0.8rem;
+  min-width: 12rem;
+
+  html.dark & {
+    color: var(--color-text-disabled);
+  }
+}
+
+.eventTutorIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-placeholder);
+  cursor: help;
+  position: relative;
+  margin-left: auto;
+  padding: 0.2rem;
+  border-radius: 50%;
+  transition: all 0.2s;
+
+  &:hover {
+    color: var(--color-primary);
+    background: rgba(100, 108, 255, 0.1);
+  }
+
+  // Tooltip on hover
+  &[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background: #333;
+    color: white;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    margin-bottom: 0.3rem;
+    z-index: 100;
+    font-style: normal;
+  }
+
+  &[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    right: 0.4rem;
+    border: 5px solid transparent;
+    border-top-color: var(--color-text-primary);
+    margin-bottom: -0.3rem;
+    z-index: 100;
+  }
+
+  html.dark & {
+    color: var(--color-text-disabled);
+
+    &:hover {
+      color: var(--color-travel-to-text);
+      background: rgba(100, 108, 255, 0.2);
+    }
+  }
+
+  @include mobile {
+    display: none;
+  }
+}
+
+.eventTutor {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  margin-left: auto;
+
+  html.dark & {
+    color: var(--color-text-disabled);
+  }
+}
+
+// Print styles
+@media print {
+  .eventItem {
+    font-size: 10pt;
+    padding: 4px 0;
+  }
+
+  .eventTime {
+    font-size: 9pt;
+    background: #eee;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .courseTag {
+    font-size: 9pt;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

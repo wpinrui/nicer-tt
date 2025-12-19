@@ -1,5 +1,9 @@
 # Changelog
 
+**v1.3.10 (19 Dec 2025)**
+- Extract shared EventCard and EventGroup components
+- Remove duplicated event rendering logic from EventsList and EventsCompareView
+
 **v1.3.9 (19 Dec 2025)**
 - Decompose CompareFilters into focused config components
 - Extract TravelConfigForm, MealConfigForm, MobileCompareSheet

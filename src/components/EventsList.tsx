@@ -1,5 +1,4 @@
-import { User } from 'lucide-react';
-import { formatTime12Hour, formatVenue, formatTutor, isToday } from '../utils/formatters';
+import { EventGroup } from './EventGroup';
 import type { GroupedEvent } from '../types';
 import styles from './EventsList.module.scss';
 
@@ -23,51 +22,13 @@ export function EventsList({
   return (
     <>
       {groupedByDate.map((group) => (
-        <div key={group.sortKey} className={styles.dateGroup}>
-          <div className={`${styles.dateHeader} ${isToday(group.sortKey) ? styles.dateHeaderToday : ''}`}>
-            <span>
-              {group.date}
-              {isToday(group.sortKey) && ' (TODAY)'}
-            </span>
-          </div>
-          <ul className={styles.eventsList}>
-            {group.events.map((event, i) => (
-              <li key={i} className={styles.eventItem}>
-                <span className={styles.eventTime}>
-                  <span className={styles.timeStart}>{formatTime12Hour(event.startTime)}</span>
-                  <span className={styles.timeSeparator}>–</span>
-                  <span className={styles.timeEnd}>{formatTime12Hour(event.endTime)}</span>
-                </span>
-                <span className={styles.courseTagWrapper}>
-                  <span
-                    className={`${styles.courseTag} ${styles.courseTagClickable}`}
-                    style={{ backgroundColor: courseColorMap.get(event.course) || '#666' }}
-                    onClick={() => onCourseClick(event.course)}
-                    title={`Filter by ${event.course}`}
-                  >
-                    {event.course}
-                  </span>
-                </span>
-                <span className={styles.eventGroup}>{event.group}</span>
-                {event.venue && (
-                  <span className={styles.eventVenue}>@ {formatVenue(event.venue)}</span>
-                )}
-                {event.tutor && (
-                  showTutor ? (
-                    <span className={styles.eventTutor}>
-                      <User size={14} />
-                      {formatTutor(event.tutor)}
-                    </span>
-                  ) : (
-                    <span className={styles.eventTutorIcon} title={formatTutor(event.tutor)}>
-                      <User size={14} />
-                    </span>
-                  )
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <EventGroup
+          key={group.sortKey}
+          group={group}
+          showTutor={showTutor}
+          courseColorMap={courseColorMap}
+          onCourseClick={onCourseClick}
+        />
       ))}
     </>
   );

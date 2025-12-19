@@ -1,0 +1,51 @@
+.dateGroup {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.dateHeader {
+  font-weight: 700;
+  color: var(--color-travel-to-text);
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  html.dark & {
+    color: var(--color-travel-to-text);
+    border-bottom-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.dateHeaderToday {
+  color: var(--color-today);
+  border-bottom-color: rgba(216, 67, 21, 0.3);
+
+  html.dark & {
+    color: var(--color-today);
+    border-bottom-color: rgba(255, 112, 67, 0.3);
+  }
+}
+
+.eventsList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Print styles
+@media print {
+  .dateGroup {
+    page-break-inside: avoid;
+    margin-bottom: 15px;
+  }
+
+  .dateHeader {
+    font-size: 12pt;
+    color: var(--color-text-primary);
+    border-bottom: 1px solid #ccc;
+  }
+}
