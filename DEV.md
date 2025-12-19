@@ -1,31 +1,32 @@
 # Changelog
-## v1.3.3 (19 Dec 2025)
+
+**v1.3.3 (19 Dec 2025)**
 - Add shared utilities: useLocalStorageJson, useToast hooks
 - Add centralized ID generation (src/utils/id.ts)
 - Add error handling utilities with logError and safeJsonParse (src/utils/errors.ts)
 - Add proper error logging to all catch blocks
 
-## v1.3.2 (19 Dec 2025)
+**v1.3.2 (19 Dec 2025)**
 - Centralize type definitions in src/types with JSDoc documentation
 - Create src/types/index.ts for domain types (TimetableEvent, Timetable, CompareFilter, etc.)
 - Create src/types/ui.ts for UI-specific types (ButtonVariant)
 - Update all imports to use centralized types
 
-## v1.3.1 (19 Dec 2025)
+**v1.3.1 (19 Dec 2025)**
 - Migrate styling from CSS to SCSS with CSS variables
 - Add centralized theme variables for light/dark mode
 - Add SCSS mixins for responsive breakpoints
 
-## v1.3.0 (19 Dec 2025)
+### v1.3.0 (19 Dec 2025) - Mobile Compare support
 - Add mobile support for Compare view with stacked layout
 - Add Compare button to mobile hamburger menu
 - Add collapsible filter toggle on mobile
 - Show timetable names as labels in stacked view
 
-## v1.2.1 (18 Dec 2025)
+**v1.2.1 (18 Dec 2025)**
 - Show explanation modal for Compare feature when user has only one timetable
 
-## v1.2.0 (18 Dec 2025)
+### v1.2.0 (18 Dec 2025) - Active timetable switching, smart sharing
 - Add active timetable switching with eye icon in Options panel
 - Show "Viewing" badge and colored styling for active timetable
 - Display active timetable name in events count
@@ -36,14 +37,14 @@
 - Smart share link handling: auto-switches if timetable already saved
 - "Add to Timetables" option when receiving share links
 
-## v1.1.2 (18 Dec 2025)
+**v1.1.2 (18 Dec 2025)**
 - Cap travel wait time at 2 hours
 - Cap dinner end time at 9pm
 
-## v1.1.1 (18 Dec 2025)
+**v1.1.1 (18 Dec 2025)**
 - Disable modal close on overlay click
 
-## v1.1.0 (18 Dec 2025)
+### v1.1.0 (18 Dec 2025) - Compare Timetables
 - Add Compare Timetables feature to compare schedules side-by-side
 - Multi-timetable storage with add/rename/delete functionality
 - Add timetables via share link or file upload in Options panel
@@ -53,62 +54,62 @@
 - CSS-based speech bubble tooltips for filter explanations
 - Meal badges show time slots directly (e.g., "12:00 PM–1:00 PM")
 
-## v1.0.14 (18 Dec 2025)
+**v1.0.14 (18 Dec 2025)**
 - Add plain background option (white/black depending on theme)
 - Rename section from "Background Image" to "Background"
 - Desktop only (hidden on mobile like other background options)
 
-## v1.0.13 (18 Dec 2025)
+**v1.0.13 (18 Dec 2025)**
 - Add custom background image option in Options modal (paste image URL)
 - Image validation on blur with success/error toast feedback
 - Thumbnail preview with Reset to Default button when custom background is set
 - Unsplash credit hidden when using custom background (Freepik credit remains)
 - Background option hidden on mobile (no background visible in mobile view)
 
-## v1.0.12 (18 Dec 2025)
+**v1.0.12 (18 Dec 2025)**
 - Add date picker filter inside search box with date pill display
 - Position card at top of viewport instead of centered
 
-## v1.0.11 (18 Dec 2025)
+**v1.0.11 (18 Dec 2025)**
 - Add mobile hamburger menu with Download, Share, Options, Help
 - Add collapsible filter panel for mobile
 - Move action buttons to header on desktop
 - Add Help section to Options modal (User Guide, Report issue)
 
-## v1.0.10 (17 Dec 2025)
+**v1.0.10 (17 Dec 2025)**
 - Allow ICS files in Options > Change file
 
-## v1.0.9 (17 Dec 2025)
+**v1.0.9 (17 Dec 2025)**
 - Skip share dialog when pasting own share link (same data)
 
-## v1.0.8 (17 Dec 2025)
+**v1.0.8 (17 Dec 2025)**
 - Handle share link pasted while already on page (hashchange listener)
 
-## v1.0.7 (17 Dec 2025)
+**v1.0.7 (17 Dec 2025)**
 - Add "Just View" option for shared timetables (temporary viewing without replacing)
 - Show banner when temporarily viewing shared timetable with back button
 - Add secondary action support to Modal component
 
-## v1.0.6 (17 Dec 2025)
+**v1.0.6 (17 Dec 2025)**
 - Mobile layout: sticky top controls (search, filters) and bottom buttons
 - Add tablet breakpoint (768px-1280px) for fluid card layout
 - Enlarge touch targets on mobile (buttons, filters, help icon)
 
-## v1.0.5 (17 Dec 2025)
+**v1.0.5 (17 Dec 2025)**
 - Add changelog link to footer
 
-## v1.0.4 (17 Dec 2025)
+**v1.0.4 (17 Dec 2025)**
 - Use version from package.json instead of hardcoded value
 
-## v1.0.3 (17 Dec 2025)
+**v1.0.3 (17 Dec 2025)**
 - Fix modal appearing mid-scroll instead of onscreen (created by v1.0.2)
 - Remove background for readability on mobile view
-## v1.0.2 (17 Dec 2025)
+
+**v1.0.2 (17 Dec 2025)**
 - Compress share URLs using pako/zlib (much shorter links)
 - Hide footer and fix scroll behavior on mobile
 
-## v1.0.1 (17 Dec 2025)
+**v1.0.1 (17 Dec 2025)**
 - Make footer clickable to github repo
 
-## v1.0.0 (17 Dec 2025)
-- Initial release
+### v1.0.0 (17 Dec 2025) - Initial release
