@@ -1,5 +1,10 @@
 # Changelog
 
+**v1.3.9 (19 Dec 2025)**
+- Decompose CompareFilters into focused config components
+- Extract TravelConfigForm, MealConfigForm, MobileCompareSheet
+- Reduce CompareFilters.tsx from 463 to 134 lines
+
 **v1.3.8 (19 Dec 2025)**
 - Decompose OptionsPanel into focused section components
 - Extract TimetableManager, BackgroundSettings, AppSettings, PrivacySection
