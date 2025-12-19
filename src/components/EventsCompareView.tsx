@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
-import { User, ArrowRight, ArrowLeft, ArrowLeftRight, Utensils } from 'lucide-react';
-import { formatTime12Hour, formatVenue, formatTutor, isToday } from '../utils/formatters';
-import type { Timetable, CompareFilter, EventItem, TravelConfig, MealConfig } from '../types';
+import { ArrowRight, ArrowLeft, ArrowLeftRight, Utensils } from 'lucide-react';
+import { formatTime12Hour, isToday } from '../utils/formatters';
+import { EventCard } from './EventCard';
+import type { Timetable, CompareFilter, TravelConfig, MealConfig } from '../types';
 import {
   processEvents,
   getAllDates,
@@ -111,40 +112,6 @@ export function EventsCompareView({
     });
   }, [allDates, leftByDate, rightByDate, compareFilter, travelConfig, mealConfig]);
 
-  const renderEvent = (event: EventItem, index: number, isHighlighted: boolean = false) => (
-    <li key={`${event.course}-${event.group}-${event.startTime}-${index}`} className={isHighlighted ? styles.eventHighlighted : ''}>
-      <span className={styles.eventTime}>
-        <span className={styles.timeStart}>{formatTime12Hour(event.startTime)}</span>
-        <span className={styles.timeSeparator}>–</span>
-        <span className={styles.timeEnd}>{formatTime12Hour(event.endTime)}</span>
-      </span>
-      <span className={styles.courseTagWrapper}>
-        <span
-          className={styles.courseTag}
-          style={{ backgroundColor: courseColorMap.get(event.course) || '#666' }}
-        >
-          {event.course}
-        </span>
-      </span>
-      <span className={styles.eventGroup}>{event.group}</span>
-      {event.venue && (
-        <span className={styles.eventVenue}>@ {formatVenue(event.venue)}</span>
-      )}
-      {event.tutor && (
-        showTutor ? (
-          <span className={styles.eventTutor}>
-            <User size={14} />
-            {formatTutor(event.tutor)}
-          </span>
-        ) : (
-          <span className={styles.eventTutorIcon} title={formatTutor(event.tutor)}>
-            <User size={14} />
-          </span>
-        )
-      )}
-    </li>
-  );
-
   if (filteredDates.length === 0) {
     return <div className={styles.noResults}>No events match your filters</div>;
   }
@@ -234,7 +201,15 @@ export function EventsCompareView({
             <div className={styles.column} data-name={leftTimetable.name}>
               {leftEvents.length > 0 ? (
                 <ul>
-                  {leftEvents.map((event, i) => renderEvent(event, i, identicalLeft.has(i)))}
+                  {leftEvents.map((event, i) => (
+                    <EventCard
+                      key={`${event.course}-${event.group}-${event.startTime}-${i}`}
+                      event={event}
+                      showTutor={showTutor}
+                      courseColor={courseColorMap.get(event.course) || '#666'}
+                      isHighlighted={identicalLeft.has(i)}
+                    />
+                  ))}
                 </ul>
               ) : (
                 <div className={styles.empty}>No classes</div>
@@ -244,7 +219,15 @@ export function EventsCompareView({
             <div className={styles.column} data-name={rightTimetable.name}>
               {rightEvents.length > 0 ? (
                 <ul>
-                  {rightEvents.map((event, i) => renderEvent(event, i, identicalRight.has(i)))}
+                  {rightEvents.map((event, i) => (
+                    <EventCard
+                      key={`${event.course}-${event.group}-${event.startTime}-${i}`}
+                      event={event}
+                      showTutor={showTutor}
+                      courseColor={courseColorMap.get(event.course) || '#666'}
+                      isHighlighted={identicalRight.has(i)}
+                    />
+                  ))}
                 </ul>
               ) : (
                 <div className={styles.empty}>No classes</div>
