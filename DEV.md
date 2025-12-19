@@ -1,5 +1,10 @@
 # Changelog
 
+**v1.3.7 (19 Dec 2025)**
+- Decompose MainPage into smaller focused components
+- Extract useMainPageState hook for filter, compare, and UI state
+- Extract UploadSection component for file upload UI
+
 **v1.3.6 (19 Dec 2025)**
 - Extract constants and magic numbers to src/shared/constants.ts
 - Add JSDoc documentation for all compare feature constants
