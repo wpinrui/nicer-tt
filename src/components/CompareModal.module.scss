@@ -19,17 +19,13 @@
 }
 
 .modal {
-  background: white;
+  background: var(--color-modal-bg);
   border-radius: 16px;
   padding: 1.5rem;
   max-width: 600px;
   width: 90%;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   animation: modalSlideIn 0.2s ease-out;
-
-  html.dark & {
-    background: var(--color-modal-bg);
-  }
 
   h3 {
     margin: 0 0 0.5rem 0;

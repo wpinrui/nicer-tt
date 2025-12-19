@@ -21,7 +21,7 @@
 }
 
 .panel {
-  background: white;
+  background: var(--color-modal-bg);
   border-radius: 16px;
   padding: 0;
   width: 700px;
@@ -32,10 +32,6 @@
   animation: modalSlideIn 0.2s ease-out;
   display: flex;
   flex-direction: column;
-
-  html.dark & {
-    background: var(--color-modal-bg);
-  }
 }
 
 @keyframes modalSlideIn {
