@@ -1,14 +1,14 @@
 import { FileText, Upload } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
-import type { TimetableEvent } from '../types';
+import type { CustomEvent, TimetableEvent } from '../types';
 import { STORAGE_KEYS } from '../utils/constants';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { parseIcs } from '../utils/parseIcs';
 import styles from './UploadSection.module.scss';
 
 interface UploadSectionProps {
-  onUpload: (events: TimetableEvent[], fileName: string) => void;
+  onUpload: (events: TimetableEvent[], fileName: string, customEvents?: CustomEvent[]) => void;
   onError: (error: string) => void;
   onClear: () => void;
   onFirstUpload: () => void;
@@ -53,8 +53,8 @@ export const UploadSection = forwardRef<UploadSectionHandle, UploadSectionProps>
 
       try {
         const text = await file.text();
-        const parsedEvents = parseIcs(text);
-        onUpload(parsedEvents, file.name);
+        const { events, customEvents } = parseIcs(text);
+        onUpload(events, file.name, customEvents.length > 0 ? customEvents : undefined);
       } catch (err) {
         onError(err instanceof Error ? err.message : 'Failed to parse ICS file');
         onClear();

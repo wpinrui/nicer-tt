@@ -114,15 +114,12 @@ export function useCustomEvents(activeTimetableId: string | null) {
   );
 
   /**
-   * Adds a new custom event to the active timetable.
+   * Adds a new custom event to a specific timetable.
+   * Use this when the timetable ID is known but may not be the active one yet.
    * @returns The ID of the newly created custom event
    */
-  const addCustomEvent = useCallback(
-    (input: CustomEventInput): string => {
-      if (!activeTimetableId) {
-        throw new Error('Cannot add custom event without an active timetable');
-      }
-
+  const addCustomEventToTimetable = useCallback(
+    (timetableId: string, input: CustomEventInput): string => {
       const id = generateId('ce');
       const now = Date.now();
       const newEvent: CustomEvent = {
@@ -133,10 +130,10 @@ export function useCustomEvents(activeTimetableId: string | null) {
       };
 
       setStore((prev) => {
-        const timetableEvents = prev[activeTimetableId] || [];
+        const timetableEvents = prev[timetableId] || [];
         const updated: CustomEventsStore = {
           ...prev,
-          [activeTimetableId]: [...timetableEvents, newEvent],
+          [timetableId]: [...timetableEvents, newEvent],
         };
         saveCustomEventsStore(updated);
         return updated;
@@ -144,7 +141,21 @@ export function useCustomEvents(activeTimetableId: string | null) {
 
       return id;
     },
-    [activeTimetableId]
+    []
+  );
+
+  /**
+   * Adds a new custom event to the active timetable.
+   * @returns The ID of the newly created custom event
+   */
+  const addCustomEvent = useCallback(
+    (input: CustomEventInput): string => {
+      if (!activeTimetableId) {
+        throw new Error('Cannot add custom event without an active timetable');
+      }
+      return addCustomEventToTimetable(activeTimetableId, input);
+    },
+    [activeTimetableId, addCustomEventToTimetable]
   );
 
   /**
@@ -242,6 +253,7 @@ export function useCustomEvents(activeTimetableId: string | null) {
   return {
     customEvents,
     addCustomEvent,
+    addCustomEventToTimetable,
     updateCustomEvent,
     deleteCustomEvent,
     getCustomEvent,

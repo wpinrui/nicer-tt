@@ -61,7 +61,7 @@ export const EventGroup = memo(function EventGroup({
               }
               onCourseClick={onCourseClick}
               onEdit={isUpgrading ? undefined : createEditHandler(event.customEventId)}
-              onDelete={isUpgrading ? undefined : createDeleteHandler(event.customEventId, group.sortKey)}
+              onDelete={createDeleteHandler(event.customEventId, group.sortKey)}
             />
           );
         })}

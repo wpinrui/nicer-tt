@@ -2,23 +2,37 @@ import { useState } from 'react';
 
 import styles from './ExportOptionsModal.module.scss';
 
+export interface ExportOptions {
+  includeCustomEvents: boolean;
+  includeUpgradingEvents: boolean;
+}
+
 interface ExportOptionsModalProps {
   customEventCount: number;
+  upgradingEventCount: number;
   actionLabel: string;
-  onConfirm: (includeCustomEvents: boolean) => void;
+  onConfirm: (options: ExportOptions) => void;
   onCancel: () => void;
 }
 
 export function ExportOptionsModal({
   customEventCount,
+  upgradingEventCount,
   actionLabel,
   onConfirm,
   onCancel,
 }: ExportOptionsModalProps) {
   const [includeCustom, setIncludeCustom] = useState(true);
+  const [includeUpgrading, setIncludeUpgrading] = useState(true);
+
+  const hasCustom = customEventCount > 0;
+  const hasUpgrading = upgradingEventCount > 0;
 
   const handleConfirm = () => {
-    onConfirm(includeCustom);
+    onConfirm({
+      includeCustomEvents: includeCustom,
+      includeUpgradingEvents: includeUpgrading,
+    });
   };
 
   return (
@@ -27,18 +41,32 @@ export function ExportOptionsModal({
         <h3>{actionLabel}</h3>
 
         <div className={styles.content}>
-          <label className={styles.checkboxLabel}>
-            <input
-              type="checkbox"
-              checked={includeCustom}
-              onChange={(e) => setIncludeCustom(e.target.checked)}
-            />
-            <span>Include custom events</span>
-            <span className={styles.count}>({customEventCount})</span>
-          </label>
-          <p className={styles.hint}>
-            Custom events are events you added manually, not from the NIE timetable.
-          </p>
+          {hasUpgrading && (
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={includeUpgrading}
+                onChange={(e) => setIncludeUpgrading(e.target.checked)}
+              />
+              <span>Include content upgrading events</span>
+              <span className={styles.count}>({upgradingEventCount})</span>
+            </label>
+          )}
+
+          {hasCustom && (
+            <label
+              className={styles.checkboxLabel}
+              style={{ marginTop: hasUpgrading ? '0.5rem' : 0 }}
+            >
+              <input
+                type="checkbox"
+                checked={includeCustom}
+                onChange={(e) => setIncludeCustom(e.target.checked)}
+              />
+              <span>Include custom events</span>
+              <span className={styles.count}>({customEventCount})</span>
+            </label>
+          )}
         </div>
 
         <div className={styles.actions}>

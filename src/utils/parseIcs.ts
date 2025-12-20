@@ -1,4 +1,9 @@
-import type { TimetableEvent } from '../types';
+import type { CustomEvent, CustomEventType, TimetableEvent } from '../types';
+
+export interface ParseIcsResult {
+  events: TimetableEvent[];
+  customEvents: CustomEvent[];
+}
 
 function unescapeIcsText(text: string): string {
   return text
@@ -28,8 +33,27 @@ function getDayName(dateStr: string): string {
   return date.toLocaleDateString('en-US', { weekday: 'long' });
 }
 
-export function parseIcs(icsContent: string): TimetableEvent[] {
+function generateId(): string {
+  return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+}
+
+interface ParsedEvent {
+  summary: string;
+  location: string;
+  description: string;
+  dtstart: string;
+  dtend: string;
+  eventType?: CustomEventType;
+  courseName?: string;
+}
+
+/**
+ * Parse ICS content and return both regular events and custom events.
+ * Custom events are identified by X-NIE-EVENT-TYPE property.
+ */
+export function parseIcs(icsContent: string): ParseIcsResult {
   const events: TimetableEvent[] = [];
+  const customEventMap = new Map<string, CustomEvent>();
 
   // Split into lines and normalize line endings
   const lines = icsContent.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
@@ -48,13 +72,7 @@ export function parseIcs(icsContent: string): TimetableEvent[] {
   }
 
   let inEvent = false;
-  let currentEvent: Partial<{
-    summary: string;
-    location: string;
-    description: string;
-    dtstart: string;
-    dtend: string;
-  }> = {};
+  let currentEvent: Partial<ParsedEvent> = {};
 
   for (const line of unfoldedLines) {
     if (line === 'BEGIN:VEVENT') {
@@ -83,16 +101,49 @@ export function parseIcs(icsContent: string): TimetableEvent[] {
           }
         }
 
-        events.push({
-          course,
-          group,
-          day: getDayName(start.date),
-          startTime: start.time,
-          endTime: end.time,
-          dates: [start.date],
-          venue: currentEvent.location || '',
-          tutor,
-        });
+        // Check if this is a custom event (has X-NIE-EVENT-TYPE)
+        if (currentEvent.eventType) {
+          // Group custom events by their properties (to consolidate multiple dates)
+          const key = `${currentEvent.eventType}|${currentEvent.courseName || ''}|${start.time}|${end.time}|${currentEvent.location || ''}|${tutor}`;
+
+          if (customEventMap.has(key)) {
+            // Add date to existing custom event
+            const existing = customEventMap.get(key)!;
+            if (!existing.dates.includes(start.date)) {
+              existing.dates.push(start.date);
+              existing.dates.sort();
+            }
+          } else {
+            // Create new custom event
+            customEventMap.set(key, {
+              id: generateId(),
+              course,
+              group,
+              day: getDayName(start.date),
+              startTime: start.time,
+              endTime: end.time,
+              dates: [start.date],
+              venue: currentEvent.location || '',
+              tutor,
+              eventType: currentEvent.eventType,
+              description: currentEvent.courseName || '',
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+            });
+          }
+        } else {
+          // Regular event
+          events.push({
+            course,
+            group,
+            day: getDayName(start.date),
+            startTime: start.time,
+            endTime: end.time,
+            dates: [start.date],
+            venue: currentEvent.location || '',
+            tutor,
+          });
+        }
       }
     } else if (inEvent) {
       // Parse property
@@ -117,16 +168,26 @@ export function parseIcs(icsContent: string): TimetableEvent[] {
           case 'DTEND':
             currentEvent.dtend = value;
             break;
+          case 'X-NIE-EVENT-TYPE':
+            if (value === 'custom' || value === 'upgrading') {
+              currentEvent.eventType = value;
+            }
+            break;
+          case 'X-NIE-COURSE-NAME':
+            currentEvent.courseName = value;
+            break;
         }
       }
     }
   }
 
-  if (events.length === 0) {
+  const customEvents = Array.from(customEventMap.values());
+
+  if (events.length === 0 && customEvents.length === 0) {
     throw new Error(
       'No events found in the ICS file. Make sure you uploaded a valid calendar file.'
     );
   }
 
-  return events;
+  return { events, customEvents };
 }

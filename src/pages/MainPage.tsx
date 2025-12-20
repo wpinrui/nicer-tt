@@ -23,6 +23,7 @@ import {
   ExportMenu,
   ExportOptionsModal,
   FilterSection,
+  ImportOptionsModal,
   Modal,
   OptionsPanel,
   PrivacyNoticeModal,
@@ -30,6 +31,7 @@ import {
   ShareWelcomeModal,
   UploadSection,
 } from '../components';
+import type { ExportOptions, ImportOptions } from '../components';
 import type { UploadSectionHandle } from '../components/UploadSection';
 import {
   useCustomEvents,
@@ -41,7 +43,8 @@ import {
   useTimetableStorage,
 } from '../hooks';
 import type { CustomEventInput } from '../hooks/useCustomEvents';
-import type { CustomEvent } from '../types';
+import type { CustomEvent, ShareData, Timetable } from '../types';
+import { isShareDataV2 } from '../types';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
 import { downloadIcs, generateIcs } from '../utils/generateIcs';
 import HelpPage from './HelpPage';
@@ -66,8 +69,15 @@ function MainPage() {
   const uploadRef = useRef<UploadSectionHandle>(null);
 
   // Custom events
-  const { customEvents, addCustomEvent, updateCustomEvent, deleteCustomEvent, getCustomEvent } =
-    useCustomEvents(activeTimetable?.id || null);
+  const {
+    customEvents,
+    addCustomEvent,
+    addCustomEventToTimetable,
+    updateCustomEvent,
+    deleteCustomEvent,
+    getCustomEvent,
+    getCustomEventsForTimetable,
+  } = useCustomEvents(activeTimetable?.id || null);
   const [isAddEventModalOpen, setAddEventModalOpen] = useState(false);
   const [editingCustomEvent, setEditingCustomEvent] = useState<CustomEvent | null>(null);
   const [deletingEvent, setDeletingEvent] = useState<{
@@ -75,7 +85,8 @@ function MainPage() {
     sortKey: string;
   } | null>(null);
   const [pendingExportAction, setPendingExportAction] = useState<'download' | 'share' | null>(null);
-  const [pendingIncludeCustomEvents, setPendingIncludeCustomEvents] = useState(false);
+  const [pendingShareTimetable, setPendingShareTimetable] = useState<Timetable | null>(null);
+  const [pendingImportData, setPendingImportData] = useState<ShareData | null>(null);
 
   const {
     filterState,
@@ -168,13 +179,60 @@ function MainPage() {
 
   useEffect(() => {
     const sharedData = getImmediateShareData();
-    if (sharedData) setTimetable(sharedData.events, sharedData.fileName);
-  }, [getImmediateShareData, setTimetable]);
+    if (sharedData) {
+      // Check if V2 format with custom events - show import options modal
+      if (isShareDataV2(sharedData) && sharedData.customEvents.length > 0) {
+        // First add the timetable with regular events
+        const timetableId = setTimetable(sharedData.events, sharedData.fileName);
+        if (timetableId) {
+          // Then add custom events
+          for (const event of sharedData.customEvents) {
+            addCustomEventToTimetable(timetableId, {
+              course: event.course,
+              group: event.group,
+              day: event.day,
+              startTime: event.startTime,
+              endTime: event.endTime,
+              dates: event.dates,
+              venue: event.venue,
+              tutor: event.tutor,
+              eventType: event.eventType,
+              description: event.description,
+            });
+          }
+        }
+      } else {
+        setTimetable(sharedData.events, sharedData.fileName);
+      }
+    }
+  }, [getImmediateShareData, setTimetable, addCustomEventToTimetable]);
 
-  const handleUpload = (parsedEvents: typeof events, fileName: string) => {
+  const handleUpload = (
+    parsedEvents: typeof events,
+    fileName: string,
+    importedCustomEvents?: CustomEvent[]
+  ) => {
     setError(null);
     resetFiltersForUpload();
-    setTimetable(parsedEvents, fileName);
+    const timetableId = setTimetable(parsedEvents, fileName);
+
+    // If ICS file contained custom events, add them to the timetable
+    if (importedCustomEvents && importedCustomEvents.length > 0 && timetableId) {
+      for (const event of importedCustomEvents) {
+        addCustomEventToTimetable(timetableId, {
+          course: event.course,
+          group: event.group,
+          day: event.day,
+          startTime: event.startTime,
+          endTime: event.endTime,
+          dates: event.dates,
+          venue: event.venue,
+          tutor: event.tutor,
+          eventType: event.eventType,
+          description: event.description,
+        });
+      }
+    }
   };
 
   const handleDownload = () => {
@@ -188,53 +246,71 @@ function MainPage() {
   };
 
   const handleShare = () => {
-    // If custom events exist, show options modal first
-    if (customEvents.length > 0) {
-      setPendingExportAction('share');
-    } else if (timetables.length > 1) {
+    // If multiple timetables, pick which one to share first
+    if (timetables.length > 1) {
       setShareSelectModalOpen(true);
     } else if (activeTimetable) {
-      createShareLink(activeTimetable.events, activeTimetable.fileName || activeTimetable.name);
+      // Single timetable - check if custom events exist
+      if (customEvents.length > 0) {
+        setPendingShareTimetable(activeTimetable);
+        setPendingExportAction('share');
+      } else {
+        createShareLink(activeTimetable.events, activeTimetable.fileName || activeTimetable.name);
+      }
     }
   };
 
-  const handleExportConfirm = (includeCustomEvents: boolean) => {
+  const handleExportConfirm = (options: ExportOptions) => {
     const action = pendingExportAction;
     setPendingExportAction(null);
 
-    if (!displayEvents || !activeTimetable) return;
-
-    // Merge custom events if user chose to include them
-    const eventsToExport = includeCustomEvents
-      ? [...displayEvents, ...customEvents]
-      : displayEvents;
-
     if (action === 'download') {
+      if (!displayEvents || !activeTimetable) return;
+      // Filter custom events based on options
+      const filteredCustomEvents = customEvents.filter((event) => {
+        if (event.eventType === 'upgrading') return options.includeUpgradingEvents;
+        return options.includeCustomEvents;
+      });
+      // For ICS download, merge filtered custom events into events array
+      const eventsToExport =
+        filteredCustomEvents.length > 0
+          ? [...displayEvents, ...filteredCustomEvents]
+          : displayEvents;
       downloadIcs(generateIcs(eventsToExport));
-    } else if (action === 'share') {
-      if (timetables.length > 1) {
-        // Store the choice for when user selects a timetable in ShareSelectModal
-        setPendingIncludeCustomEvents(includeCustomEvents);
-        setShareSelectModalOpen(true);
-      } else {
-        createShareLink(eventsToExport, activeTimetable.fileName || activeTimetable.name);
-      }
+    } else if (action === 'share' && pendingShareTimetable) {
+      // Get custom events for the timetable being shared
+      const timetableCustomEvents = getCustomEventsForTimetable(pendingShareTimetable.id);
+      const filteredCustomEvents = timetableCustomEvents.filter((event) => {
+        if (event.eventType === 'upgrading') return options.includeUpgradingEvents;
+        return options.includeCustomEvents;
+      });
+      createShareLink(
+        pendingShareTimetable.events,
+        pendingShareTimetable.fileName || pendingShareTimetable.name,
+        filteredCustomEvents.length > 0 ? filteredCustomEvents : undefined
+      );
+      setPendingShareTimetable(null);
     }
   };
 
   const handleExportCancel = () => {
     setPendingExportAction(null);
+    setPendingShareTimetable(null);
   };
 
   const handleShareTimetable = (timetable: (typeof timetables)[0]) => {
     setShareSelectModalOpen(false);
-    // Include custom events only if user chose to AND sharing the active timetable
-    const events =
-      pendingIncludeCustomEvents && timetable.id === activeTimetable?.id
-        ? [...timetable.events, ...customEvents]
-        : timetable.events;
-    createShareLink(events, timetable.fileName || timetable.name);
-    setPendingIncludeCustomEvents(false);
+
+    // Check if this timetable has custom events
+    const timetableCustomEvents = getCustomEventsForTimetable(timetable.id);
+    if (timetableCustomEvents.length > 0) {
+      // Show export options modal to choose which custom events to include
+      setPendingShareTimetable(timetable);
+      setPendingExportAction('share');
+    } else {
+      // No custom events, share directly
+      createShareLink(timetable.events, timetable.fileName || timetable.name);
+    }
   };
 
   const handleViewingToast = (name: string) => {
@@ -244,11 +320,68 @@ function MainPage() {
 
   const handleAddShareData = () => {
     const sharedData = confirmShare();
-    if (sharedData) {
+    if (!sharedData) return;
+
+    // Check if V2 format with custom events - show import options modal
+    if (isShareDataV2(sharedData) && sharedData.customEvents.length > 0) {
+      setPendingImportData(sharedData);
+    } else {
+      // V1 format or no custom events - add directly
       const newId = addTimetable(sharedData.events, sharedData.fileName);
       setActiveTimetable(newId);
     }
   };
+
+  const handleImportConfirm = useCallback(
+    (options: ImportOptions) => {
+      if (!pendingImportData) return;
+
+      const isV2 = isShareDataV2(pendingImportData);
+
+      // Filter events based on user choices
+      const eventsToImport = options.includeRegularEvents ? pendingImportData.events : [];
+
+      // Create timetable if there are events to import
+      if (
+        eventsToImport.length > 0 ||
+        (isV2 && (options.includeCustomEvents || options.includeUpgradingEvents))
+      ) {
+        const newId = addTimetable(eventsToImport, pendingImportData.fileName);
+        setActiveTimetable(newId);
+
+        // Import custom events to the new timetable
+        if (isV2) {
+          const customEventsToImport = pendingImportData.customEvents.filter((event) => {
+            if (event.eventType === 'upgrading') return options.includeUpgradingEvents;
+            return options.includeCustomEvents;
+          });
+
+          // Add each custom event directly to the new timetable
+          for (const event of customEventsToImport) {
+            addCustomEventToTimetable(newId, {
+              course: event.course,
+              group: event.group,
+              day: event.day,
+              startTime: event.startTime,
+              endTime: event.endTime,
+              dates: event.dates,
+              venue: event.venue,
+              tutor: event.tutor,
+              eventType: event.eventType,
+              description: event.description,
+            });
+          }
+        }
+      }
+
+      setPendingImportData(null);
+    },
+    [pendingImportData, addTimetable, setActiveTimetable, addCustomEventToTimetable]
+  );
+
+  const handleImportCancel = useCallback(() => {
+    setPendingImportData(null);
+  }, []);
 
   const handleCompareClick = () => {
     if (timetables.length < 2) {
@@ -288,6 +421,8 @@ function MainPage() {
   // Get the event being deleted to check date count
   const deletingEventData = deletingEvent ? getCustomEvent(deletingEvent.id) : null;
   const isMultiDateDelete = deletingEventData && deletingEventData.dates.length > 1;
+  const canDeleteSingleOccurrence =
+    isMultiDateDelete && deletingEventData?.eventType !== 'upgrading';
 
   // Convert sortKey (YYYYMMDD) to YYYY-MM-DD format for matching
   const sortKeyToIsoDate = (sortKey: string): string => {
@@ -517,6 +652,8 @@ function MainPage() {
                 <EventsCompareView
                   leftTimetable={leftTimetable}
                   rightTimetable={rightTimetable}
+                  leftCustomEvents={getCustomEventsForTimetable(leftTimetable.id)}
+                  rightCustomEvents={getCustomEventsForTimetable(rightTimetable.id)}
                   searchQuery={debouncedSearchQuery}
                   compareFilter={compareFilter}
                   travelConfig={travelConfig}
@@ -620,13 +757,17 @@ function MainPage() {
           onConfirm={() => confirmDeleteCustomEvent(true)}
           confirmText={isMultiDateDelete ? 'Delete All Occurrences' : 'Delete'}
           confirmVariant="danger"
-          onSecondary={isMultiDateDelete ? () => confirmDeleteCustomEvent(false) : undefined}
-          secondaryText={isMultiDateDelete ? 'Delete This Occurrence' : undefined}
+          onSecondary={
+            canDeleteSingleOccurrence ? () => confirmDeleteCustomEvent(false) : undefined
+          }
+          secondaryText={canDeleteSingleOccurrence ? 'Delete This Occurrence' : undefined}
         >
           <p>
-            {isMultiDateDelete
+            {canDeleteSingleOccurrence
               ? `This event has ${deletingEventData?.dates.length} occurrences. Delete just this one or all?`
-              : 'This action cannot be undone.'}
+              : isMultiDateDelete
+                ? `This upgrading course has ${deletingEventData?.dates.length} sessions. Delete all?`
+                : 'This action cannot be undone.'}
           </p>
         </Modal>
       )}
@@ -643,6 +784,7 @@ function MainPage() {
           activeTimetableId={activeTimetable?.id || null}
           onSetActiveTimetable={setActiveTimetable}
           onAddTimetable={addTimetable}
+          onAddCustomEventsToTimetable={addCustomEventToTimetable}
           onRenameTimetable={renameTimetable}
           onDeleteTimetable={deleteTimetable}
           onViewingToast={handleViewingToast}
@@ -705,12 +847,37 @@ function MainPage() {
         />
       )}
 
-      {pendingExportAction && (
-        <ExportOptionsModal
-          customEventCount={customEvents.length}
-          actionLabel={pendingExportAction === 'download' ? 'Download .ics' : 'Share Timetable'}
-          onConfirm={handleExportConfirm}
-          onCancel={handleExportCancel}
+      {pendingExportAction &&
+        (() => {
+          // Compute counts based on which timetable we're exporting
+          const eventsToCount = pendingShareTimetable
+            ? getCustomEventsForTimetable(pendingShareTimetable.id)
+            : customEvents;
+          let exportCustomCount = 0;
+          let exportUpgradingCount = 0;
+          for (const event of eventsToCount) {
+            if (event.eventType === 'upgrading') {
+              exportUpgradingCount++;
+            } else {
+              exportCustomCount++;
+            }
+          }
+          return (
+            <ExportOptionsModal
+              customEventCount={exportCustomCount}
+              upgradingEventCount={exportUpgradingCount}
+              actionLabel={pendingExportAction === 'download' ? 'Download .ics' : 'Share Timetable'}
+              onConfirm={handleExportConfirm}
+              onCancel={handleExportCancel}
+            />
+          );
+        })()}
+
+      {pendingImportData && (
+        <ImportOptionsModal
+          shareData={pendingImportData}
+          onConfirm={handleImportConfirm}
+          onCancel={handleImportCancel}
         />
       )}
     </div>

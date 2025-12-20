@@ -13,6 +13,8 @@ interface EventCardProps {
   isHighlighted?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
+  /** Disable custom/upgrading event border and background styling (for compare view) */
+  disableCustomStyling?: boolean;
 }
 
 export const EventCard = memo(function EventCard({
@@ -23,6 +25,7 @@ export const EventCard = memo(function EventCard({
   isHighlighted = false,
   onEdit,
   onDelete,
+  disableCustomStyling = false,
 }: EventCardProps) {
   const isClickable = !!onCourseClick;
   const isCustom = 'isCustom' in event && event.isCustom;
@@ -31,7 +34,8 @@ export const EventCard = memo(function EventCard({
   const classNames = [
     styles.eventItem,
     isHighlighted ? styles.eventHighlighted : '',
-    isUpgrading ? styles.eventUpgrading : isCustom ? styles.eventCustom : '',
+    !disableCustomStyling &&
+      (isUpgrading ? styles.eventUpgrading : isCustom ? styles.eventCustom : ''),
   ]
     .filter(Boolean)
     .join(' ');

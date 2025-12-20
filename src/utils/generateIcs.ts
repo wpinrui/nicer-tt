@@ -1,4 +1,11 @@
-import type { TimetableEvent } from '../types';
+import type { CustomEventType, TimetableEvent } from '../types';
+
+// Check if event has custom event properties
+function isCustomEvent(
+  event: TimetableEvent
+): event is TimetableEvent & { eventType: CustomEventType; description?: string } {
+  return 'eventType' in event && (event.eventType === 'custom' || event.eventType === 'upgrading');
+}
 
 function formatTimeForIcs(time: string): string {
   return time.padEnd(6, '0');
@@ -47,17 +54,28 @@ export function generateIcs(events: TimetableEvent[]): string {
       const uid = generateUid();
       const dtstamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
-      icsEvents.push(
-        `BEGIN:VEVENT
-UID:${uid}
-DTSTAMP:${dtstamp}
-DTSTART:${dtstart}
-DTEND:${dtend}
-SUMMARY:${escapeIcsText(summary)}
-LOCATION:${escapeIcsText(location)}
-DESCRIPTION:${escapeIcsText(description)}
-END:VEVENT`
-      );
+      // Build event lines
+      const lines = [
+        'BEGIN:VEVENT',
+        `UID:${uid}`,
+        `DTSTAMP:${dtstamp}`,
+        `DTSTART:${dtstart}`,
+        `DTEND:${dtend}`,
+        `SUMMARY:${escapeIcsText(summary)}`,
+        `LOCATION:${escapeIcsText(location)}`,
+        `DESCRIPTION:${escapeIcsText(description)}`,
+      ];
+
+      // Add custom event metadata as X- properties
+      if (isCustomEvent(event)) {
+        lines.push(`X-NIE-EVENT-TYPE:${event.eventType}`);
+        if (event.description) {
+          lines.push(`X-NIE-COURSE-NAME:${escapeIcsText(event.description)}`);
+        }
+      }
+
+      lines.push('END:VEVENT');
+      icsEvents.push(lines.join('\n'));
     }
   }
 

@@ -1,7 +1,8 @@
 import { Check, Eye, Link, Pencil, Trash2, Upload } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-import type { Timetable, TimetableEvent } from '../../types';
+import type { CustomEvent, Timetable, TimetableEvent } from '../../types';
+import type { CustomEventInput } from '../../hooks/useCustomEvents';
 import { TOAST_DURATION_MS } from '../../utils/constants';
 import { parseHtmlTimetable } from '../../utils/parseHtml';
 import { parseIcs } from '../../utils/parseIcs';
@@ -18,6 +19,7 @@ interface TimetableManagerProps {
     fileName: string | null,
     customName?: string
   ) => string;
+  onAddCustomEventsToTimetable: (timetableId: string, event: CustomEventInput) => void;
   onRenameTimetable: (id: string, newName: string) => void;
   onDeleteTimetable: (id: string) => boolean;
   onViewingToast: (name: string) => void;
@@ -29,6 +31,7 @@ export function TimetableManager({
   activeTimetableId,
   onSetActiveTimetable,
   onAddTimetable,
+  onAddCustomEventsToTimetable,
   onRenameTimetable,
   onDeleteTimetable,
   onViewingToast,
@@ -68,7 +71,15 @@ export function TimetableManager({
       return;
     }
 
-    onAddTimetable(data.events, data.fileName);
+    const timetableId = onAddTimetable(data.events, data.fileName);
+
+    // Add custom events if present (V2 share format)
+    if ('customEvents' in data && data.customEvents && data.customEvents.length > 0) {
+      for (const event of data.customEvents) {
+        onAddCustomEventsToTimetable(timetableId, event);
+      }
+    }
+
     setShareLinkInput('');
     setShareLinkError(null);
     setTimetableToast({ message: 'Timetable added successfully!', type: 'success' });
@@ -81,14 +92,25 @@ export function TimetableManager({
     try {
       const text = await file.text();
       let events: TimetableEvent[];
+      let customEvents: CustomEvent[] = [];
 
       if (file.name.toLowerCase().endsWith('.ics')) {
-        events = parseIcs(text);
+        const parsed = parseIcs(text);
+        events = parsed.events;
+        customEvents = parsed.customEvents;
       } else {
         events = parseHtmlTimetable(text);
       }
 
-      onAddTimetable(events, file.name);
+      const timetableId = onAddTimetable(events, file.name);
+
+      // Add custom events if present
+      if (customEvents.length > 0) {
+        for (const event of customEvents) {
+          onAddCustomEventsToTimetable(timetableId, event);
+        }
+      }
+
       setTimetableToast({ message: 'Timetable added successfully!', type: 'success' });
     } catch (err) {
       setTimetableToast({

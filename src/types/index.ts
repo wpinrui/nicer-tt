@@ -237,3 +237,39 @@ export interface UpgradingCourse {
   /** Array of sessions for this course */
   sessions: UpgradingSession[];
 }
+
+// =============================================================================
+// Share Data Types
+// =============================================================================
+
+/**
+ * V1 share data format (legacy).
+ * Only contains regular events, no custom event metadata.
+ */
+export interface ShareDataV1 {
+  events: TimetableEvent[];
+  fileName: string;
+}
+
+/**
+ * V2 share data format.
+ * Includes custom events with full metadata preserved.
+ */
+export interface ShareDataV2 {
+  version: 2;
+  events: TimetableEvent[];
+  customEvents: CustomEvent[];
+  fileName: string;
+}
+
+/**
+ * Union of all share data formats.
+ */
+export type ShareData = ShareDataV1 | ShareDataV2;
+
+/**
+ * Type guard to check if share data is V2 format.
+ */
+export function isShareDataV2(data: ShareData): data is ShareDataV2 {
+  return 'version' in data && data.version === 2;
+}

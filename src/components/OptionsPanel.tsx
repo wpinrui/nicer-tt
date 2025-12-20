@@ -1,6 +1,7 @@
 import { ExternalLink, HelpCircle, RotateCcw, X } from 'lucide-react';
 import { useState } from 'react';
 
+import type { CustomEventInput } from '../hooks/useCustomEvents';
 import type { Timetable, TimetableEvent } from '../types';
 import { Modal } from './Modal';
 import { AppSettings, BackgroundSettings, PrivacySection, TimetableManager } from './options';
@@ -22,6 +23,7 @@ interface OptionsPanelProps {
     fileName: string | null,
     customName?: string
   ) => string;
+  onAddCustomEventsToTimetable: (timetableId: string, event: CustomEventInput) => void;
   onRenameTimetable: (id: string, newName: string) => void;
   onDeleteTimetable: (id: string) => boolean;
   onViewingToast: (name: string) => void;
@@ -38,6 +40,7 @@ export function OptionsPanel({
   activeTimetableId,
   onSetActiveTimetable,
   onAddTimetable,
+  onAddCustomEventsToTimetable,
   onRenameTimetable,
   onDeleteTimetable,
   onViewingToast,
@@ -72,6 +75,7 @@ export function OptionsPanel({
             activeTimetableId={activeTimetableId}
             onSetActiveTimetable={onSetActiveTimetable}
             onAddTimetable={onAddTimetable}
+            onAddCustomEventsToTimetable={onAddCustomEventsToTimetable}
             onRenameTimetable={onRenameTimetable}
             onDeleteTimetable={onDeleteTimetable}
             onViewingToast={onViewingToast}

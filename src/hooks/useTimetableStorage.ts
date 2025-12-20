@@ -156,42 +156,56 @@ export function useTimetableStorage() {
   /**
    * Sets or updates the primary timetable (backward-compatible API).
    * Pass null to clear the primary timetable.
+   * @returns The ID of the primary timetable, or null if cleared
    */
   const setTimetable = useCallback(
-    (newEvents: TimetableEvent[] | null, newFileName: string | null) => {
-      setTimetablesState((prev) => {
-        let updated: Timetable[];
+    (newEvents: TimetableEvent[] | null, newFileName: string | null): string | null => {
+      if (newEvents === null) {
+        setTimetablesState((prev) => {
+          const updated = prev.filter((t) => !t.isPrimary);
+          saveTimetables(updated);
+          return updated;
+        });
+        return null;
+      }
 
-        if (newEvents === null) {
-          updated = prev.filter((t) => !t.isPrimary);
+      // Determine timetable ID BEFORE setState to avoid closure timing issues
+      const existingPrimary = timetables.find((t) => t.isPrimary);
+      const timetableId = existingPrimary?.id ?? generateId('tt');
+
+      setTimetablesState((prev) => {
+        const primaryIndex = prev.findIndex((t) => t.isPrimary);
+
+        if (primaryIndex >= 0) {
+          // Update existing primary
+          const updated = [...prev];
+          updated[primaryIndex] = {
+            ...updated[primaryIndex],
+            events: newEvents,
+            fileName: newFileName,
+          };
+          saveTimetables(updated);
+          return updated;
         } else {
-          const primaryIndex = prev.findIndex((t) => t.isPrimary);
-          if (primaryIndex >= 0) {
-            updated = [...prev];
-            updated[primaryIndex] = {
-              ...updated[primaryIndex],
+          // Create new primary
+          const updated = [
+            {
+              id: timetableId,
+              name: 'My Timetable',
               events: newEvents,
               fileName: newFileName,
-            };
-          } else {
-            updated = [
-              {
-                id: generateId('tt'),
-                name: 'My Timetable',
-                events: newEvents,
-                fileName: newFileName,
-                isPrimary: true,
-              },
-              ...prev,
-            ];
-          }
+              isPrimary: true,
+            },
+            ...prev,
+          ];
+          saveTimetables(updated);
+          return updated;
         }
-
-        saveTimetables(updated);
-        return updated;
       });
+
+      return timetableId;
     },
-    []
+    [timetables]
   );
 
   /** Clears the primary timetable */
