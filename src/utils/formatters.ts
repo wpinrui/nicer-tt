@@ -103,7 +103,7 @@ export function matchesDateSearch(dateStr: string, query: string): boolean {
   // Split query into tokens (by space, slash, or dash)
   const queryTokens = query
     .toLowerCase()
-    .split(/[\s/\-]+/)
+    .split(/[\s/-]+/)
     .filter((t) => t.length > 0);
 
   if (queryTokens.length === 0) return true;
