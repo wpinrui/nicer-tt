@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import type { CustomEvent, CustomEventsStore, TimetableEvent } from '../types';
 import { STORAGE_KEYS, TIMETABLE_YEAR } from '../utils/constants';
@@ -107,8 +107,11 @@ export type CustomEventUpdate = Partial<TimetableEvent>;
 export function useCustomEvents(activeTimetableId: string | null) {
   const [store, setStore] = useState<CustomEventsStore>(loadCustomEventsStore);
 
-  // Custom events for the active timetable
-  const customEvents = activeTimetableId ? store[activeTimetableId] || [] : [];
+  // Custom events for the active timetable (memoized to stabilize useCallback deps)
+  const customEvents = useMemo(
+    () => (activeTimetableId ? store[activeTimetableId] || [] : []),
+    [activeTimetableId, store]
+  );
 
   /**
    * Adds a new custom event to the active timetable.
@@ -229,7 +232,8 @@ export function useCustomEvents(activeTimetableId: string | null) {
       if (!prev[timetableId]) {
         return prev;
       }
-      const { [timetableId]: _, ...rest } = prev;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [timetableId]: _removed, ...rest } = prev;
       saveCustomEventsStore(rest);
       return rest;
     });

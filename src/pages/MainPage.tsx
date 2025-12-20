@@ -282,11 +282,12 @@ function MainPage() {
   const deletingEventData = deletingEvent ? getCustomEvent(deletingEvent.id) : null;
   const isMultiDateDelete = deletingEventData && deletingEventData.dates.length > 1;
 
-  // Convert sortKey (YYYYMMDD) to DD/MM format for matching
-  const sortKeyToDisplayDate = (sortKey: string): string => {
-    const day = sortKey.slice(6, 8);
+  // Convert sortKey (YYYYMMDD) to YYYY-MM-DD format for matching
+  const sortKeyToIsoDate = (sortKey: string): string => {
+    const year = sortKey.slice(0, 4);
     const month = sortKey.slice(4, 6);
-    return `${day}/${month}`;
+    const day = sortKey.slice(6, 8);
+    return `${year}-${month}-${day}`;
   };
 
   const confirmDeleteCustomEvent = useCallback(
@@ -298,7 +299,7 @@ function MainPage() {
         deleteCustomEvent(deletingEvent.id);
       } else {
         // Remove only this date from the event
-        const dateToRemove = sortKeyToDisplayDate(deletingEvent.sortKey);
+        const dateToRemove = sortKeyToIsoDate(deletingEvent.sortKey);
         const newDates = deletingEventData.dates.filter((d) => d !== dateToRemove);
         updateCustomEvent(deletingEvent.id, { dates: newDates });
       }

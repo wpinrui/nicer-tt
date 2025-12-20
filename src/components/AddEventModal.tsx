@@ -1,7 +1,8 @@
+import 'react-datepicker/dist/react-datepicker.css';
+
 import { ArrowLeft, ChevronDown, ExternalLink, X } from 'lucide-react';
 import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 
 import { UPGRADING_COURSES } from '../data/upgrading-courses';
 import type { CustomEventInput } from '../hooks/useCustomEvents';
