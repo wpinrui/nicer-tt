@@ -18,7 +18,7 @@ interface EventsListProps {
   showTutor: boolean;
   onCourseClick: (course: string) => void;
   onEditCustomEvent?: (eventId: string) => void;
-  onDeleteCustomEvent?: (eventId: string) => void;
+  onDeleteCustomEvent?: (eventId: string, date: string) => void;
 }
 
 export function EventsList({

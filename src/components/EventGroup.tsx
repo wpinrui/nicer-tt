@@ -20,7 +20,7 @@ interface EventGroupProps {
   courseColorMap: Map<string, string>;
   onCourseClick?: (course: string) => void;
   onEditCustomEvent?: (eventId: string) => void;
-  onDeleteCustomEvent?: (eventId: string) => void;
+  onDeleteCustomEvent?: (eventId: string, date: string) => void;
 }
 
 export const EventGroup = memo(function EventGroup({
@@ -40,9 +40,9 @@ export const EventGroup = memo(function EventGroup({
   );
 
   const createDeleteHandler = useCallback(
-    (eventId: string | undefined) => {
+    (eventId: string | undefined, date: string) => {
       if (!eventId || !onDeleteCustomEvent) return undefined;
-      return () => onDeleteCustomEvent(eventId);
+      return () => onDeleteCustomEvent(eventId, date);
     },
     [onDeleteCustomEvent]
   );
@@ -63,10 +63,13 @@ export const EventGroup = memo(function EventGroup({
             key={event.customEventId || i}
             event={event}
             showTutor={showTutor}
-            courseColor={courseColorMap.get(event.course) || '#9c27b0'}
+            courseColor={
+              courseColorMap.get(event.course) ||
+              (event.eventType === 'upgrading' ? '#16a085' : '#9c27b0')
+            }
             onCourseClick={onCourseClick}
             onEdit={createEditHandler(event.customEventId)}
-            onDelete={createDeleteHandler(event.customEventId)}
+            onDelete={createDeleteHandler(event.customEventId, group.sortKey)}
           />
         ))}
       </ul>

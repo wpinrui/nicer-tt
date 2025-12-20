@@ -227,7 +227,12 @@ export function EventsCompareView({
                       key={`${event.course}-${event.group}-${event.startTime}-${i}`}
                       event={event}
                       showTutor={showTutor}
-                      courseColor={courseColorMap.get(event.course) || '#666'}
+                      courseColor={
+                        courseColorMap.get(event.course) ||
+                        ('eventType' in event && event.eventType === 'upgrading'
+                          ? '#16a085'
+                          : '#9c27b0')
+                      }
                       isHighlighted={identicalLeft.has(i)}
                     />
                   ))}
@@ -245,7 +250,12 @@ export function EventsCompareView({
                       key={`${event.course}-${event.group}-${event.startTime}-${i}`}
                       event={event}
                       showTutor={showTutor}
-                      courseColor={courseColorMap.get(event.course) || '#666'}
+                      courseColor={
+                        courseColorMap.get(event.course) ||
+                        ('eventType' in event && event.eventType === 'upgrading'
+                          ? '#16a085'
+                          : '#9c27b0')
+                      }
                       isHighlighted={identicalRight.has(i)}
                     />
                   ))}
