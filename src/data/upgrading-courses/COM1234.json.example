@@ -1,0 +1,75 @@
+{
+  "courseName": "COM1234 - Computing for Educators",
+  "sessions": [
+    {
+      "date": "02/01",
+      "startTime": "09:00",
+      "endTime": "12:00",
+      "venue": "NIE7-02-CR3",
+      "tutor": "Dr. Tan Wei Ming"
+    },
+    {
+      "date": "03/01",
+      "startTime": "09:00",
+      "endTime": "12:00",
+      "venue": "NIE7-02-CR3",
+      "tutor": "Dr. Tan Wei Ming"
+    },
+    {
+      "date": "06/01",
+      "startTime": "09:00",
+      "endTime": "12:00",
+      "venue": "NIE7-02-CR3",
+      "tutor": "Dr. Tan Wei Ming"
+    },
+    {
+      "date": "07/01",
+      "startTime": "09:00",
+      "endTime": "12:00",
+      "venue": "NIE7-02-CR3",
+      "tutor": "Dr. Tan Wei Ming"
+    },
+    {
+      "date": "08/01",
+      "startTime": "09:00",
+      "endTime": "12:00",
+      "venue": "NIE7-02-CR3",
+      "tutor": "Dr. Tan Wei Ming"
+    },
+    {
+      "date": "09/01",
+      "startTime": "09:00",
+      "endTime": "12:00",
+      "venue": "NIE7-02-CR3",
+      "tutor": "Dr. Tan Wei Ming"
+    },
+    {
+      "date": "10/01",
+      "startTime": "09:00",
+      "endTime": "12:00",
+      "venue": "NIE7-02-CR3",
+      "tutor": "Dr. Tan Wei Ming"
+    },
+    {
+      "date": "13/01",
+      "startTime": "09:00",
+      "endTime": "12:00",
+      "venue": "NIE7-02-CR3",
+      "tutor": "Dr. Tan Wei Ming"
+    },
+    {
+      "date": "14/01",
+      "startTime": "09:00",
+      "endTime": "12:00",
+      "venue": "NIE7-02-CR3",
+      "tutor": "Dr. Tan Wei Ming"
+    },
+    {
+      "date": "15/01",
+      "startTime": "09:00",
+      "endTime": "12:00",
+      "venue": "NIE7-02-CR3",
+      "tutor": "Dr. Tan Wei Ming"
+    }
+  ]
+}

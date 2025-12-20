@@ -30,12 +30,12 @@ export function useCourseColorMap(events: TimetableEvent[] | null): UseCourseCol
     const coursesSet = new Set<string>();
 
     for (const event of events) {
-      if (event.course) {
-        coursesSet.add(event.course);
-      } else if ('eventType' in event && event.eventType) {
-        // Handle custom events with empty course (legacy format)
+      // Check for custom/upgrading events first (they use special filter names)
+      if ('eventType' in event && event.eventType) {
         const courseName = event.eventType === 'upgrading' ? 'Upgrading' : 'Custom';
         coursesSet.add(courseName);
+      } else if (event.course) {
+        coursesSet.add(event.course);
       }
     }
 

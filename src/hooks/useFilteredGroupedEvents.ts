@@ -103,12 +103,14 @@ export function useFilteredGroupedEvents(
 
       // Apply course filter
       if (selectedCourses.size > 0) {
-        // Get effective course name (handles legacy custom events with empty course)
-        let effectiveCourse = event.course;
-        if (!effectiveCourse && 'eventType' in event && event.eventType) {
+        // Custom/upgrading events use their eventType as filter name, not their course code
+        let effectiveCourse: string;
+        if ('eventType' in event && event.eventType) {
           effectiveCourse = event.eventType === 'upgrading' ? 'Upgrading' : 'Custom';
+        } else {
+          effectiveCourse = event.course;
         }
-        if (effectiveCourse && !selectedCourses.has(effectiveCourse)) {
+        if (!selectedCourses.has(effectiveCourse)) {
           return;
         }
       }

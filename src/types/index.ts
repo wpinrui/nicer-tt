@@ -194,3 +194,34 @@ export interface DisplayEventItem extends EventItem {
   /** User-provided description (only for custom events) */
   description?: string;
 }
+
+// =============================================================================
+// Content Upgrading Types
+// =============================================================================
+
+/**
+ * A single session in an upgrading course.
+ */
+export interface UpgradingSession {
+  /** Date in DD/MM format */
+  date: string;
+  /** Start time in HH:MM format (24-hour) */
+  startTime: string;
+  /** End time in HH:MM format (24-hour) */
+  endTime: string;
+  /** Venue/location */
+  venue: string;
+  /** Tutor/instructor name */
+  tutor: string;
+}
+
+/**
+ * A content upgrading course preset.
+ * Each JSON file in src/data/upgrading-courses/ represents one course.
+ */
+export interface UpgradingCourse {
+  /** Course name (may include code, e.g., "COM1234 - Computing for Educators") */
+  courseName: string;
+  /** Array of sessions for this course */
+  sessions: UpgradingSession[];
+}

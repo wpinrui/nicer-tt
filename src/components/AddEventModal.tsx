@@ -1,10 +1,12 @@
-import { ChevronDown, X } from 'lucide-react';
+import { ArrowLeft, ChevronDown, ExternalLink, X } from 'lucide-react';
 import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import type { CustomEvent, CustomEventType } from '../types';
+import { UPGRADING_COURSES } from '../data/upgrading-courses';
 import type { CustomEventInput } from '../hooks/useCustomEvents';
+import type { CustomEvent, CustomEventType, UpgradingCourse } from '../types';
+import { CONTRIBUTION_PAGE_URL } from '../utils/constants';
 import styles from './AddEventModal.module.scss';
 
 const DESCRIPTION_MAX = 100;
@@ -12,6 +14,8 @@ const DESCRIPTION_SUGGESTED = 80;
 
 // Support current year and next year for custom events
 const CURRENT_YEAR = new Date().getFullYear();
+
+type ModalStep = 'type-select' | 'custom-form' | 'upgrading-select' | 'upgrading-preview';
 
 interface AddEventModalProps {
   onClose: () => void;
@@ -44,6 +48,32 @@ function getDayOfWeek(date: Date): string {
   return date.toLocaleDateString('en-US', { weekday: 'long' });
 }
 
+/**
+ * Converts DD/MM date string to Date object (using current or next year).
+ */
+function ddmmToDate(ddmm: string): Date {
+  const [day, month] = ddmm.split('/').map(Number);
+  const now = new Date();
+  const thisYear = new Date(now.getFullYear(), month - 1, day);
+  // If the date is in the past, use next year
+  if (thisYear < now) {
+    return new Date(now.getFullYear() + 1, month - 1, day);
+  }
+  return thisYear;
+}
+
+/**
+ * Formats a date for display in preview.
+ */
+function formatPreviewDate(ddmm: string): string {
+  const date = ddmmToDate(ddmm);
+  return date.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
 // Time state as { hour, minute } or null
 interface TimeValue {
   hour: string;
@@ -69,10 +99,52 @@ function timeValueToString(time: TimeValue | null): string {
   return `${time.hour}${time.minute}`;
 }
 
+/**
+ * Converts HH:MM to HHMM format.
+ */
+function colonTimeToHHMM(colonTime: string): string {
+  return colonTime.replace(':', '');
+}
+
+/**
+ * Formats HHMM or HH:MM time for display.
+ */
+function formatTimeDisplay(time: string): string {
+  const clean = time.replace(':', '');
+  if (clean.length < 4) return time;
+  const hour = parseInt(clean.slice(0, 2));
+  const minute = clean.slice(2, 4);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+  return `${hour12}:${minute} ${ampm}`;
+}
+
 // Hours ordered by working hours first (08-18), then evening (19-23), then early morning (00-07)
 const HOURS = [
-  '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18',
-  '19', '20', '21', '22', '23', '00', '01', '02', '03', '04', '05', '06', '07',
+  '08',
+  '09',
+  '10',
+  '11',
+  '12',
+  '13',
+  '14',
+  '15',
+  '16',
+  '17',
+  '18',
+  '19',
+  '20',
+  '21',
+  '22',
+  '23',
+  '00',
+  '01',
+  '02',
+  '03',
+  '04',
+  '05',
+  '06',
+  '07',
 ];
 // Minutes as buttons (00, 15, 30, 45)
 const MINUTES = ['00', '15', '30', '45'];
@@ -102,14 +174,8 @@ function TimeDropdown({ value, options, placeholder, onChange }: TimeDropdownPro
 
   return (
     <div className={styles.timeDropdown} ref={containerRef}>
-      <button
-        type="button"
-        className={styles.timeDropdownBtn}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span className={value ? '' : styles.timeDropdownPlaceholder}>
-          {value || placeholder}
-        </span>
+      <button type="button" className={styles.timeDropdownBtn} onClick={() => setIsOpen(!isOpen)}>
+        <span className={value ? '' : styles.timeDropdownPlaceholder}>{value || placeholder}</span>
         <ChevronDown size={14} />
       </button>
       {isOpen && (
@@ -157,7 +223,21 @@ CustomDateInput.displayName = 'CustomDateInput';
 export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalProps) {
   const isEditing = !!editingEvent;
 
-  // Selected dates as Date objects
+  // Determine initial step based on whether editing
+  const getInitialStep = (): ModalStep => {
+    if (isEditing) {
+      // When editing, go directly to the appropriate form
+      return editingEvent.eventType === 'upgrading' ? 'upgrading-preview' : 'custom-form';
+    }
+    return 'type-select';
+  };
+
+  const [step, setStep] = useState<ModalStep>(getInitialStep);
+
+  // Selected upgrading course
+  const [selectedCourse, setSelectedCourse] = useState<UpgradingCourse | null>(null);
+
+  // Custom event form state
   const [selectedDates, setSelectedDates] = useState<Date[]>(() => {
     if (editingEvent?.dates?.length) {
       return editingEvent.dates.map((d) => isoToDate(d));
@@ -171,22 +251,40 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
   const [endTime, setEndTime] = useState<TimeValue | null>(() =>
     editingEvent ? parseTimeString(editingEvent.endTime) : null
   );
-  const [eventType, setEventType] = useState<CustomEventType>(
-    () => editingEvent?.eventType || 'custom'
-  );
   const [description, setDescription] = useState(() => editingEvent?.description || '');
   const [venue, setVenue] = useState(() => editingEvent?.venue || '');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Type selection handlers
+  const handleSelectCustom = useCallback(() => {
+    setStep('custom-form');
+  }, []);
+
+  const handleSelectUpgrading = useCallback(() => {
+    setStep('upgrading-select');
+  }, []);
+
+  // Upgrading course selection
+  const handleCourseSelect = useCallback((course: UpgradingCourse) => {
+    setSelectedCourse(course);
+    setStep('upgrading-preview');
+  }, []);
+
+  // Back navigation
+  const handleBack = useCallback(() => {
+    if (step === 'custom-form' || step === 'upgrading-select') {
+      setStep('type-select');
+    } else if (step === 'upgrading-preview' && !isEditing) {
+      setStep('upgrading-select');
+      setSelectedCourse(null);
+    }
+  }, [step, isEditing]);
+
+  // Custom form handlers
   const handleDateChange = useCallback((dates: Date | [Date | null, Date | null] | null) => {
     if (!dates) return;
-    // For multi-select, dates is the array of selected dates
-    if (Array.isArray(dates)) {
-      // This shouldn't happen with our config, but handle it
-      return;
-    }
-    // Toggle the date
+    if (Array.isArray(dates)) return;
     setSelectedDates((prev) => {
       const existing = prev.find(
         (d) =>
@@ -230,15 +328,13 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
     return `${selectedDates.length} dates selected`;
   }, [selectedDates]);
 
-  const handleSubmit = useCallback(() => {
+  // Submit custom event
+  const handleSubmitCustom = useCallback(() => {
     const newErrors: Record<string, string> = {};
 
-    // Validate dates
     if (selectedDates.length === 0) {
       newErrors.dates = 'At least one date is required';
     }
-
-    // Validate times
     if (!startTime) {
       newErrors.startTime = 'Start time is required';
     }
@@ -252,8 +348,6 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
         newErrors.endTime = 'End time must be after start time';
       }
     }
-
-    // Validate description
     if (!description.trim()) {
       newErrors.description = 'Description is required';
     }
@@ -265,214 +359,176 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
 
     const sortedDates = [...selectedDates].sort((a, b) => a.getTime() - b.getTime());
 
-    // Build event input - dates stored as YYYY-MM-DD
     const eventInput: CustomEventInput = {
       dates: sortedDates.map((d) => dateToIso(d)),
       day: getDayOfWeek(sortedDates[0]),
       startTime: timeValueToString(startTime),
       endTime: timeValueToString(endTime),
-      eventType,
+      eventType: 'custom' as CustomEventType,
       description: description.trim(),
-      course: eventType === 'upgrading' ? 'Upgrading' : 'Custom',
+      course: 'Custom',
       group: '',
       venue: venue.trim(),
       tutor: '',
     };
 
     onSave(eventInput);
-  }, [selectedDates, startTime, endTime, eventType, description, venue, onSave]);
+  }, [selectedDates, startTime, endTime, description, venue, onSave]);
+
+  // Submit upgrading course
+  const handleSubmitUpgrading = useCallback(() => {
+    if (!selectedCourse) return;
+
+    // Convert sessions to dates in YYYY-MM-DD format
+    const dates = selectedCourse.sessions.map((s) => {
+      const date = ddmmToDate(s.date);
+      return dateToIso(date);
+    });
+
+    // Use first session's time (they might vary, but we take the first)
+    const firstSession = selectedCourse.sessions[0];
+
+    const eventInput: CustomEventInput = {
+      dates,
+      day: getDayOfWeek(ddmmToDate(firstSession.date)),
+      startTime: colonTimeToHHMM(firstSession.startTime),
+      endTime: colonTimeToHHMM(firstSession.endTime),
+      eventType: 'upgrading' as CustomEventType,
+      description: selectedCourse.courseName,
+      course: '', // Not displayed for upgrading events
+      group: 'Upgrading',
+      venue: firstSession.venue,
+      tutor: firstSession.tutor,
+    };
+
+    onSave(eventInput);
+  }, [selectedCourse, onSave]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose();
-      } else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-        handleSubmit();
       }
     },
-    [onClose, handleSubmit]
+    [onClose]
   );
 
-  return (
-    <div className={styles.overlay} onKeyDown={handleKeyDown}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+  // Render type selection screen
+  const renderTypeSelect = () => (
+    <>
+      <div className={styles.header}>
+        <h3>Add Event</h3>
+        <button className={styles.closeBtn} onClick={onClose}>
+          <X size={18} />
+        </button>
+      </div>
+
+      <div className={styles.content}>
+        <p className={styles.typeSelectHint}>What would you like to add?</p>
+
+        <div className={styles.typeSelectOptions}>
+          <button className={styles.typeSelectBtn} onClick={handleSelectUpgrading}>
+            <span className={styles.typeSelectBtnTitle}>Content Upgrading Course</span>
+            <span className={styles.typeSelectBtnDesc}>
+              Select from available upgrading courses
+            </span>
+          </button>
+
+          <button className={styles.typeSelectBtn} onClick={handleSelectCustom}>
+            <span className={styles.typeSelectBtnTitle}>Custom Event</span>
+            <span className={styles.typeSelectBtnDesc}>Create a personal event manually</span>
+          </button>
+        </div>
+      </div>
+    </>
+  );
+
+  // Render upgrading course selection
+  const renderUpgradingSelect = () => (
+    <>
+      <div className={styles.header}>
+        <button className={styles.backBtn} onClick={handleBack}>
+          <ArrowLeft size={18} />
+        </button>
+        <h3>Select Upgrading Course</h3>
+        <button className={styles.closeBtn} onClick={onClose}>
+          <X size={18} />
+        </button>
+      </div>
+
+      <div className={styles.content}>
+        {UPGRADING_COURSES.length === 0 ? (
+          <div className={styles.noCoursesMessage}>
+            <p>No upgrading courses available yet.</p>
+            <p className={styles.noCoursesHint}>
+              Courses will be added as they become available. You can help by contributing your
+              schedule!
+            </p>
+          </div>
+        ) : (
+          <div className={styles.courseList}>
+            {UPGRADING_COURSES.map((course) => (
+              <button
+                key={course.courseName}
+                className={styles.courseListItem}
+                onClick={() => handleCourseSelect(course)}
+              >
+                <span className={styles.courseName}>{course.courseName}</span>
+                <span className={styles.sessionCount}>{course.sessions.length} sessions</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        <a
+          href={CONTRIBUTION_PAGE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.notListedLink}
+        >
+          <span>My course is not listed</span>
+          <ExternalLink size={14} />
+        </a>
+      </div>
+    </>
+  );
+
+  // Render upgrading course preview
+  const renderUpgradingPreview = () => {
+    const course = selectedCourse;
+    if (!course) return null;
+
+    return (
+      <>
         <div className={styles.header}>
-          <h3>{isEditing ? 'Edit Custom Event' : 'Add Custom Event'}</h3>
+          {!isEditing && (
+            <button className={styles.backBtn} onClick={handleBack}>
+              <ArrowLeft size={18} />
+            </button>
+          )}
+          <h3>{isEditing ? 'Upgrading Course' : 'Preview'}</h3>
           <button className={styles.closeBtn} onClick={onClose}>
             <X size={18} />
           </button>
         </div>
 
         <div className={styles.content}>
-          {/* Date picker section */}
-          <div className={styles.field}>
-            <label className={styles.label}>Select Dates</label>
+          <div className={styles.previewHeader}>
+            <span className={styles.previewName}>{course.courseName}</span>
+          </div>
 
-            <div className={styles.datePickerWrapper}>
-              <DatePicker
-                selected={null}
-                onChange={handleDateChange}
-                customInput={<CustomDateInput placeholder="Click to select dates" />}
-                highlightDates={selectedDates}
-                minDate={new Date()}
-                maxDate={new Date(CURRENT_YEAR + 1, 11, 31)}
-                calendarClassName={styles.datePicker}
-                popperClassName={styles.datePickerPopper}
-                value={getInputDisplayValue()}
-                shouldCloseOnSelect={false}
-                dayClassName={(date) =>
-                  selectedDates.some(
-                    (d) =>
-                      d.getFullYear() === date.getFullYear() &&
-                      d.getMonth() === date.getMonth() &&
-                      d.getDate() === date.getDate()
-                  )
-                    ? styles.datePickerDaySelected
-                    : ''
-                }
-              />
-            </div>
-
-            {/* Selected dates chips */}
-            {selectedDates.length > 0 && (
-              <div className={styles.selectedDates}>
-                {selectedDates.map((date) => (
-                  <span key={date.toISOString()} className={styles.dateChip}>
-                    {formatDateChip(date)}
-                    <button
-                      type="button"
-                      className={styles.dateChipRemove}
-                      onClick={() => removeDate(date)}
-                    >
-                      <X size={12} />
-                    </button>
+          <div className={styles.previewSessions}>
+            <label className={styles.label}>Sessions ({course.sessions.length})</label>
+            <div className={styles.sessionList}>
+              {course.sessions.map((session, i) => (
+                <div key={i} className={styles.sessionItem}>
+                  <span className={styles.sessionDate}>{formatPreviewDate(session.date)}</span>
+                  <span className={styles.sessionTime}>
+                    {formatTimeDisplay(session.startTime)} - {formatTimeDisplay(session.endTime)}
                   </span>
-                ))}
-              </div>
-            )}
-
-            {errors.dates && <span className={styles.error}>{errors.dates}</span>}
-          </div>
-
-          {/* Time section */}
-          <div className={styles.timeRow}>
-            <div className={styles.field}>
-              <label className={styles.label}>Start Time</label>
-              <div className={styles.timeSelect}>
-                <TimeDropdown
-                  value={startTime?.hour || ''}
-                  options={HOURS}
-                  placeholder="HH"
-                  onChange={(hour) => {
-                    setStartTime({ hour, minute: startTime?.minute || '00' });
-                    setErrors((prev) => ({ ...prev, startTime: '' }));
-                  }}
-                />
-                <span className={styles.timeSeparator}>:</span>
-                <TimeDropdown
-                  value={startTime?.minute || ''}
-                  options={MINUTES}
-                  placeholder="MM"
-                  onChange={(minute) => {
-                    setStartTime({ hour: startTime?.hour || '08', minute });
-                    setErrors((prev) => ({ ...prev, startTime: '' }));
-                  }}
-                />
-              </div>
-              {errors.startTime && <span className={styles.error}>{errors.startTime}</span>}
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label}>End Time</label>
-              <div className={styles.timeSelect}>
-                <TimeDropdown
-                  value={endTime?.hour || ''}
-                  options={HOURS}
-                  placeholder="HH"
-                  onChange={(hour) => {
-                    setEndTime({ hour, minute: endTime?.minute || '00' });
-                    setErrors((prev) => ({ ...prev, endTime: '' }));
-                  }}
-                />
-                <span className={styles.timeSeparator}>:</span>
-                <TimeDropdown
-                  value={endTime?.minute || ''}
-                  options={MINUTES}
-                  placeholder="MM"
-                  onChange={(minute) => {
-                    setEndTime({ hour: endTime?.hour || '10', minute });
-                    setErrors((prev) => ({ ...prev, endTime: '' }));
-                  }}
-                />
-              </div>
-              {errors.endTime && <span className={styles.error}>{errors.endTime}</span>}
-            </div>
-          </div>
-
-          {/* Event type toggle */}
-          <div className={styles.field}>
-            <label className={styles.label}>Event Type</label>
-            <div className={styles.eventTypeToggle}>
-              <button
-                type="button"
-                className={`${styles.eventTypeBtn} ${eventType === 'custom' ? styles.eventTypeBtnActive : ''}`}
-                onClick={() => setEventType('custom')}
-              >
-                Custom
-              </button>
-              <button
-                type="button"
-                className={`${styles.eventTypeBtn} ${eventType === 'upgrading' ? styles.eventTypeBtnActive : ''}`}
-                onClick={() => setEventType('upgrading')}
-              >
-                Upgrading
-              </button>
-            </div>
-          </div>
-
-          {/* Venue (optional) */}
-          <div className={styles.field}>
-            <label className={styles.label}>
-              Location <span className={styles.optionalHint}>(optional)</span>
-            </label>
-            <input
-              type="text"
-              className={styles.input}
-              value={venue}
-              onChange={(e) => setVenue(e.target.value)}
-              placeholder="e.g., 7-01-TR703"
-            />
-          </div>
-
-          {/* Description */}
-          <div className={styles.field}>
-            <label className={styles.label}>Description</label>
-            <textarea
-              className={styles.textarea}
-              value={description}
-              onChange={(e) => {
-                if (e.target.value.length <= DESCRIPTION_MAX) {
-                  setDescription(e.target.value);
-                  setErrors((prev) => ({ ...prev, description: '' }));
-                }
-              }}
-              placeholder="e.g., Chemistry content upgrading at LT27"
-              rows={2}
-            />
-            {errors.description && <span className={styles.error}>{errors.description}</span>}
-            <div className={styles.charCounter}>
-              <span
-                className={
-                  description.length > DESCRIPTION_SUGGESTED ? styles.charCounterWarning : ''
-                }
-              >
-                {description.length}/{DESCRIPTION_MAX}
-              </span>
-              {description.length > DESCRIPTION_SUGGESTED &&
-                description.length <= DESCRIPTION_MAX && (
-                  <span className={styles.charCounterHint}>
-                    (suggested: {DESCRIPTION_SUGGESTED})
-                  </span>
-                )}
+                  {session.venue && <span className={styles.sessionVenue}>{session.venue}</span>}
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -481,10 +537,200 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
           <button className={styles.cancelBtn} onClick={onClose}>
             Cancel
           </button>
-          <button className={styles.saveBtn} onClick={handleSubmit}>
-            {isEditing ? 'Save Changes' : 'Add Event'}
-          </button>
+          {!isEditing && (
+            <button className={styles.saveBtn} onClick={handleSubmitUpgrading}>
+              Add to Timetable
+            </button>
+          )}
         </div>
+      </>
+    );
+  };
+
+  // Render custom event form
+  const renderCustomForm = () => (
+    <>
+      <div className={styles.header}>
+        {!isEditing && (
+          <button className={styles.backBtn} onClick={handleBack}>
+            <ArrowLeft size={18} />
+          </button>
+        )}
+        <h3>{isEditing ? 'Edit Custom Event' : 'Custom Event'}</h3>
+        <button className={styles.closeBtn} onClick={onClose}>
+          <X size={18} />
+        </button>
+      </div>
+
+      <div className={styles.content}>
+        {/* Date picker section */}
+        <div className={styles.field}>
+          <label className={styles.label}>Select Dates</label>
+
+          <div className={styles.datePickerWrapper}>
+            <DatePicker
+              selected={null}
+              onChange={handleDateChange}
+              customInput={<CustomDateInput placeholder="Click to select dates" />}
+              highlightDates={selectedDates}
+              minDate={new Date()}
+              maxDate={new Date(CURRENT_YEAR + 1, 11, 31)}
+              calendarClassName={styles.datePicker}
+              popperClassName={styles.datePickerPopper}
+              value={getInputDisplayValue()}
+              shouldCloseOnSelect={false}
+              dayClassName={(date: Date) =>
+                selectedDates.some(
+                  (d) =>
+                    d.getFullYear() === date.getFullYear() &&
+                    d.getMonth() === date.getMonth() &&
+                    d.getDate() === date.getDate()
+                )
+                  ? styles.datePickerDaySelected
+                  : ''
+              }
+            />
+          </div>
+
+          {/* Selected dates chips */}
+          {selectedDates.length > 0 && (
+            <div className={styles.selectedDates}>
+              {selectedDates.map((date) => (
+                <span key={date.toISOString()} className={styles.dateChip}>
+                  {formatDateChip(date)}
+                  <button
+                    type="button"
+                    className={styles.dateChipRemove}
+                    onClick={() => removeDate(date)}
+                  >
+                    <X size={12} />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+
+          {errors.dates && <span className={styles.error}>{errors.dates}</span>}
+        </div>
+
+        {/* Time section */}
+        <div className={styles.timeRow}>
+          <div className={styles.field}>
+            <label className={styles.label}>Start Time</label>
+            <div className={styles.timeSelect}>
+              <TimeDropdown
+                value={startTime?.hour || ''}
+                options={HOURS}
+                placeholder="HH"
+                onChange={(hour) => {
+                  setStartTime({ hour, minute: startTime?.minute || '00' });
+                  setErrors((prev) => ({ ...prev, startTime: '' }));
+                }}
+              />
+              <span className={styles.timeSeparator}>:</span>
+              <TimeDropdown
+                value={startTime?.minute || ''}
+                options={MINUTES}
+                placeholder="MM"
+                onChange={(minute) => {
+                  setStartTime({ hour: startTime?.hour || '08', minute });
+                  setErrors((prev) => ({ ...prev, startTime: '' }));
+                }}
+              />
+            </div>
+            {errors.startTime && <span className={styles.error}>{errors.startTime}</span>}
+          </div>
+          <div className={styles.field}>
+            <label className={styles.label}>End Time</label>
+            <div className={styles.timeSelect}>
+              <TimeDropdown
+                value={endTime?.hour || ''}
+                options={HOURS}
+                placeholder="HH"
+                onChange={(hour) => {
+                  setEndTime({ hour, minute: endTime?.minute || '00' });
+                  setErrors((prev) => ({ ...prev, endTime: '' }));
+                }}
+              />
+              <span className={styles.timeSeparator}>:</span>
+              <TimeDropdown
+                value={endTime?.minute || ''}
+                options={MINUTES}
+                placeholder="MM"
+                onChange={(minute) => {
+                  setEndTime({ hour: endTime?.hour || '10', minute });
+                  setErrors((prev) => ({ ...prev, endTime: '' }));
+                }}
+              />
+            </div>
+            {errors.endTime && <span className={styles.error}>{errors.endTime}</span>}
+          </div>
+        </div>
+
+        {/* Venue (optional) */}
+        <div className={styles.field}>
+          <label className={styles.label}>
+            Location <span className={styles.optionalHint}>(optional)</span>
+          </label>
+          <input
+            type="text"
+            className={styles.input}
+            value={venue}
+            onChange={(e) => setVenue(e.target.value)}
+            placeholder="e.g., 7-01-TR703"
+          />
+        </div>
+
+        {/* Description */}
+        <div className={styles.field}>
+          <label className={styles.label}>Description</label>
+          <textarea
+            className={styles.textarea}
+            value={description}
+            onChange={(e) => {
+              if (e.target.value.length <= DESCRIPTION_MAX) {
+                setDescription(e.target.value);
+                setErrors((prev) => ({ ...prev, description: '' }));
+              }
+            }}
+            placeholder="e.g., Study group meeting"
+            rows={2}
+          />
+          {errors.description && <span className={styles.error}>{errors.description}</span>}
+          <div className={styles.charCounter}>
+            <span
+              className={
+                description.length > DESCRIPTION_SUGGESTED ? styles.charCounterWarning : ''
+              }
+            >
+              {description.length}/{DESCRIPTION_MAX}
+            </span>
+            {description.length > DESCRIPTION_SUGGESTED &&
+              description.length <= DESCRIPTION_MAX && (
+                <span className={styles.charCounterHint}>(suggested: {DESCRIPTION_SUGGESTED})</span>
+              )}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.actions}>
+        <button className={styles.cancelBtn} onClick={onClose}>
+          Cancel
+        </button>
+        <button className={styles.saveBtn} onClick={handleSubmitCustom}>
+          {isEditing ? 'Save Changes' : 'Add Event'}
+        </button>
+      </div>
+    </>
+  );
+
+  return (
+    <div className={styles.overlay} onKeyDown={handleKeyDown}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        {step === 'type-select' && renderTypeSelect()}
+        {step === 'custom-form' && renderCustomForm()}
+        {step === 'upgrading-select' && renderUpgradingSelect()}
+        {step === 'upgrading-preview' && renderUpgradingPreview()}
       </div>
     </div>
   );

@@ -26,11 +26,12 @@ export const EventCard = memo(function EventCard({
 }: EventCardProps) {
   const isClickable = !!onCourseClick;
   const isCustom = 'isCustom' in event && event.isCustom;
+  const isUpgrading = isCustom && 'eventType' in event && event.eventType === 'upgrading';
 
   const classNames = [
     styles.eventItem,
     isHighlighted ? styles.eventHighlighted : '',
-    isCustom ? styles.eventCustom : '',
+    isUpgrading ? styles.eventUpgrading : isCustom ? styles.eventCustom : '',
   ]
     .filter(Boolean)
     .join(' ');

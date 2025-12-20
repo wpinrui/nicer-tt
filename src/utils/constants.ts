@@ -29,6 +29,9 @@ export const DEFAULT_TIMETABLE_NAMES = [
   "Someten's Timetable",
 ] as const;
 
+// Placeholder link for crowdsourcing contribution page
+export const CONTRIBUTION_PAGE_URL = 'https://example.com/contribute'; // TODO: Replace with actual Firebase page
+
 // Color palette for course codes (darker shades for white text)
 export const COURSE_COLORS = [
   '#b71c1c',
