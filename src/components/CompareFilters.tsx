@@ -1,7 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Calendar, Users, Car, Info, Utensils, Filter, ChevronDown, ChevronUp, Settings, type LucideIcon } from 'lucide-react';
-import type { CompareFilter, TravelConfig, MealConfig } from '../types';
-import { TravelConfigForm, MealConfigForm, MobileCompareSheet } from './compare';
+import {
+  Calendar,
+  Car,
+  ChevronDown,
+  ChevronUp,
+  Filter,
+  Info,
+  type LucideIcon,
+  Settings,
+  Users,
+  Utensils,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+import type { CompareFilter, MealConfig, TravelConfig } from '../types';
+import { MealConfigForm, MobileCompareSheet, TravelConfigForm } from './compare';
 import styles from './CompareFilters.module.scss';
 
 interface CompareFiltersProps {
@@ -23,10 +35,30 @@ interface FilterButtonConfig {
 }
 
 const FILTER_BUTTONS: FilterButtonConfig[] = [
-  { id: 'commonDays', icon: Calendar, label: 'Common Days', tooltip: 'Show only days where both timetables have classes' },
-  { id: 'identical', icon: Users, label: 'Identical Classes', tooltip: 'Show classes with matching course, group, AND time' },
-  { id: 'travel', icon: Car, label: 'Travel Together', tooltip: 'See which days you can commute together' },
-  { id: 'eat', icon: Utensils, label: 'Eat Together', tooltip: 'Find 1-hour gaps during lunch or dinner where both can eat together' },
+  {
+    id: 'commonDays',
+    icon: Calendar,
+    label: 'Common Days',
+    tooltip: 'Show only days where both timetables have classes',
+  },
+  {
+    id: 'identical',
+    icon: Users,
+    label: 'Identical Classes',
+    tooltip: 'Show classes with matching course, group, AND time',
+  },
+  {
+    id: 'travel',
+    icon: Car,
+    label: 'Travel Together',
+    tooltip: 'See which days you can commute together',
+  },
+  {
+    id: 'eat',
+    icon: Utensils,
+    label: 'Eat Together',
+    tooltip: 'Find 1-hour gaps during lunch or dinner where both can eat together',
+  },
 ];
 
 const MOBILE_BREAKPOINT = '(max-width: 768px)';
@@ -43,9 +75,7 @@ export function CompareFilters({
 }: CompareFiltersProps) {
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const [showConfigModal, setShowConfigModal] = useState(false);
-  const [isMobile, setIsMobile] = useState(
-    () => window.matchMedia(MOBILE_BREAKPOINT).matches
-  );
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia(MOBILE_BREAKPOINT).matches);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(MOBILE_BREAKPOINT);
@@ -65,15 +95,12 @@ export function CompareFilters({
     }
   };
 
-  const activeFilterLabel = FILTER_BUTTONS.find(f => f.id === compareFilter)?.label || 'None';
+  const activeFilterLabel = FILTER_BUTTONS.find((f) => f.id === compareFilter)?.label || 'None';
   const needsConfig = compareFilter === 'travel' || compareFilter === 'eat';
 
   return (
     <div className={styles.container}>
-      <button
-        className={styles.filtersToggle}
-        onClick={() => setFiltersExpanded(!filtersExpanded)}
-      >
+      <button className={styles.filtersToggle} onClick={() => setFiltersExpanded(!filtersExpanded)}>
         <Filter size={14} />
         <span>Filters{compareFilter !== 'none' ? `: ${activeFilterLabel}` : ''}</span>
         {filtersExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -95,10 +122,7 @@ export function CompareFilters({
       </div>
 
       {needsConfig && (
-        <button
-          className={styles.mobileConfigBtn}
-          onClick={() => setShowConfigModal(true)}
-        >
+        <button className={styles.mobileConfigBtn} onClick={() => setShowConfigModal(true)}>
           <Settings size={14} />
           <span>Configure {compareFilter === 'travel' ? 'Travel' : 'Meal'} Options</span>
         </button>

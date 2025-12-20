@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react';
-import type { CompareFilter, TravelConfig, MealConfig } from '../types';
+import { useCallback, useState } from 'react';
+
 import { DEFAULT_TRAVEL_WAIT_MINUTES } from '../shared/constants';
+import type { CompareFilter, MealConfig, TravelConfig } from '../types';
 
 export interface FilterState {
   searchQuery: string;
@@ -105,15 +106,16 @@ export function useMainPageState() {
     setSelectedDate(null);
   }, []);
 
-  const hasActiveFilters = selectedCourses.size > 0 || searchQuery.length > 0 || selectedDate !== null;
+  const hasActiveFilters =
+    selectedCourses.size > 0 || searchQuery.length > 0 || selectedDate !== null;
 
   // Compare handlers
   const handleTravelConfigChange = useCallback((update: Partial<TravelConfig>) => {
-    setTravelConfig(prev => ({ ...prev, ...update }));
+    setTravelConfig((prev) => ({ ...prev, ...update }));
   }, []);
 
   const handleMealConfigChange = useCallback((update: Partial<MealConfig>) => {
-    setMealConfig(prev => ({ ...prev, ...update }));
+    setMealConfig((prev) => ({ ...prev, ...update }));
   }, []);
 
   const handleCompare = useCallback((selection: [string, string]) => {

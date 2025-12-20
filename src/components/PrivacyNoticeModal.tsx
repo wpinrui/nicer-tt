@@ -1,4 +1,5 @@
 import { Shield } from 'lucide-react';
+
 import styles from './PrivacyNoticeModal.module.scss';
 
 interface PrivacyNoticeModalProps {

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
-import type { TimetableEvent, GroupedEvent, EventItem } from '../types';
-import { formatDateDisplay, createSortKey } from '../utils/formatters';
+
+import type { EventItem, GroupedEvent, TimetableEvent } from '../types';
+import { createSortKey, formatDateDisplay } from '../utils/formatters';
 
 interface UseGroupedEventsResult {
   groupedByDate: GroupedEvent[];
@@ -50,9 +51,7 @@ export function useGroupedEvents(events: TimetableEvent[] | null): UseGroupedEve
       }
     }
 
-    const sorted = Array.from(dateMap.values()).sort((a, b) =>
-      a.sortKey.localeCompare(b.sortKey)
-    );
+    const sorted = Array.from(dateMap.values()).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
 
     // Sort events within each date by start time
     for (const group of sorted) {

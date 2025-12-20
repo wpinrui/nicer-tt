@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { RotateCcw, Image } from 'lucide-react';
+import { Image, RotateCcw } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../../utils/constants';
 import { logError } from '../../utils/errors';
 import styles from '../OptionsPanel.module.scss';
@@ -29,7 +30,9 @@ export function BackgroundSettings() {
     }
     return '';
   });
-  const [backgroundStatus, setBackgroundStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [backgroundStatus, setBackgroundStatus] = useState<
+    'idle' | 'loading' | 'success' | 'error'
+  >('idle');
   const [backgroundToast, setBackgroundToast] = useState<string | null>(null);
 
   // Check if using plain background
@@ -101,11 +104,7 @@ export function BackgroundSettings() {
       <h4>Background</h4>
       <label className={styles.toggle}>
         <span>Use plain background</span>
-        <input
-          type="checkbox"
-          checked={isPlainBackground}
-          onChange={handlePlainBackgroundToggle}
-        />
+        <input type="checkbox" checked={isPlainBackground} onChange={handlePlainBackgroundToggle} />
       </label>
       {!isPlainBackground && (
         <>
@@ -151,7 +150,9 @@ export function BackgroundSettings() {
         </>
       )}
       {backgroundToast && (
-        <div className={`${styles.backgroundToast} ${backgroundStatus === 'error' ? styles.error : styles.success}`}>
+        <div
+          className={`${styles.backgroundToast} ${backgroundStatus === 'error' ? styles.error : styles.success}`}
+        >
           {backgroundToast}
         </div>
       )}

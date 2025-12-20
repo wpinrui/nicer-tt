@@ -1,6 +1,12 @@
 import { useMemo } from 'react';
-import type { TimetableEvent, GroupedEvent, EventItem } from '../types';
-import { formatDateDisplay, getDateSearchString, createSortKey, getTodaySortKey } from '../utils/formatters';
+
+import type { EventItem, GroupedEvent, TimetableEvent } from '../types';
+import {
+  createSortKey,
+  formatDateDisplay,
+  getDateSearchString,
+  getTodaySortKey,
+} from '../utils/formatters';
 
 interface FilterOptions {
   searchQuery: string;
@@ -45,7 +51,8 @@ export function useFilteredGroupedEvents(
     let filtered = 0;
 
     const query = searchQuery.toLowerCase();
-    const hasFilters = selectedCourses.size > 0 || query.length > 0 || hidePastDates || selectedDate !== null;
+    const hasFilters =
+      selectedCourses.size > 0 || query.length > 0 || hidePastDates || selectedDate !== null;
     const todaySortKey = getTodaySortKey();
 
     // Parse selected date for filtering (format: YYYY-MM-DD from date input)
@@ -113,9 +120,7 @@ export function useFilteredGroupedEvents(
       }
     }
 
-    const sorted = Array.from(dateMap.values()).sort((a, b) =>
-      a.sortKey.localeCompare(b.sortKey)
-    );
+    const sorted = Array.from(dateMap.values()).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
 
     // Sort events within each date by start time
     for (const group of sorted) {

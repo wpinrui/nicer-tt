@@ -1,4 +1,5 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { TOAST_DURATION_MS } from '../utils/constants';
 
 interface UseToastOptions {
@@ -29,18 +30,21 @@ export function useToast(options?: UseToastOptions): UseToastReturn {
     }
   }, []);
 
-  const show = useCallback((msg: string) => {
-    // Clear any existing timeout
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+  const show = useCallback(
+    (msg: string) => {
+      // Clear any existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
 
-    setMessage(msg);
-    timeoutRef.current = setTimeout(() => {
-      setMessage(null);
-      timeoutRef.current = null;
-    }, duration);
-  }, [duration]);
+      setMessage(msg);
+      timeoutRef.current = setTimeout(() => {
+        setMessage(null);
+        timeoutRef.current = null;
+      }, duration);
+    },
+    [duration]
+  );
 
   // Cleanup on unmount
   useEffect(() => {

@@ -1,6 +1,7 @@
 import { User } from 'lucide-react';
-import { formatTime12Hour, formatVenue, formatTutor } from '../utils/formatters';
+
 import type { EventItem } from '../types';
+import { formatTime12Hour, formatTutor, formatVenue } from '../utils/formatters';
 import styles from './EventCard.module.scss';
 
 interface EventCardProps {
@@ -38,11 +39,9 @@ export function EventCard({
         </span>
       </span>
       <span className={styles.eventGroup}>{event.group}</span>
-      {event.venue && (
-        <span className={styles.eventVenue}>@ {formatVenue(event.venue)}</span>
-      )}
-      {event.tutor && (
-        showTutor ? (
+      {event.venue && <span className={styles.eventVenue}>@ {formatVenue(event.venue)}</span>}
+      {event.tutor &&
+        (showTutor ? (
           <span className={styles.eventTutor}>
             <User size={14} />
             {formatTutor(event.tutor)}
@@ -51,8 +50,7 @@ export function EventCard({
           <span className={styles.eventTutorIcon} title={formatTutor(event.tutor)}>
             <User size={14} />
           </span>
-        )
-      )}
+        ))}
     </li>
   );
 }

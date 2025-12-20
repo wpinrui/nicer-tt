@@ -6,7 +6,9 @@ export function parseHtmlTimetable(html: string): TimetableEvent[] {
 
   const infoTable = doc.querySelector('#infotab');
   if (!infoTable) {
-    throw new Error('Could not find timetable data. Make sure you uploaded the correct NIE timetable HTML file.');
+    throw new Error(
+      'Could not find timetable data. Make sure you uploaded the correct NIE timetable HTML file.'
+    );
   }
 
   const rows = infoTable.querySelectorAll('tr');
@@ -28,7 +30,10 @@ export function parseHtmlTimetable(html: string): TimetableEvent[] {
 
     if (!course || !startTime || !endTime) continue;
 
-    const dates = datesStr.split(',').map(d => d.trim()).filter(d => d);
+    const dates = datesStr
+      .split(',')
+      .map((d) => d.trim())
+      .filter((d) => d);
 
     events.push({
       course,
@@ -43,7 +48,9 @@ export function parseHtmlTimetable(html: string): TimetableEvent[] {
   }
 
   if (events.length === 0) {
-    throw new Error('No events found in the timetable. The file might be empty or in an unexpected format.');
+    throw new Error(
+      'No events found in the timetable. The file might be empty or in an unexpected format.'
+    );
   }
 
   return events;

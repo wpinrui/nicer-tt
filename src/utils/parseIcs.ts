@@ -123,7 +123,9 @@ export function parseIcs(icsContent: string): TimetableEvent[] {
   }
 
   if (events.length === 0) {
-    throw new Error('No events found in the ICS file. Make sure you uploaded a valid calendar file.');
+    throw new Error(
+      'No events found in the ICS file. Make sure you uploaded a valid calendar file.'
+    );
   }
 
   return events;

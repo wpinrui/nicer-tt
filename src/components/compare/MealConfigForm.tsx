@@ -1,10 +1,10 @@
-import type { MealConfig } from '../../types';
 import {
-  LUNCH_START_HOURS,
-  LUNCH_END_HOURS,
-  DINNER_START_HOURS,
   DINNER_END_HOURS,
+  DINNER_START_HOURS,
+  LUNCH_END_HOURS,
+  LUNCH_START_HOURS,
 } from '../../shared/constants';
+import type { MealConfig } from '../../types';
 import styles from '../CompareFilters.module.scss';
 
 function formatHour(hour: number): string {
@@ -34,7 +34,7 @@ interface MealTypeButtonsProps {
 function MealTypeButtons({ value, onChange, buttonClassName, showTooltips }: MealTypeButtonsProps) {
   return (
     <>
-      {MEAL_TYPES.map(type => (
+      {MEAL_TYPES.map((type) => (
         <button
           key={type}
           className={`${buttonClassName} ${value === type ? styles.active : ''}`}
@@ -78,8 +78,10 @@ function MealTimeRange({
           value={startValue}
           onChange={(e) => onStartChange(Number(e.target.value))}
         >
-          {startOptions.map(hour => (
-            <option key={hour} value={hour}>{formatHour(hour)}</option>
+          {startOptions.map((hour) => (
+            <option key={hour} value={hour}>
+              {formatHour(hour)}
+            </option>
           ))}
         </select>
         <span className={styles.mealTimeSeparator}>to</span>
@@ -88,8 +90,10 @@ function MealTimeRange({
           value={endValue}
           onChange={(e) => onEndChange(Number(e.target.value))}
         >
-          {endOptions.map(hour => (
-            <option key={hour} value={hour}>{formatHour(hour)}</option>
+          {endOptions.map((hour) => (
+            <option key={hour} value={hour}>
+              {formatHour(hour)}
+            </option>
           ))}
         </select>
       </label>
@@ -172,8 +176,10 @@ function ModalTimeRange({
             value={startValue}
             onChange={(e) => onStartChange(Number(e.target.value))}
           >
-            {startOptions.map(hour => (
-              <option key={hour} value={hour}>{formatHour(hour)}</option>
+            {startOptions.map((hour) => (
+              <option key={hour} value={hour}>
+                {formatHour(hour)}
+              </option>
             ))}
           </select>
           <span>to</span>
@@ -182,8 +188,10 @@ function ModalTimeRange({
             value={endValue}
             onChange={(e) => onEndChange(Number(e.target.value))}
           >
-            {endOptions.map(hour => (
-              <option key={hour} value={hour}>{formatHour(hour)}</option>
+            {endOptions.map((hour) => (
+              <option key={hour} value={hour}>
+                {formatHour(hour)}
+              </option>
             ))}
           </select>
         </div>

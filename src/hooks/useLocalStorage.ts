@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
+
 import { logError } from '../utils/errors';
 
 interface UseLocalStorageJsonOptions {
@@ -28,19 +29,22 @@ export function useLocalStorageJson<T>(
     }
   });
 
-  const setValue = useCallback((value: T | ((prev: T) => T)) => {
-    setStoredValue((prev) => {
-      const valueToStore = value instanceof Function ? value(prev) : value;
-      try {
-        localStorage.setItem(key, JSON.stringify(valueToStore));
-      } catch (e) {
-        const error = e instanceof Error ? e : new Error(String(e));
-        logError('useLocalStorageJson:write', error, { key });
-        options?.onError?.(error);
-      }
-      return valueToStore;
-    });
-  }, [key, options]);
+  const setValue = useCallback(
+    (value: T | ((prev: T) => T)) => {
+      setStoredValue((prev) => {
+        const valueToStore = value instanceof Function ? value(prev) : value;
+        try {
+          localStorage.setItem(key, JSON.stringify(valueToStore));
+        } catch (e) {
+          const error = e instanceof Error ? e : new Error(String(e));
+          logError('useLocalStorageJson:write', error, { key });
+          options?.onError?.(error);
+        }
+        return valueToStore;
+      });
+    },
+    [key, options]
+  );
 
   return [storedValue, setValue];
 }

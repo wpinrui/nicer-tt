@@ -1,8 +1,9 @@
+import { ExternalLink, HelpCircle, RotateCcw, X } from 'lucide-react';
 import { useState } from 'react';
-import { X, RotateCcw, HelpCircle, ExternalLink } from 'lucide-react';
+
 import type { Timetable, TimetableEvent } from '../types';
 import { Modal } from './Modal';
-import { AppSettings, BackgroundSettings, TimetableManager, PrivacySection } from './options';
+import { AppSettings, BackgroundSettings, PrivacySection, TimetableManager } from './options';
 import styles from './OptionsPanel.module.scss';
 
 interface OptionsPanelProps {
@@ -16,7 +17,11 @@ interface OptionsPanelProps {
   timetables: Timetable[];
   activeTimetableId: string | null;
   onSetActiveTimetable: (id: string) => void;
-  onAddTimetable: (events: TimetableEvent[], fileName: string | null, customName?: string) => string;
+  onAddTimetable: (
+    events: TimetableEvent[],
+    fileName: string | null,
+    customName?: string
+  ) => string;
   onRenameTimetable: (id: string, newName: string) => void;
   onDeleteTimetable: (id: string) => boolean;
   onViewingToast: (name: string) => void;
@@ -99,7 +104,10 @@ export function OptionsPanel({
               >
                 <ExternalLink size={14} /> Report an issue
               </a>
-              <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => setShowFactoryReset(true)}>
+              <button
+                className={`${styles.btn} ${styles.btnDanger}`}
+                onClick={() => setShowFactoryReset(true)}
+              >
                 <RotateCcw size={14} /> Factory Reset
               </button>
             </div>
@@ -117,7 +125,9 @@ export function OptionsPanel({
           confirmVariant="danger"
         >
           <p>This will clear ALL your data including timetables, settings, and preferences.</p>
-          <p><strong>This cannot be undone.</strong></p>
+          <p>
+            <strong>This cannot be undone.</strong>
+          </p>
         </Modal>
       )}
     </div>

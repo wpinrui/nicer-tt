@@ -46,7 +46,7 @@ export function generateIcs(events: TimetableEvent[]): string {
       const dtstamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
       icsEvents.push(
-`BEGIN:VEVENT
+        `BEGIN:VEVENT
 UID:${uid}
 DTSTAMP:${dtstamp}
 DTSTART:${dtstart}

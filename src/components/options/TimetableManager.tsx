@@ -1,7 +1,8 @@
-import { useRef, useState, useEffect } from 'react';
-import { Upload, Link, Pencil, Check, Eye, Trash2 } from 'lucide-react';
-import { TOAST_DURATION_MS } from '../../utils/constants';
+import { Check, Eye, Link, Pencil, Trash2, Upload } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+
 import type { Timetable, TimetableEvent } from '../../types';
+import { TOAST_DURATION_MS } from '../../utils/constants';
 import { parseHtmlTimetable } from '../../utils/parseHtml';
 import { parseIcs } from '../../utils/parseIcs';
 import { decodeShareUrl } from '../../utils/shareUtils';
@@ -12,7 +13,11 @@ interface TimetableManagerProps {
   timetables: Timetable[];
   activeTimetableId: string | null;
   onSetActiveTimetable: (id: string) => void;
-  onAddTimetable: (events: TimetableEvent[], fileName: string | null, customName?: string) => string;
+  onAddTimetable: (
+    events: TimetableEvent[],
+    fileName: string | null,
+    customName?: string
+  ) => string;
   onRenameTimetable: (id: string, newName: string) => void;
   onDeleteTimetable: (id: string) => boolean;
   onViewingToast: (name: string) => void;
@@ -36,8 +41,15 @@ export function TimetableManager({
   const [shareLinkError, setShareLinkError] = useState<string | null>(null);
   const [editingTimetableId, setEditingTimetableId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
-  const [timetableToast, setTimetableToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string; isPrimary: boolean } | null>(null);
+  const [timetableToast, setTimetableToast] = useState<{
+    message: string;
+    type: 'success' | 'error';
+  } | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{
+    id: string;
+    name: string;
+    isPrimary: boolean;
+  } | null>(null);
 
   // Auto-hide toast
   useEffect(() => {
@@ -81,7 +93,7 @@ export function TimetableManager({
     } catch (err) {
       setTimetableToast({
         message: err instanceof Error ? err.message : 'Failed to parse file',
-        type: 'error'
+        type: 'error',
       });
     }
 
@@ -133,16 +145,17 @@ export function TimetableManager({
     <>
       <div className={styles.section}>
         <h4>Timetables</h4>
-        <p className={styles.privacyDesc}>
-          Add timetables to compare with friends.
-        </p>
+        <p className={styles.privacyDesc}>Add timetables to compare with friends.</p>
 
         {/* List of timetables */}
         <div className={styles.timetableList}>
           {timetables.map((timetable) => {
             const isActive = timetable.id === activeTimetableId;
             return (
-              <div key={timetable.id} className={`${styles.timetableListItem} ${isActive ? styles.timetableListItemActive : ''}`}>
+              <div
+                key={timetable.id}
+                className={`${styles.timetableListItem} ${isActive ? styles.timetableListItemActive : ''}`}
+              >
                 {editingTimetableId === timetable.id ? (
                   <div className={styles.timetableEditRow}>
                     <input
@@ -171,11 +184,11 @@ export function TimetableManager({
                   <>
                     <div className={styles.timetableInfo}>
                       <span className={styles.timetableName}>{timetable.name}</span>
-                      {timetable.isPrimary && (
-                        <span className={styles.timetableBadge}>You</span>
-                      )}
+                      {timetable.isPrimary && <span className={styles.timetableBadge}>You</span>}
                       {isActive && (
-                        <span className={`${styles.timetableBadge} ${styles.timetableBadgeActive}`}>Viewing</span>
+                        <span className={`${styles.timetableBadge} ${styles.timetableBadgeActive}`}>
+                          Viewing
+                        </span>
                       )}
                     </div>
                     <div className={styles.timetableActions}>
@@ -197,7 +210,9 @@ export function TimetableManager({
                       </button>
                       <button
                         className={`${styles.timetableActionBtn} ${styles.timetableActionBtnDanger}`}
-                        onClick={() => handleDeleteTimetable(timetable.id, timetable.name, timetable.isPrimary)}
+                        onClick={() =>
+                          handleDeleteTimetable(timetable.id, timetable.name, timetable.isPrimary)
+                        }
                         title="Delete"
                       >
                         <Trash2 size={14} />
@@ -239,9 +254,7 @@ export function TimetableManager({
               Add
             </button>
           </div>
-          {shareLinkError && (
-            <p className={styles.addTimetableError}>{shareLinkError}</p>
-          )}
+          {shareLinkError && <p className={styles.addTimetableError}>{shareLinkError}</p>}
 
           <div className={styles.addTimetableDivider}>
             <span>or</span>
@@ -260,7 +273,9 @@ export function TimetableManager({
         </div>
 
         {timetableToast && (
-          <div className={`${styles.backgroundToast} ${timetableToast.type === 'success' ? styles.success : styles.error}`}>
+          <div
+            className={`${styles.backgroundToast} ${timetableToast.type === 'success' ? styles.success : styles.error}`}
+          >
             {timetableToast.message}
           </div>
         )}
@@ -278,7 +293,7 @@ export function TimetableManager({
           <p>
             {deleteConfirm.isPrimary
               ? "This will clear your timetable data. You'll need to upload a new file."
-              : "This cannot be undone."}
+              : 'This cannot be undone.'}
           </p>
         </Modal>
       )}

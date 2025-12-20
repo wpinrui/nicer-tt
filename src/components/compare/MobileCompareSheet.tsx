@@ -1,7 +1,7 @@
-import type { CompareFilter, TravelConfig, MealConfig } from '../../types';
+import type { CompareFilter, MealConfig, TravelConfig } from '../../types';
 import { Modal } from '../Modal';
-import { TravelConfigModalContent } from './TravelConfigForm';
 import { MealConfigModalContent } from './MealConfigForm';
+import { TravelConfigModalContent } from './TravelConfigForm';
 
 interface MobileCompareSheetProps {
   compareFilter: CompareFilter;
@@ -34,10 +34,7 @@ export function MobileCompareSheet({
         confirmVariant="primary"
         cancelText=""
       >
-        <TravelConfigModalContent
-          config={travelConfig}
-          onChange={onTravelConfigChange}
-        />
+        <TravelConfigModalContent config={travelConfig} onChange={onTravelConfigChange} />
       </Modal>
     );
   }
@@ -52,10 +49,7 @@ export function MobileCompareSheet({
         confirmVariant="primary"
         cancelText=""
       >
-        <MealConfigModalContent
-          config={mealConfig}
-          onChange={onMealConfigChange}
-        />
+        <MealConfigModalContent config={mealConfig} onChange={onMealConfigChange} />
       </Modal>
     );
   }
