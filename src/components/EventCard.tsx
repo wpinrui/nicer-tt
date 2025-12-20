@@ -51,8 +51,16 @@ export const EventCard = memo(function EventCard({
         <span
           className={`${styles.courseTag} ${isClickable ? styles.courseTagClickable : ''}`}
           style={{ backgroundColor: courseColor }}
-          onClick={isClickable ? () => onCourseClick(event.course) : undefined}
-          title={isClickable ? `Filter by ${event.course}` : undefined}
+          onClick={
+            isClickable
+              ? () => onCourseClick(isUpgrading ? 'Upgrading' : isCustom ? 'Custom' : event.course)
+              : undefined
+          }
+          title={
+            isClickable
+              ? `Filter by ${isUpgrading ? 'Upgrading' : isCustom ? 'Custom' : event.course}`
+              : undefined
+          }
         >
           {isCustom ? (isUpgrading ? 'Upgrading' : 'Custom') : event.course}
         </span>
