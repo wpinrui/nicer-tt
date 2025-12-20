@@ -111,9 +111,12 @@ export function matchesDateSearch(dateStr: string, query: string): boolean {
   const dateTokens = getDateSearchTokens(dateStr);
 
   // Each query token must match at least one date token
-  // Only check dt.includes(qt), not qt.includes(dt), to avoid false positives
-  // e.g., "19" would wrongly match month "1" if we allowed qt.includes(dt)
-  return queryTokens.every((qt) => dateTokens.some((dt) => dt.includes(qt)));
+  // Numeric tokens use exact match to avoid "1" matching day "17"
+  // Text tokens use includes for partial matching (e.g., "mar" matches "march")
+  return queryTokens.every((qt) => {
+    const isNumeric = /^\d+$/.test(qt);
+    return dateTokens.some((dt) => (isNumeric ? dt === qt : dt.includes(qt)));
+  });
 }
 
 /**
