@@ -1,9 +1,10 @@
-import { useRef, useImperativeHandle, forwardRef } from 'react';
-import { Upload, FileText } from 'lucide-react';
+import { FileText,Upload } from 'lucide-react';
+import { forwardRef,useImperativeHandle, useRef } from 'react';
+
 import type { TimetableEvent } from '../types';
+import { STORAGE_KEYS } from '../utils/constants';
 import { parseHtmlTimetable } from '../utils/parseHtml';
 import { parseIcs } from '../utils/parseIcs';
-import { STORAGE_KEYS } from '../utils/constants';
 import styles from './UploadSection.module.scss';
 
 interface UploadSectionProps {

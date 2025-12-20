@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react';
-import type { CompareFilter, TravelConfig, MealConfig } from '../types';
+import { useCallback,useState } from 'react';
+
 import { DEFAULT_TRAVEL_WAIT_MINUTES } from '../shared/constants';
+import type { CompareFilter, MealConfig,TravelConfig } from '../types';
 
 export interface FilterState {
   searchQuery: string;

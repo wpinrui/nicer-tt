@@ -1,4 +1,5 @@
-import { Sun, Moon } from 'lucide-react';
+import { Moon,Sun } from 'lucide-react';
+
 import styles from '../OptionsPanel.module.scss';
 
 interface AppSettingsProps {

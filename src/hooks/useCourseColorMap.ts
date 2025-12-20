@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+
 import type { TimetableEvent } from '../types';
 import { COURSE_COLORS } from '../utils/constants';
 

@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { X, Upload } from 'lucide-react';
 import './HelpPage.scss';
+
+import { Upload,X } from 'lucide-react';
+import { useState } from 'react';
 
 interface Step {
   title: string;

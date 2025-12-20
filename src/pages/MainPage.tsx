@@ -1,12 +1,14 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
-import { Download, Share2, HelpCircle, Settings, ArrowLeft, Menu, X, GitCompare, Search } from 'lucide-react';
-import type { UploadSectionHandle } from '../components/UploadSection';
-import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents, useMainPageState, useDebouncedValue } from '../hooks';
-import { generateIcs, downloadIcs } from '../utils/generateIcs';
-import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
-import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, ShareSelectModal, PrivacyNoticeModal, CompareModal, CompareFilters, EventsCompareView, UploadSection } from '../components';
-import HelpPage from './HelpPage';
 import './MainPage.scss';
+
+import { ArrowLeft, Download, GitCompare, HelpCircle, Menu, Search,Settings, Share2, X } from 'lucide-react';
+import { useEffect, useMemo,useRef, useState } from 'react';
+
+import { CompareFilters, CompareModal, EventsCompareView, EventsList, FilterSection, Modal, OptionsPanel, PrivacyNoticeModal, ShareSelectModal, ShareWelcomeModal, UploadSection } from '../components';
+import type { UploadSectionHandle } from '../components/UploadSection';
+import { useDebouncedValue,useFilteredEvents, useLocalStorage, useMainPageState, useShareData, useTimetableStorage } from '../hooks';
+import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
+import { downloadIcs,generateIcs } from '../utils/generateIcs';
+import HelpPage from './HelpPage';
 
 function MainPage() {
   const { events, setTimetable, clearTimetable, timetables, activeTimetable, setActiveTimetable, addTimetable, renameTimetable, deleteTimetable, getTimetable } = useTimetableStorage();

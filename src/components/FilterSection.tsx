@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react';
-import { Search, X, Filter, ChevronDown, ChevronUp, Calendar } from 'lucide-react';
+import { Calendar,ChevronDown, ChevronUp, Filter, Search, X } from 'lucide-react';
+import { useRef,useState } from 'react';
+
 import styles from './FilterSection.module.scss';
 
 interface FilterSectionProps {

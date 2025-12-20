@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import './App.scss';
+
 import { Analytics } from '@vercel/analytics/react';
+import { useEffect,useState } from 'react';
+
+import MainPage from './pages/MainPage';
 import { STORAGE_KEYS } from './utils/constants';
 import { logError } from './utils/errors';
-import MainPage from './pages/MainPage';
-import './App.scss';
 
 function App() {
   const [customBackground, setCustomBackground] = useState<string | null>(() => {

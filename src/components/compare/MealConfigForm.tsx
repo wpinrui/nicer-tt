@@ -1,10 +1,10 @@
-import type { MealConfig } from '../../types';
 import {
-  LUNCH_START_HOURS,
-  LUNCH_END_HOURS,
-  DINNER_START_HOURS,
   DINNER_END_HOURS,
+  DINNER_START_HOURS,
+  LUNCH_END_HOURS,
+  LUNCH_START_HOURS,
 } from '../../shared/constants';
+import type { MealConfig } from '../../types';
 import styles from '../CompareFilters.module.scss';
 
 function formatHour(hour: number): string {

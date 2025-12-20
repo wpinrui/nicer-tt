@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
-import type { TimetableEvent, GroupedEvent, EventItem } from '../types';
-import { formatDateDisplay, createSortKey } from '../utils/formatters';
+
+import type { EventItem,GroupedEvent, TimetableEvent } from '../types';
+import { createSortKey,formatDateDisplay } from '../utils/formatters';
 
 interface UseGroupedEventsResult {
   groupedByDate: GroupedEvent[];

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import type { Timetable } from '../types';
 import styles from './CompareModal.module.scss';
 

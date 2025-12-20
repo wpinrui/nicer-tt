@@ -1,4 +1,5 @@
 import pako from 'pako';
+
 import type { TimetableEvent } from '../types';
 import { logError } from './errors';
 

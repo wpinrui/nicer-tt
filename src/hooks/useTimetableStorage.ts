@@ -1,9 +1,10 @@
-import { useState, useCallback } from 'react';
-import type { TimetableEvent, Timetable } from '../types';
-import { useLocalStorageJson } from './useLocalStorage';
-import { STORAGE_KEYS, DEFAULT_TIMETABLE_NAMES } from '../utils/constants';
-import { generateId } from '../utils/id';
+import { useCallback,useState } from 'react';
+
+import type { Timetable,TimetableEvent } from '../types';
+import { DEFAULT_TIMETABLE_NAMES,STORAGE_KEYS } from '../utils/constants';
 import { logError } from '../utils/errors';
+import { generateId } from '../utils/id';
+import { useLocalStorageJson } from './useLocalStorage';
 
 /**
  * Gets the next available default name for a new timetable.

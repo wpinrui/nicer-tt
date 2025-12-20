@@ -1,6 +1,7 @@
 import { User } from 'lucide-react';
+
 import type { EventItem } from '../types';
-import { formatTime12Hour, formatVenue, formatTutor } from '../utils/formatters';
+import { formatTime12Hour, formatTutor,formatVenue } from '../utils/formatters';
 import styles from './EventCard.module.scss';
 
 interface EventCardProps {

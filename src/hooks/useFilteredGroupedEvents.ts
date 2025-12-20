@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
-import type { TimetableEvent, GroupedEvent, EventItem } from '../types';
-import { formatDateDisplay, getDateSearchString, createSortKey, getTodaySortKey } from '../utils/formatters';
+
+import type { EventItem,GroupedEvent, TimetableEvent } from '../types';
+import { createSortKey, formatDateDisplay, getDateSearchString, getTodaySortKey } from '../utils/formatters';
 
 interface FilterOptions {
   searchQuery: string;

@@ -1,5 +1,6 @@
-import { useState } from 'react';
 import { Share2 } from 'lucide-react';
+import { useState } from 'react';
+
 import type { Timetable } from '../types';
 import { Modal } from './Modal';
 import styles from './ShareSelectModal.module.scss';

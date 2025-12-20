@@ -1,5 +1,5 @@
-import type { TimetableEvent, EventItem, GroupedEvent, TravelInfo, MealInfo } from '../types';
-import { MEAL_BUFFER_MINUTES, DEFAULT_MEAL_GAP_DURATION } from '../shared/constants';
+import { DEFAULT_MEAL_GAP_DURATION,MEAL_BUFFER_MINUTES } from '../shared/constants';
+import type { EventItem, GroupedEvent, MealInfo,TimetableEvent, TravelInfo } from '../types';
 import { createSortKey, getDateSearchString } from './formatters';
 
 // Convert time string "HHMM" to minutes since midnight

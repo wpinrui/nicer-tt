@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Calendar, Users, Car, Info, Utensils, Filter, ChevronDown, ChevronUp, Settings, type LucideIcon } from 'lucide-react';
-import type { CompareFilter, TravelConfig, MealConfig } from '../types';
-import { TravelConfigForm, MealConfigForm, MobileCompareSheet } from './compare';
+import { Calendar, Car, ChevronDown, ChevronUp, Filter, Info, type LucideIcon,Settings, Users, Utensils } from 'lucide-react';
+import { useEffect,useState } from 'react';
+
+import type { CompareFilter, MealConfig,TravelConfig } from '../types';
+import { MealConfigForm, MobileCompareSheet,TravelConfigForm } from './compare';
 import styles from './CompareFilters.module.scss';
 
 interface CompareFiltersProps {

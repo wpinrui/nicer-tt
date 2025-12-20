@@ -1,8 +1,9 @@
+import { ExternalLink,HelpCircle, RotateCcw, X } from 'lucide-react';
 import { useState } from 'react';
-import { X, RotateCcw, HelpCircle, ExternalLink } from 'lucide-react';
+
 import type { Timetable, TimetableEvent } from '../types';
 import { Modal } from './Modal';
-import { AppSettings, BackgroundSettings, TimetableManager, PrivacySection } from './options';
+import { AppSettings, BackgroundSettings, PrivacySection,TimetableManager } from './options';
 import styles from './OptionsPanel.module.scss';
 
 interface OptionsPanelProps {

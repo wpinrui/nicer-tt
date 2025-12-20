@@ -1,4 +1,5 @@
 import { Shield } from 'lucide-react';
+
 import styles from '../OptionsPanel.module.scss';
 
 interface PrivacySectionProps {

@@ -1,4 +1,5 @@
 import { Share2 } from 'lucide-react';
+
 import styles from './ShareWelcomeModal.module.scss';
 
 interface ShareWelcomeModalProps {
