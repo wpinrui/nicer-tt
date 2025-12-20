@@ -93,7 +93,13 @@ function MainPage() {
     if (sharedData) { const newId = addTimetable(sharedData.events, sharedData.fileName); setActiveTimetable(newId); }
   };
 
-  const handleCompareClick = () => { timetables.length < 2 ? setShowCompareExplanation(true) : setShowCompareModal(true); };
+  const handleCompareClick = () => {
+    if (timetables.length < 2) {
+      setShowCompareExplanation(true);
+    } else {
+      setShowCompareModal(true);
+    }
+  };
 
   const getCompareTooltip = () => {
     if (timetables.length === 0) return 'Add a timetable first';
