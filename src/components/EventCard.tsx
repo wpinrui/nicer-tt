@@ -50,11 +50,7 @@ export const EventCard = memo(function EventCard({
           onClick={isClickable ? () => onCourseClick(event.course) : undefined}
           title={isClickable ? `Filter by ${event.course}` : undefined}
         >
-          {isCustom
-            ? 'eventType' in event && event.eventType === 'upgrading'
-              ? 'Upgrading'
-              : 'Custom'
-            : event.course}
+          {isCustom ? (isUpgrading ? 'Upgrading' : 'Custom') : event.course}
         </span>
       </span>
       {isCustom && 'description' in event && event.description ? (
