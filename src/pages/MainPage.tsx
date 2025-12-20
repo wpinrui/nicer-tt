@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { Download, Share2, HelpCircle, Settings, ArrowLeft, Menu, X, GitCompare, Search } from 'lucide-react';
 import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
-import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents, useMainPageState } from '../hooks';
+import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents, useMainPageState, useDebouncedValue } from '../hooks';
 import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, ShareSelectModal, PrivacyNoticeModal, CompareModal, CompareFilters, EventsCompareView, UploadSection } from '../components';
 import type { UploadSectionHandle } from '../components/UploadSection';
 import HelpPage from './HelpPage';
@@ -28,6 +28,9 @@ function MainPage() {
   const { compareMode, compareTimetables, compareFilter, travelConfig, mealConfig } = compareState;
   const { showOptions, showShareWelcome, showPrivacyNotice, showShareSelect, showCompareModal, showCompareExplanation, mobileMenuOpen } = uiState;
 
+  // Debounce search to avoid filtering on every keystroke
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 150);
+
   const hasExistingData = Boolean(events && events.length > 0);
   const {
     showShareModal, shareMessage, tempViewData, matchedTimetable, shareLinkFallback,
@@ -39,7 +42,7 @@ function MainPage() {
   const isViewingTemp = tempViewData !== null;
 
   const { groupedByDate, totalEvents, courseColorMap, uniqueCourses, filteredCount } = useFilteredEvents(
-    displayEvents, searchQuery, selectedCourses, hidePastDates, selectedDate
+    displayEvents, debouncedSearchQuery, selectedCourses, hidePastDates, selectedDate
   );
 
   useEffect(() => { document.documentElement.classList.toggle('dark', darkMode); }, [darkMode]);
@@ -174,7 +177,7 @@ function MainPage() {
                 <div className="compare-column-header"><span className="compare-column-name">{rightTimetable.name}</span></div>
               </div>
               <div className="events-preview">
-                <EventsCompareView leftTimetable={leftTimetable} rightTimetable={rightTimetable} searchQuery={searchQuery} compareFilter={compareFilter} travelConfig={travelConfig} mealConfig={mealConfig} showTutor={false} courseColorMap={courseColorMap} />
+                <EventsCompareView leftTimetable={leftTimetable} rightTimetable={rightTimetable} searchQuery={debouncedSearchQuery} compareFilter={compareFilter} travelConfig={travelConfig} mealConfig={mealConfig} showTutor={false} courseColorMap={courseColorMap} />
               </div>
             </>
           ) : (

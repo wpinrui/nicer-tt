@@ -5,5 +5,6 @@ export { useFilteredEvents } from './useFilteredEvents';
 export { useCourseColorMap } from './useCourseColorMap';
 export { useGroupedEvents } from './useGroupedEvents';
 export { useFilteredGroupedEvents } from './useFilteredGroupedEvents';
+export { useDebouncedValue } from './useDebouncedValue';
 export { useToast } from './useToast';
 export { useMainPageState } from './useMainPageState';
