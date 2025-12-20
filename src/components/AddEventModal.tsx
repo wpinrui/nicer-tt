@@ -30,19 +30,11 @@ function dateToIso(date: Date): string {
 }
 
 /**
- * Converts YYYY-MM-DD to DD/MM format for storage.
+ * Converts YYYY-MM-DD to Date object.
  */
-function toDisplayDate(isoDate: string): string {
-  const [, month, day] = isoDate.split('-');
-  return `${day}/${month}`;
-}
-
-/**
- * Converts DD/MM to Date object.
- */
-function displayDateToDate(displayDate: string, year: number = CURRENT_YEAR): Date {
-  const [day, month] = displayDate.split('/');
-  return new Date(year, parseInt(month, 10) - 1, parseInt(day, 10));
+function isoToDate(isoDate: string): Date {
+  const [year, month, day] = isoDate.split('-').map(Number);
+  return new Date(year, month - 1, day);
 }
 
 /**
@@ -94,7 +86,7 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
   // Selected dates as Date objects
   const [selectedDates, setSelectedDates] = useState<Date[]>(() => {
     if (editingEvent?.dates?.length) {
-      return editingEvent.dates.map((d) => displayDateToDate(d, CURRENT_YEAR));
+      return editingEvent.dates.map((d) => isoToDate(d));
     }
     return [];
   });
@@ -189,9 +181,9 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
 
     const sortedDates = [...selectedDates].sort((a, b) => a.getTime() - b.getTime());
 
-    // Build event input
+    // Build event input - dates stored as YYYY-MM-DD
     const eventInput: CustomEventInput = {
-      dates: sortedDates.map((d) => toDisplayDate(dateToIso(d))),
+      dates: sortedDates.map((d) => dateToIso(d)),
       day: getDayOfWeek(sortedDates[0]),
       startTime: fromTimeInput(startTime),
       endTime: fromTimeInput(endTime),

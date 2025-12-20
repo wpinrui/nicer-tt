@@ -95,7 +95,7 @@ export function useFilteredGroupedEvents(
 
       // Filter by selected date (match month and day only)
       if (filterMonth !== null && filterDay !== null) {
-        const [eventDay, eventMonth] = dateStr.split('/').map(Number);
+        const [, eventMonth, eventDay] = dateStr.split('-').map(Number);
         if (eventMonth !== filterMonth || eventDay !== filterDay) {
           return;
         }

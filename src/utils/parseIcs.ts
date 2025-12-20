@@ -1,5 +1,4 @@
 import type { TimetableEvent } from '../types';
-import { TIMETABLE_YEAR } from './constants';
 
 function unescapeIcsText(text: string): string {
   return text
@@ -10,21 +9,22 @@ function unescapeIcsText(text: string): string {
 }
 
 function parseIcsDateTime(dtString: string): { date: string; time: string } {
-  // Parse "20260112T083000" -> { date: "12/01", time: "0830" }
+  // Parse "20260112T083000" -> { date: "2026-01-12", time: "0830" }
   const match = dtString.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})/);
   if (!match) {
     throw new Error(`Invalid ICS datetime format: ${dtString}`);
   }
-  const [, , month, day, hours, minutes] = match;
+  const [, year, month, day, hours, minutes] = match;
   return {
-    date: `${parseInt(day, 10)}/${month}`,
+    date: `${year}-${month}-${day}`,
     time: `${hours}${minutes}`,
   };
 }
 
 function getDayName(dateStr: string): string {
-  const [day, month] = dateStr.split('/').map(Number);
-  const date = new Date(TIMETABLE_YEAR, month - 1, day);
+  // Parse YYYY-MM-DD format
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
   return date.toLocaleDateString('en-US', { weekday: 'long' });
 }
 

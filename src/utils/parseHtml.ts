@@ -1,4 +1,14 @@
 import type { TimetableEvent } from '../types';
+import { TIMETABLE_YEAR } from './constants';
+
+/**
+ * Convert DD/MM date format to YYYY-MM-DD format.
+ * HTML timetables don't include year, so we use TIMETABLE_YEAR as default.
+ */
+function convertDateToIso(dateStr: string): string {
+  const [day, month] = dateStr.split('/');
+  return `${TIMETABLE_YEAR}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+}
 
 export function parseHtmlTimetable(html: string): TimetableEvent[] {
   const parser = new DOMParser();
@@ -30,10 +40,12 @@ export function parseHtmlTimetable(html: string): TimetableEvent[] {
 
     if (!course || !startTime || !endTime) continue;
 
+    // Convert DD/MM dates to YYYY-MM-DD format
     const dates = datesStr
       .split(',')
       .map((d) => d.trim())
-      .filter((d) => d);
+      .filter((d) => d)
+      .map(convertDateToIso);
 
     events.push({
       course,
