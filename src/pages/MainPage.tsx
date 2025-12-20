@@ -392,14 +392,6 @@ function MainPage() {
   const canDeleteSingleOccurrence =
     isMultiDateDelete && deletingEventData?.eventType !== 'upgrading';
 
-  // Convert sortKey (YYYYMMDD) to YYYY-MM-DD format for matching
-  const sortKeyToIsoDate = (sortKey: string): string => {
-    const year = sortKey.slice(0, 4);
-    const month = sortKey.slice(4, 6);
-    const day = sortKey.slice(6, 8);
-    return `${year}-${month}-${day}`;
-  };
-
   const confirmDeleteCustomEvent = useCallback(
     (deleteAll: boolean) => {
       if (!deletingEvent || !deletingEventData) return;
@@ -408,9 +400,8 @@ function MainPage() {
         // Delete the entire event
         deleteCustomEvent(deletingEvent.id);
       } else {
-        // Remove only this date from the event
-        const dateToRemove = sortKeyToIsoDate(deletingEvent.sortKey);
-        const newDates = deletingEventData.dates.filter((d) => d !== dateToRemove);
+        // Remove only this date from the event (sortKey is already YYYY-MM-DD format)
+        const newDates = deletingEventData.dates.filter((d) => d !== deletingEvent.sortKey);
         updateCustomEvent(deletingEvent.id, { dates: newDates });
       }
       setDeletingEvent(null);

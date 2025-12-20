@@ -1,23 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import type { CustomEvent, CustomEventsStore, TimetableEvent } from '../types';
-import { STORAGE_KEYS, TIMETABLE_YEAR } from '../utils/constants';
+import { STORAGE_KEYS } from '../utils/constants';
+import { migrateDateFormat } from '../utils/dateMigration';
 import { logError } from '../utils/errors';
 import { generateId } from '../utils/id';
-
-/**
- * Migrate date from DD/MM format to YYYY-MM-DD format.
- * Returns original if already in ISO format.
- */
-function migrateDateFormat(dateStr: string): string {
-  if (dateStr.includes('/')) {
-    // Old DD/MM format - convert to YYYY-MM-DD
-    const [day, month] = dateStr.split('/');
-    return `${TIMETABLE_YEAR}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-  }
-  // Already in YYYY-MM-DD format
-  return dateStr;
-}
 
 /**
  * Migrate custom events store from old DD/MM format to YYYY-MM-DD format.

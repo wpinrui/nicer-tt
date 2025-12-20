@@ -201,7 +201,7 @@ export interface DisplayEventItem extends EventItem {
 export interface DisplayGroupedEvent {
   /** Formatted date string for display (e.g., "Monday, 15 January 2026") */
   date: string;
-  /** Sort key in YYYYMMDD format */
+  /** Sort key in YYYY-MM-DD format */
   sortKey: string;
   /** Events occurring on this date */
   events: DisplayEventItem[];
