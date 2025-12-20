@@ -1,9 +1,11 @@
 import type { CustomEventType, TimetableEvent } from '../types';
 
 // Check if event has custom event properties
-function isCustomEvent(
-  event: TimetableEvent
-): event is TimetableEvent & { eventType: CustomEventType; description?: string } {
+function isCustomEvent(event: TimetableEvent): event is TimetableEvent & {
+  eventType: CustomEventType;
+  description?: string;
+  groupId?: string;
+} {
   return 'eventType' in event && (event.eventType === 'custom' || event.eventType === 'upgrading');
 }
 
@@ -71,6 +73,9 @@ export function generateIcs(events: TimetableEvent[]): string {
         lines.push(`X-NIE-EVENT-TYPE:${event.eventType}`);
         if (event.description) {
           lines.push(`X-NIE-COURSE-NAME:${escapeIcsText(event.description)}`);
+        }
+        if (event.groupId) {
+          lines.push(`X-NIE-GROUP-ID:${event.groupId}`);
         }
       }
 

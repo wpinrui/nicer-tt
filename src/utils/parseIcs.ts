@@ -45,6 +45,7 @@ interface ParsedEvent {
   dtend: string;
   eventType?: CustomEventType;
   courseName?: string;
+  groupId?: string;
 }
 
 /**
@@ -129,6 +130,7 @@ export function parseIcs(icsContent: string): ParseIcsResult {
               description: currentEvent.courseName || '',
               createdAt: Date.now(),
               updatedAt: Date.now(),
+              groupId: currentEvent.groupId,
             });
           }
         } else {
@@ -175,6 +177,9 @@ export function parseIcs(icsContent: string): ParseIcsResult {
             break;
           case 'X-NIE-COURSE-NAME':
             currentEvent.courseName = value;
+            break;
+          case 'X-NIE-GROUP-ID':
+            currentEvent.groupId = value;
             break;
         }
       }

@@ -86,6 +86,7 @@ function MainPage() {
     addCustomEventToTimetable,
     updateCustomEvent,
     deleteCustomEvent,
+    deleteCustomEventsByGroupId,
     getCustomEvent,
     getCustomEventsForTimetable,
   } = useCustomEvents(activeTimetable?.id || null);
@@ -389,7 +390,15 @@ function MainPage() {
 
   // Get the event being deleted to check date count
   const deletingEventData = deletingEvent ? getCustomEvent(deletingEvent.id) : null;
-  const isMultiDateDelete = deletingEventData && deletingEventData.dates.length > 1;
+  // For upgrading courses with groupId, count total sessions (sum of all dates across grouped events)
+  const upgradingGroupCount =
+    deletingEventData?.groupId && deletingEventData?.eventType === 'upgrading'
+      ? customEvents
+          .filter((e) => e.groupId === deletingEventData.groupId)
+          .reduce((sum, e) => sum + e.dates.length, 0)
+      : 0;
+  const isMultiDateDelete =
+    deletingEventData && (deletingEventData.dates.length > 1 || upgradingGroupCount > 1);
   const canDeleteSingleOccurrence =
     isMultiDateDelete && deletingEventData?.eventType !== 'upgrading';
 
@@ -397,7 +406,10 @@ function MainPage() {
     (deleteAll: boolean) => {
       if (!deletingEvent || !deletingEventData) return;
 
-      if (deleteAll || deletingEventData.dates.length === 1) {
+      // Upgrading events with groupId: delete all sessions in the group
+      if (deletingEventData.groupId && deletingEventData.eventType === 'upgrading') {
+        deleteCustomEventsByGroupId(deletingEventData.groupId);
+      } else if (deleteAll || deletingEventData.dates.length === 1) {
         // Delete the entire event
         deleteCustomEvent(deletingEvent.id);
       } else {
@@ -407,15 +419,27 @@ function MainPage() {
       }
       setDeletingEvent(null);
     },
-    [deletingEvent, deletingEventData, deleteCustomEvent, updateCustomEvent]
+    [
+      deletingEvent,
+      deletingEventData,
+      deleteCustomEvent,
+      deleteCustomEventsByGroupId,
+      updateCustomEvent,
+    ]
   );
 
   const handleSaveCustomEvent = useCallback(
-    (eventInput: CustomEventInput) => {
+    (eventInput: CustomEventInput | CustomEventInput[]) => {
       if (editingCustomEvent) {
-        updateCustomEvent(editingCustomEvent.id, eventInput);
+        // Editing only supports single events
+        const input = Array.isArray(eventInput) ? eventInput[0] : eventInput;
+        updateCustomEvent(editingCustomEvent.id, input);
       } else {
-        addCustomEvent(eventInput);
+        // Adding supports both single events and arrays (for upgrading courses)
+        const inputs = Array.isArray(eventInput) ? eventInput : [eventInput];
+        for (const input of inputs) {
+          addCustomEvent(input);
+        }
       }
       setAddEventModalOpen(false);
       setEditingCustomEvent(null);
@@ -726,7 +750,7 @@ function MainPage() {
             {canDeleteSingleOccurrence
               ? `This event has ${deletingEventData?.dates.length} occurrences. Delete just this one or all?`
               : isMultiDateDelete
-                ? `This upgrading course has ${deletingEventData?.dates.length} sessions. Delete all?`
+                ? `This upgrading course has ${upgradingGroupCount || deletingEventData?.dates.length} sessions. Delete all?`
                 : 'This action cannot be undone.'}
           </p>
         </Modal>

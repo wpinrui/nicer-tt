@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 
 import type { CustomEventInput } from '../../hooks/useCustomEvents';
 import type { CustomEvent, CustomEventType, UpgradingCourse } from '../../types';
+import { generateId } from '../../utils/id';
 import styles from './AddEventModal.module.scss';
 import { CustomFormStep } from './CustomFormStep';
 import { TypeSelectStep } from './TypeSelectStep';
@@ -23,7 +24,7 @@ type ModalStep = 'type-select' | 'custom-form' | 'upgrading-select' | 'upgrading
 
 interface AddEventModalProps {
   onClose: () => void;
-  onSave: (event: CustomEventInput) => void;
+  onSave: (events: CustomEventInput | CustomEventInput[]) => void;
   editingEvent?: CustomEvent | null;
 }
 
@@ -167,31 +168,32 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
     onSave(eventInput);
   }, [selectedDates, startTime, endTime, description, venue, onSave]);
 
-  // Submit upgrading course
+  // Submit upgrading course - create one event per session, linked by groupId
   const handleSubmitUpgrading = useCallback(() => {
     if (!selectedCourse) return;
 
-    const dates = selectedCourse.sessions.map((s) => {
-      const date = ddmmToDate(s.date);
-      return dateToIso(date);
+    // Generate a shared groupId so all sessions delete together
+    const groupId = generateId('upg');
+
+    // Create one event per session to preserve unique times
+    const eventInputs: CustomEventInput[] = selectedCourse.sessions.map((session) => {
+      const date = ddmmToDate(session.date);
+      return {
+        dates: [dateToIso(date)],
+        day: getDayOfWeek(date),
+        startTime: colonTimeToHHMM(session.startTime),
+        endTime: colonTimeToHHMM(session.endTime),
+        eventType: 'upgrading' as CustomEventType,
+        description: selectedCourse.courseName,
+        course: '',
+        group: 'Upgrading',
+        venue: session.venue,
+        tutor: session.tutor,
+        groupId,
+      };
     });
 
-    const firstSession = selectedCourse.sessions[0];
-
-    const eventInput: CustomEventInput = {
-      dates,
-      day: getDayOfWeek(ddmmToDate(firstSession.date)),
-      startTime: colonTimeToHHMM(firstSession.startTime),
-      endTime: colonTimeToHHMM(firstSession.endTime),
-      eventType: 'upgrading' as CustomEventType,
-      description: selectedCourse.courseName,
-      course: '',
-      group: 'Upgrading',
-      venue: firstSession.venue,
-      tutor: firstSession.tutor,
-    };
-
-    onSave(eventInput);
+    onSave(eventInputs);
   }, [selectedCourse, onSave]);
 
   const handleKeyDown = useCallback(

@@ -211,6 +211,29 @@ export function useCustomEvents(activeTimetableId: string | null) {
   );
 
   /**
+   * Deletes all custom events with a given groupId.
+   * Used for upgrading courses where all sessions should be deleted together.
+   */
+  const deleteCustomEventsByGroupId = useCallback(
+    (groupId: string): void => {
+      if (!activeTimetableId) {
+        return;
+      }
+
+      setStore((prev) => {
+        const timetableEvents = prev[activeTimetableId] || [];
+        const updated: CustomEventsStore = {
+          ...prev,
+          [activeTimetableId]: timetableEvents.filter((e) => e.groupId !== groupId),
+        };
+        saveCustomEventsStore(updated);
+        return updated;
+      });
+    },
+    [activeTimetableId]
+  );
+
+  /**
    * Gets a custom event by ID.
    */
   const getCustomEvent = useCallback(
@@ -252,6 +275,7 @@ export function useCustomEvents(activeTimetableId: string | null) {
     addCustomEventToTimetable,
     updateCustomEvent,
     deleteCustomEvent,
+    deleteCustomEventsByGroupId,
     getCustomEvent,
     getCustomEventsForTimetable,
     deleteCustomEventsForTimetable,

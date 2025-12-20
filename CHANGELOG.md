@@ -1,5 +1,10 @@
 # Changelog
 
+**v1.5.2 (21 Dec 2025)**
+- Fix upgrading courses with multiple sessions per day showing duplicate events with same timeslot
+- Upgrading course sessions are linked via groupId - deleting one deletes all
+- Preserve groupId in ICS export/import for round-trip support
+
 **v1.5.1 (21 Dec 2025)**
 - Fix modal height being clipped by card container (use portals)
 - Fix dark mode tooltip styling (arrow + background now use CSS variables)
