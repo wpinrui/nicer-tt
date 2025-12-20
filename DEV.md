@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.3.12 (20 Dec 2025)**
+- Add visible border to compare filter buttons for better visibility
+
 **v1.3.11 (19 Dec 2025)**
 - Refactor hooks: split useFilteredEvents into useCourseColorMap, useGroupedEvents, useFilteredGroupedEvents
 - Simplify useShareData with extracted URL utilities (src/utils/shareUrl.ts)
