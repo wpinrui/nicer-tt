@@ -1,4 +1,5 @@
 import { Shield } from 'lucide-react';
+import { createPortal } from 'react-dom';
 
 import styles from './PrivacyNoticeModal.module.scss';
 
@@ -7,7 +8,7 @@ interface PrivacyNoticeModalProps {
 }
 
 export function PrivacyNoticeModal({ onClose }: PrivacyNoticeModalProps) {
-  return (
+  return createPortal(
     <div className={styles.overlay}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
@@ -85,6 +86,7 @@ export function PrivacyNoticeModal({ onClose }: PrivacyNoticeModalProps) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -520,8 +520,8 @@ header h1 {
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  background: #333;
-  color: white;
+  background: var(--color-tooltip-bg);
+  color: var(--color-tooltip-text);
   padding: 0.4rem 0.6rem;
   border-radius: 4px;
   font-size: 0.75rem;
@@ -537,7 +537,7 @@ header h1 {
   left: 50%;
   transform: translateX(-50%);
   border: 6px solid transparent;
-  border-top-color: var(--color-text-primary);
+  border-top-color: var(--color-tooltip-bg);
   margin-bottom: -0.25rem;
   z-index: 100;
 }

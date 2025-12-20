@@ -150,12 +150,25 @@ export function formatTime12Hour(time: string): string {
 }
 
 export function formatVenue(venue: string): string {
-  const match = venue.match(/^(\d+)-(\d+)-(.+)$/);
+  // Match optional NIE prefix, block number, optional letter suffix, level (including basement), room
+  const match = venue.match(/^(?:NIE)?(\d+)([A-Z])?-(B?\d+)-(.+)$/i);
   if (match) {
-    const block = parseInt(match[1], 10);
-    const level = parseInt(match[2], 10);
-    const room = match[3];
-    return `Block ${block}, Level ${level}, ${room}`;
+    const blockNum = match[1];
+    const blockLetter = match[2]?.toUpperCase() || '';
+    const levelRaw = match[3].toUpperCase();
+    const roomNum = match[4];
+
+    const block = blockLetter ? `${blockNum}${blockLetter}` : String(parseInt(blockNum, 10));
+    const level = levelRaw.startsWith('B')
+      ? `Basement ${levelRaw.slice(1)}`
+      : `Level ${parseInt(levelRaw, 10)}`;
+
+    // If room starts with letters (TR100, LT27), use as-is
+    // If room is numbers only (06), prepend level code (01-06, B1-06)
+    const hasLetterPrefix = /^[A-Z]/i.test(roomNum);
+    const room = hasLetterPrefix ? roomNum : `${levelRaw}-${roomNum}`;
+
+    return `Block ${block}, ${level}, ${room}`;
   }
   return venue;
 }

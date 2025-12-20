@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import type { CustomEventInput } from '../../hooks/useCustomEvents';
 import type { CustomEvent, CustomEventType, UpgradingCourse } from '../../types';
@@ -202,7 +203,7 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
     [onClose]
   );
 
-  return (
+  return createPortal(
     <div className={styles.overlay} onKeyDown={handleKeyDown}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         {step === 'type-select' && (
@@ -253,6 +254,7 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
           />
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 import type { ButtonVariant } from '../types/ui';
 import styles from './Modal.module.scss';
@@ -28,7 +29,7 @@ export function Modal({
 }: ModalProps) {
   const confirmClass = confirmVariant === 'primary' ? styles.confirmPrimary : styles.confirm;
 
-  return (
+  return createPortal(
     <div className={styles.overlay}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>{title}</h3>
@@ -49,6 +50,7 @@ export function Modal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

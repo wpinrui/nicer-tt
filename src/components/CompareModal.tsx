@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import type { Timetable } from '../types';
 import styles from './CompareModal.module.scss';
@@ -68,7 +69,7 @@ export function CompareModal({
 
   const canCompare = leftSelection && rightSelection && leftSelection !== rightSelection;
 
-  return (
+  return createPortal(
     <div className={styles.overlay}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>Compare Timetables</h3>
@@ -124,6 +125,7 @@ export function CompareModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

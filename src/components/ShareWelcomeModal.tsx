@@ -1,4 +1,5 @@
 import { Share2 } from 'lucide-react';
+import { createPortal } from 'react-dom';
 
 import styles from './ShareWelcomeModal.module.scss';
 
@@ -7,7 +8,7 @@ interface ShareWelcomeModalProps {
 }
 
 export function ShareWelcomeModal({ onClose }: ShareWelcomeModalProps) {
-  return (
+  return createPortal(
     <div className={styles.overlay}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
@@ -34,6 +35,7 @@ export function ShareWelcomeModal({ onClose }: ShareWelcomeModalProps) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+**v1.5.1 (21 Dec 2025)**
+- Fix modal height being clipped by card container (use portals)
+- Fix dark mode tooltip styling (arrow + background now use CSS variables)
+- Add support for NIE prefix and basement levels in venue formatting
+- Fix modal hint text alignment
+
 ### v1.5.0 (20 Dec 2025) - Crowdsourcing Contribution
 - Add contribution page for users to submit their content upgrading schedules
 - Firebase integration for storing submissions (Firestore + Storage)
