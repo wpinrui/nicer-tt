@@ -1,9 +1,9 @@
-import { useCallback,useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import type { Timetable,TimetableEvent } from '../types';
+import type { Timetable, TimetableEvent } from '../types';
 import { TOAST_DURATION_MS } from '../utils/constants';
 import { logError } from '../utils/errors';
-import { clearShareHash,createShareUrl, getShareDataFromUrl } from '../utils/shareUrl';
+import { clearShareHash, createShareUrl, getShareDataFromUrl } from '../utils/shareUrl';
 import { encodeShareData, type ShareData } from '../utils/shareUtils';
 
 interface MatchedTimetable {
@@ -91,22 +91,19 @@ export function useShareData(hasExistingData: boolean, timetables: Timetable[]) 
    * Creates a share link and copies to clipboard.
    * Falls back to showing URL in modal if clipboard fails.
    */
-  const createShareLink = useCallback(
-    async (events: TimetableEvent[], timetableName: string) => {
-      const encoded = encodeShareData(events, timetableName);
-      const shareUrl = createShareUrl(encoded);
+  const createShareLink = useCallback(async (events: TimetableEvent[], timetableName: string) => {
+    const encoded = encodeShareData(events, timetableName);
+    const shareUrl = createShareUrl(encoded);
 
-      try {
-        await navigator.clipboard.writeText(shareUrl);
-        setShareMessage(`Share link for "${timetableName}" copied!`);
-        setTimeout(() => setShareMessage(null), TOAST_DURATION_MS);
-      } catch (e) {
-        logError('useShareData:clipboard', e);
-        setShareLinkFallback({ url: shareUrl, name: timetableName });
-      }
-    },
-    []
-  );
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setShareMessage(`Share link for "${timetableName}" copied!`);
+      setTimeout(() => setShareMessage(null), TOAST_DURATION_MS);
+    } catch (e) {
+      logError('useShareData:clipboard', e);
+      setShareLinkFallback({ url: shareUrl, name: timetableName });
+    }
+  }, []);
 
   /** User confirmed adding shared timetable */
   const confirmShare = useCallback(() => {

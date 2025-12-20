@@ -46,7 +46,7 @@ export function CompareModal({
     setLeftSelection(id);
     if (rightSelection === id) {
       // Find another timetable for right pane
-      const other = timetables.find(t => t.id !== id);
+      const other = timetables.find((t) => t.id !== id);
       setRightSelection(other?.id || null);
     }
   };
@@ -55,7 +55,7 @@ export function CompareModal({
     setRightSelection(id);
     if (leftSelection === id) {
       // Find another timetable for left pane
-      const other = timetables.find(t => t.id !== id);
+      const other = timetables.find((t) => t.id !== id);
       setLeftSelection(other?.id || null);
     }
   };
@@ -72,9 +72,7 @@ export function CompareModal({
     <div className={styles.overlay}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>Compare Timetables</h3>
-        <p className={styles.desc}>
-          Select two timetables to compare side by side
-        </p>
+        <p className={styles.desc}>Select two timetables to compare side by side</p>
 
         <div className={styles.panes}>
           <div className={styles.pane}>
@@ -121,11 +119,7 @@ export function CompareModal({
               Exit Compare
             </button>
           )}
-          <button
-            className={styles.confirm}
-            onClick={handleConfirm}
-            disabled={!canCompare}
-          >
+          <button className={styles.confirm} onClick={handleConfirm} disabled={!canCompare}>
             {isCompareMode ? 'Update' : 'Compare'}
           </button>
         </div>

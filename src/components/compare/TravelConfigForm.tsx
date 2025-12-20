@@ -33,10 +33,15 @@ interface TravelDirectionButtonsProps {
   showTooltips?: boolean;
 }
 
-function TravelDirectionButtons({ value, onChange, buttonClassName, showTooltips }: TravelDirectionButtonsProps) {
+function TravelDirectionButtons({
+  value,
+  onChange,
+  buttonClassName,
+  showTooltips,
+}: TravelDirectionButtonsProps) {
   return (
     <>
-      {TRAVEL_DIRECTIONS.map(dir => (
+      {TRAVEL_DIRECTIONS.map((dir) => (
         <button
           key={dir}
           className={`${buttonClassName} ${value === dir ? styles.active : ''}`}
@@ -71,7 +76,10 @@ export function TravelConfigForm({ config, onChange }: TravelConfigFormProps) {
       </div>
 
       <div className={styles.travelWaitGroup}>
-        <label className={styles.travelOptionsLabel} data-tooltip="Maximum time willing to wait for each other">
+        <label
+          className={styles.travelOptionsLabel}
+          data-tooltip="Maximum time willing to wait for each other"
+        >
           Wait time:
           <select
             className={styles.travelWaitSelect}
@@ -79,7 +87,9 @@ export function TravelConfigForm({ config, onChange }: TravelConfigFormProps) {
             onChange={(e) => onChange({ waitMinutes: Number(e.target.value) })}
           >
             {WAIT_TIME_OPTIONS.map(({ value, label }) => (
-              <option key={value} value={value}>{label}</option>
+              <option key={value} value={value}>
+                {label}
+              </option>
             ))}
           </select>
         </label>
@@ -115,7 +125,9 @@ export function TravelConfigModalContent({ config, onChange }: TravelConfigModal
             onChange={(e) => onChange({ waitMinutes: Number(e.target.value) })}
           >
             {WAIT_TIME_OPTIONS.map(({ value, label }) => (
-              <option key={value} value={value}>{label}</option>
+              <option key={value} value={value}>
+                {label}
+              </option>
             ))}
           </select>
         </label>

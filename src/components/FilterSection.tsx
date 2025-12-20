@@ -1,5 +1,5 @@
-import { Calendar,ChevronDown, ChevronUp, Filter, Search, X } from 'lucide-react';
-import { useRef,useState } from 'react';
+import { Calendar, ChevronDown, ChevronUp, Filter, Search, X } from 'lucide-react';
+import { useRef, useState } from 'react';
 
 import styles from './FilterSection.module.scss';
 
@@ -56,18 +56,14 @@ export function FilterSection({
         <div className={`${styles.searchInputWrapper} ${selectedDate ? styles.hasDatePill : ''}`}>
           <Search size={16} className={styles.searchIcon} />
           {selectedDate && (
-            <button
-              className={styles.datePill}
-              onClick={handleDateClear}
-              title="Clear date filter"
-            >
+            <button className={styles.datePill} onClick={handleDateClear} title="Clear date filter">
               <span>{formatDatePill(selectedDate)}</span>
               <X size={12} className={styles.datePillX} />
             </button>
           )}
           <input
             type="text"
-            placeholder={selectedDate ? "Search..." : "Search courses, venues, tutors..."}
+            placeholder={selectedDate ? 'Search...' : 'Search courses, venues, tutors...'}
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             className={styles.searchInput}
@@ -108,7 +104,10 @@ export function FilterSection({
           <span>Hide past</span>
         </label>
         {hasActiveFilters && (
-          <button onClick={onClearFilters} className={`${styles.clearFiltersBtn} ${styles.desktopOnly}`}>
+          <button
+            onClick={onClearFilters}
+            className={`${styles.clearFiltersBtn} ${styles.desktopOnly}`}
+          >
             <X size={14} /> Clear
           </button>
         )}

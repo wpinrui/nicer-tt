@@ -15,7 +15,7 @@ export function ShareSelectModal({ timetables, onShare, onClose }: ShareSelectMo
   const [selectedId, setSelectedId] = useState<string>(timetables[0]?.id || '');
 
   const handleShare = () => {
-    const timetable = timetables.find(t => t.id === selectedId);
+    const timetable = timetables.find((t) => t.id === selectedId);
     if (timetable) {
       onShare(timetable);
     }
@@ -26,7 +26,11 @@ export function ShareSelectModal({ timetables, onShare, onClose }: ShareSelectMo
       title="Share Timetable"
       onClose={onClose}
       onConfirm={handleShare}
-      confirmText={<><Share2 size={14} /> Copy Share Link</>}
+      confirmText={
+        <>
+          <Share2 size={14} /> Copy Share Link
+        </>
+      }
       confirmVariant="primary"
     >
       <p>Which timetable would you like to share?</p>

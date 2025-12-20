@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowLeftRight, ArrowRight, Utensils } from 'lucide-react';
 import { useMemo } from 'react';
 
-import type { CompareFilter, MealConfig,Timetable, TravelConfig } from '../types';
+import type { CompareFilter, MealConfig, Timetable, TravelConfig } from '../types';
 import {
   calculateMealInfo,
   calculateTravelInfo,
@@ -44,35 +44,39 @@ export function EventsCompareView({
     [rightTimetable.events, searchQuery]
   );
 
-  const allDates = useMemo(() => getAllDates(leftGrouped, rightGrouped), [leftGrouped, rightGrouped]);
-  const leftByDate = useMemo(
-    () => new Map(leftGrouped.map(g => [g.sortKey, g])),
-    [leftGrouped]
+  const allDates = useMemo(
+    () => getAllDates(leftGrouped, rightGrouped),
+    [leftGrouped, rightGrouped]
   );
+  const leftByDate = useMemo(() => new Map(leftGrouped.map((g) => [g.sortKey, g])), [leftGrouped]);
   const rightByDate = useMemo(
-    () => new Map(rightGrouped.map(g => [g.sortKey, g])),
+    () => new Map(rightGrouped.map((g) => [g.sortKey, g])),
     [rightGrouped]
   );
 
   const filteredDates = useMemo(() => {
-    return allDates.filter(sortKey => {
+    return allDates.filter((sortKey) => {
       const leftGroup = leftByDate.get(sortKey);
       const rightGroup = rightByDate.get(sortKey);
 
       switch (compareFilter) {
         case 'commonDays':
-          return leftGroup && rightGroup && leftGroup.events.length > 0 && rightGroup.events.length > 0;
+          return (
+            leftGroup && rightGroup && leftGroup.events.length > 0 && rightGroup.events.length > 0
+          );
 
         case 'identical': {
           if (!leftGroup || !rightGroup) return false;
-          return leftGroup.events.some(le =>
-            rightGroup.events.some(re => eventsMatch(le, re))
-          );
+          return leftGroup.events.some((le) => rightGroup.events.some((re) => eventsMatch(le, re)));
         }
 
         case 'travel': {
           if (!leftGroup || !rightGroup) return false;
-          const travel = calculateTravelInfo(leftGroup.events, rightGroup.events, travelConfig.waitMinutes);
+          const travel = calculateTravelInfo(
+            leftGroup.events,
+            rightGroup.events,
+            travelConfig.waitMinutes
+          );
 
           switch (travelConfig.direction) {
             case 'to':
@@ -119,19 +123,28 @@ export function EventsCompareView({
 
   return (
     <div className={styles.container}>
-      {filteredDates.map(sortKey => {
+      {filteredDates.map((sortKey) => {
         const leftGroup = leftByDate.get(sortKey);
         const rightGroup = rightByDate.get(sortKey);
         const leftEvents = leftGroup?.events || [];
         const rightEvents = rightGroup?.events || [];
 
-        const travelInfo = compareFilter === 'travel'
-          ? calculateTravelInfo(leftEvents, rightEvents, travelConfig.waitMinutes)
-          : null;
+        const travelInfo =
+          compareFilter === 'travel'
+            ? calculateTravelInfo(leftEvents, rightEvents, travelConfig.waitMinutes)
+            : null;
 
-        const mealInfo = compareFilter === 'eat'
-          ? calculateMealInfo(leftEvents, rightEvents, mealConfig.lunchStart, mealConfig.lunchEnd, mealConfig.dinnerStart, mealConfig.dinnerEnd)
-          : null;
+        const mealInfo =
+          compareFilter === 'eat'
+            ? calculateMealInfo(
+                leftEvents,
+                rightEvents,
+                mealConfig.lunchStart,
+                mealConfig.lunchEnd,
+                mealConfig.dinnerStart,
+                mealConfig.dinnerEnd
+              )
+            : null;
 
         const identicalLeft = new Set<number>();
         const identicalRight = new Set<number>();
@@ -150,7 +163,9 @@ export function EventsCompareView({
 
         return (
           <div key={sortKey} className={styles.dateRow}>
-            <div className={`${styles.dateHeader} ${isToday(sortKey) ? styles.dateHeaderToday : ''}`}>
+            <div
+              className={`${styles.dateHeader} ${isToday(sortKey) ? styles.dateHeaderToday : ''}`}
+            >
               <span>
                 {displayDate}
                 {isToday(sortKey) && ' (TODAY)'}
@@ -187,12 +202,14 @@ export function EventsCompareView({
                 <div className={styles.mealIndicator}>
                   {mealInfo.canEatLunch && (
                     <span className={`${styles.mealBadge} ${styles.mealBadgeLunch}`}>
-                      <Utensils size={12} /> {formatTime12Hour(mealInfo.lunchGapStart)} to {formatTime12Hour(mealInfo.lunchGapEnd)}
+                      <Utensils size={12} /> {formatTime12Hour(mealInfo.lunchGapStart)} to{' '}
+                      {formatTime12Hour(mealInfo.lunchGapEnd)}
                     </span>
                   )}
                   {mealInfo.canEatDinner && (
                     <span className={`${styles.mealBadge} ${styles.mealBadgeDinner}`}>
-                      <Utensils size={12} /> {formatTime12Hour(mealInfo.dinnerGapStart)} to {formatTime12Hour(mealInfo.dinnerGapEnd)}
+                      <Utensils size={12} /> {formatTime12Hour(mealInfo.dinnerGapStart)} to{' '}
+                      {formatTime12Hour(mealInfo.dinnerGapEnd)}
                     </span>
                   )}
                 </div>

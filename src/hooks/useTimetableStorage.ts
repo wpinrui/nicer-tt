@@ -1,7 +1,7 @@
-import { useCallback,useState } from 'react';
+import { useCallback, useState } from 'react';
 
-import type { Timetable,TimetableEvent } from '../types';
-import { DEFAULT_TIMETABLE_NAMES,STORAGE_KEYS } from '../utils/constants';
+import type { Timetable, TimetableEvent } from '../types';
+import { DEFAULT_TIMETABLE_NAMES, STORAGE_KEYS } from '../utils/constants';
 import { logError } from '../utils/errors';
 import { generateId } from '../utils/id';
 import { useLocalStorageJson } from './useLocalStorage';

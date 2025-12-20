@@ -1,4 +1,4 @@
-import type { GroupedEvent,TimetableEvent } from '../types';
+import type { GroupedEvent, TimetableEvent } from '../types';
 import { useCourseColorMap } from './useCourseColorMap';
 import { useFilteredGroupedEvents } from './useFilteredGroupedEvents';
 

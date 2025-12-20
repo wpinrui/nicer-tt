@@ -1,5 +1,5 @@
-import { DEFAULT_MEAL_GAP_DURATION,MEAL_BUFFER_MINUTES } from '../shared/constants';
-import type { EventItem, GroupedEvent, MealInfo,TimetableEvent, TravelInfo } from '../types';
+import { DEFAULT_MEAL_GAP_DURATION, MEAL_BUFFER_MINUTES } from '../shared/constants';
+import type { EventItem, GroupedEvent, MealInfo, TimetableEvent, TravelInfo } from '../types';
 import { createSortKey, getDateSearchString } from './formatters';
 
 // Convert time string "HHMM" to minutes since midnight
@@ -17,10 +17,7 @@ export function minutesToTime(minutes: number): string {
 }
 
 // Process timetable events into grouped format
-export function processEvents(
-  events: TimetableEvent[],
-  searchQuery: string
-): GroupedEvent[] {
+export function processEvents(events: TimetableEvent[], searchQuery: string): GroupedEvent[] {
   const dateMap = new Map<string, EventItem[]>();
   const searchLower = searchQuery.toLowerCase();
 
@@ -36,7 +33,9 @@ export function processEvents(
           event.venue,
           event.tutor,
           getDateSearchString(dateStr),
-        ].join(' ').toLowerCase();
+        ]
+          .join(' ')
+          .toLowerCase();
 
         if (!searchFields.includes(searchLower)) continue;
       }
@@ -82,17 +81,19 @@ export function processEvents(
 // Get all unique dates from both timetables
 export function getAllDates(left: GroupedEvent[], right: GroupedEvent[]): string[] {
   const dates = new Set<string>();
-  left.forEach(g => dates.add(g.sortKey));
-  right.forEach(g => dates.add(g.sortKey));
+  left.forEach((g) => dates.add(g.sortKey));
+  right.forEach((g) => dates.add(g.sortKey));
   return Array.from(dates).sort();
 }
 
 // Check if two events are identical (same course, group, and time)
 export function eventsMatch(a: EventItem, b: EventItem): boolean {
-  return a.course === b.course &&
+  return (
+    a.course === b.course &&
     a.group === b.group &&
     a.startTime === b.startTime &&
-    a.endTime === b.endTime;
+    a.endTime === b.endTime
+  );
 }
 
 // Calculate travel compatibility for a given date
@@ -152,7 +153,9 @@ export function findGaps(events: EventItem[]): { start: number; end: number }[] 
   if (events.length === 0) return [];
 
   // Sort events by start time
-  const sorted = [...events].sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
+  const sorted = [...events].sort(
+    (a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime)
+  );
 
   const gaps: { start: number; end: number }[] = [];
 
@@ -181,11 +184,7 @@ export function findGaps(events: EventItem[]): { start: number; end: number }[] 
 }
 
 // Check if a person is "available" for a meal during the given window
-function isAvailableForMeal(
-  events: EventItem[],
-  mealStart: number,
-  mealEnd: number
-): boolean {
+function isAvailableForMeal(events: EventItem[], mealStart: number, mealEnd: number): boolean {
   if (events.length === 0) return false;
 
   // Find earliest start and latest end of classes
@@ -224,8 +223,12 @@ function isAvailableForMeal(
     }
   }
 
-  return hasClassBeforeMeal && hasClassAfterMeal &&
-    hasClassEndingBeforeMealEnds && hasClassStartingAfterMealStarts;
+  return (
+    hasClassBeforeMeal &&
+    hasClassAfterMeal &&
+    hasClassEndingBeforeMealEnds &&
+    hasClassStartingAfterMealStarts
+  );
 }
 
 // Find overlapping gap between two schedules within a time window

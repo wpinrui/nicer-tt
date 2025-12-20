@@ -109,7 +109,9 @@
   border-radius: 8px;
   cursor: pointer;
   overflow: hidden;
-  transition: border-color 0.2s, transform 0.2s;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
 
   &:hover {
     border-color: var(--color-primary);

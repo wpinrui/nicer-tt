@@ -118,7 +118,9 @@ header h1 {
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+  transition:
+    background 0.2s,
+    transform 0.1s;
 }
 
 .header-btn:hover {
@@ -810,7 +812,6 @@ html.dark .file-button-tertiary:hover {
     overflow-y: auto;
   }
 
-
   .results {
     display: flex;
     flex-direction: column;
@@ -1288,4 +1289,3 @@ html.dark .compare-column-name {
     background: rgba(255, 193, 7, 0.25);
   }
 }
-

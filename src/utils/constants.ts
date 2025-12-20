@@ -30,8 +30,24 @@ export const DEFAULT_TIMETABLE_NAMES = [
 
 // Color palette for course codes (darker shades for white text)
 export const COURSE_COLORS = [
-  '#b71c1c', '#880e4f', '#4a148c', '#311b92', '#1a237e',
-  '#0d47a1', '#01579b', '#006064', '#004d40', '#1b5e20',
-  '#33691e', '#827717', '#f57f17', '#e65100', '#bf360c',
-  '#3e2723', '#424242', '#263238', '#ad1457', '#6a1b9a',
+  '#b71c1c',
+  '#880e4f',
+  '#4a148c',
+  '#311b92',
+  '#1a237e',
+  '#0d47a1',
+  '#01579b',
+  '#006064',
+  '#004d40',
+  '#1b5e20',
+  '#33691e',
+  '#827717',
+  '#f57f17',
+  '#e65100',
+  '#bf360c',
+  '#3e2723',
+  '#424242',
+  '#263238',
+  '#ad1457',
+  '#6a1b9a',
 ] as const;

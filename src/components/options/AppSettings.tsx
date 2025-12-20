@@ -1,4 +1,4 @@
-import { Moon,Sun } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 
 import styles from '../OptionsPanel.module.scss';
 
@@ -28,10 +28,7 @@ export function AppSettings({
       </label>
       <label className={styles.toggle}>
         <span>{darkMode ? 'Dark mode' : 'Light mode'}</span>
-        <button
-          className={styles.themeBtn}
-          onClick={() => onDarkModeChange(!darkMode)}
-        >
+        <button className={styles.themeBtn} onClick={() => onDarkModeChange(!darkMode)}>
           {darkMode ? <Sun size={16} /> : <Moon size={16} />}
           {darkMode ? 'Switch to light' : 'Switch to dark'}
         </button>

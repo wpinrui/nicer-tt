@@ -10,15 +10,12 @@ interface EventGroupProps {
   onCourseClick?: (course: string) => void;
 }
 
-export function EventGroup({
-  group,
-  showTutor,
-  courseColorMap,
-  onCourseClick,
-}: EventGroupProps) {
+export function EventGroup({ group, showTutor, courseColorMap, onCourseClick }: EventGroupProps) {
   return (
     <div className={styles.dateGroup}>
-      <div className={`${styles.dateHeader} ${isToday(group.sortKey) ? styles.dateHeaderToday : ''}`}>
+      <div
+        className={`${styles.dateHeader} ${isToday(group.sortKey) ? styles.dateHeaderToday : ''}`}
+      >
         <span>
           {group.date}
           {isToday(group.sortKey) && ' (TODAY)'}
