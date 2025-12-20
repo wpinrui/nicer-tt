@@ -150,12 +150,16 @@ export function formatTime12Hour(time: string): string {
 }
 
 export function formatVenue(venue: string): string {
-  const match = venue.match(/^(\d+)-(\d+)-(.+)$/);
+  // Match optional NIE prefix, block number, level (including basement), room
+  const match = venue.match(/^(?:NIE)?(\d+)-(B?\d+)-(.+)$/i);
   if (match) {
     const block = parseInt(match[1], 10);
-    const level = parseInt(match[2], 10);
+    const levelRaw = match[2].toUpperCase();
+    const level = levelRaw.startsWith('B')
+      ? `Basement ${levelRaw.slice(1)}`
+      : `Level ${parseInt(levelRaw, 10)}`;
     const room = match[3];
-    return `Block ${block}, Level ${level}, ${room}`;
+    return `Block ${block}, ${level}, ${room}`;
   }
   return venue;
 }

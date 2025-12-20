@@ -151,7 +151,7 @@
     left: 50%;
     transform: translateX(-50%);
     border: 5px solid transparent;
-    border-top-color: var(--color-text-primary);
+    border-top-color: #333;
     margin-bottom: -0.1rem;
     z-index: 100;
     pointer-events: none;
@@ -159,6 +159,10 @@
 
   html.dark &:hover::after {
     background: #444;
+  }
+
+  html.dark &:hover::before {
+    border-top-color: #444;
   }
 }
 
