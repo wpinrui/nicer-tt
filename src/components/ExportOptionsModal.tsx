@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import styles from './ExportOptionsModal.module.scss';
 
@@ -35,7 +36,7 @@ export function ExportOptionsModal({
     });
   };
 
-  return (
+  return createPortal(
     <div className={styles.overlay}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>{actionLabel}</h3>
@@ -75,6 +76,7 @@ export function ExportOptionsModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

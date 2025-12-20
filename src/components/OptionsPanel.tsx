@@ -1,5 +1,6 @@
 import { ExternalLink, HelpCircle, RotateCcw, X } from 'lucide-react';
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import type { CustomEventInput } from '../hooks/useCustomEvents';
 import type { Timetable, TimetableEvent } from '../types';
@@ -52,7 +53,7 @@ export function OptionsPanel({
     window.location.reload();
   };
 
-  return (
+  return createPortal(
     <div className={styles.overlay}>
       <div className={styles.panel} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
@@ -134,6 +135,7 @@ export function OptionsPanel({
           </p>
         </Modal>
       )}
-    </div>
+    </div>,
+    document.body
   );
 }

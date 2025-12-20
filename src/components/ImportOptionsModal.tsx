@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import type { ShareData } from '../types';
 import { isShareDataV2 } from '../types';
@@ -55,7 +56,7 @@ export function ImportOptionsModal({ shareData, onConfirm, onCancel }: ImportOpt
     (includeCustom && customCount > 0) ||
     (includeUpgrading && upgradingCount > 0);
 
-  return (
+  return createPortal(
     <div className={styles.overlay}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>Import Options</h3>
@@ -111,6 +112,7 @@ export function ImportOptionsModal({ shareData, onConfirm, onCancel }: ImportOpt
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
