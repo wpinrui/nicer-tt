@@ -28,8 +28,8 @@ function MainPage() {
   const { compareMode, compareTimetables, compareFilter, travelConfig, mealConfig } = compareState;
   const { showOptions, showShareWelcome, showPrivacyNotice, showShareSelect, showCompareModal, showCompareExplanation, mobileMenuOpen } = uiState;
 
-  // Debounce search to avoid filtering on every keystroke
-  const debouncedSearchQuery = useDebouncedValue(searchQuery, 150);
+  // Debounce search to avoid filtering on every keystroke (uses default 150ms)
+  const debouncedSearchQuery = useDebouncedValue(searchQuery);
 
   const hasExistingData = Boolean(events && events.length > 0);
   const {
