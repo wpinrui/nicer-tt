@@ -92,7 +92,7 @@ export function ContributePage() {
         </div>
 
         <div className={styles.field}>
-          <label htmlFor="notes">Notes {files.length === 0 && <span className={styles.required}>*</span>}</label>
+          <label htmlFor="notes">Notes</label>
           <textarea
             id="notes"
             value={notes}
@@ -103,13 +103,13 @@ export function ContributePage() {
         </div>
 
         <div className={styles.field}>
-          <label htmlFor="telegram">Telegram Handle</label>
+          <label htmlFor="telegram">Telegram Handle (Optional)</label>
           <input
             id="telegram"
             type="text"
             value={telegram}
             onChange={(e) => setTelegram(e.target.value)}
-            placeholder="@username (optional)"
+            placeholder="@username"
           />
           <span className={styles.hint}>For follow-up questions only</span>
         </div>
