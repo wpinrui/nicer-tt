@@ -1,9 +1,57 @@
 import { useCallback, useState } from 'react';
 
 import type { CustomEvent, CustomEventsStore, TimetableEvent } from '../types';
-import { STORAGE_KEYS } from '../utils/constants';
+import { STORAGE_KEYS, TIMETABLE_YEAR } from '../utils/constants';
 import { logError } from '../utils/errors';
 import { generateId } from '../utils/id';
+
+/**
+ * Migrate date from DD/MM format to YYYY-MM-DD format.
+ * Returns original if already in ISO format.
+ */
+function migrateDateFormat(dateStr: string): string {
+  if (dateStr.includes('/')) {
+    // Old DD/MM format - convert to YYYY-MM-DD
+    const [day, month] = dateStr.split('/');
+    return `${TIMETABLE_YEAR}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  }
+  // Already in YYYY-MM-DD format
+  return dateStr;
+}
+
+/**
+ * Migrate custom events store from old DD/MM format to YYYY-MM-DD format.
+ */
+function migrateCustomEventsStore(store: CustomEventsStore): CustomEventsStore {
+  let needsMigration = false;
+
+  // Check if any dates need migration
+  for (const events of Object.values(store)) {
+    for (const event of events) {
+      if (event.dates?.some((d) => d.includes('/'))) {
+        needsMigration = true;
+        break;
+      }
+    }
+    if (needsMigration) break;
+  }
+
+  if (!needsMigration) return store;
+
+  // Migrate all dates
+  const migrated: CustomEventsStore = {};
+  for (const [timetableId, events] of Object.entries(store)) {
+    migrated[timetableId] = events.map((event) => ({
+      ...event,
+      dates: event.dates.map(migrateDateFormat),
+    }));
+  }
+
+  // Save migrated store
+  localStorage.setItem(STORAGE_KEYS.CUSTOM_EVENTS, JSON.stringify(migrated));
+
+  return migrated;
+}
 
 /**
  * Loads custom events from localStorage.
@@ -14,7 +62,7 @@ function loadCustomEventsStore(): CustomEventsStore {
     if (stored) {
       const data = JSON.parse(stored);
       if (typeof data === 'object' && data !== null) {
-        return data;
+        return migrateCustomEventsStore(data);
       }
     }
   } catch (e) {
