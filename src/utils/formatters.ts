@@ -1,13 +1,13 @@
 import { TIMETABLE_YEAR } from './constants';
 
 /**
- * Format a date from year, month, day numbers to "DayName, Day MonthName" format.
+ * Format a date from year, month, day numbers to "DayName, Day MonthName Year" format.
  */
 export function formatDateFromParts(year: number, month: number, day: number): string {
   const date = new Date(year, month - 1, day);
   const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
   const monthName = date.toLocaleDateString('en-US', { month: 'long' });
-  return `${dayName}, ${day} ${monthName}`;
+  return `${dayName}, ${day} ${monthName} ${year}`;
 }
 
 export function formatDateDisplay(dateStr: string): string {
