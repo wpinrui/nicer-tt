@@ -1,3 +1,6 @@
+import { useMemo, useState } from 'react';
+import { Search } from 'lucide-react';
+
 import { UPGRADING_COURSES } from '../../data/upgrading-courses';
 import type { UpgradingCourse } from '../../types';
 import styles from './AddEventModal.module.scss';
@@ -10,6 +13,14 @@ interface UpgradingSelectStepProps {
 }
 
 export function UpgradingSelectStep({ onClose, onBack, onCourseSelect }: UpgradingSelectStepProps) {
+  const [search, setSearch] = useState('');
+
+  const filteredCourses = useMemo(() => {
+    if (!search.trim()) return UPGRADING_COURSES;
+    const query = search.toLowerCase();
+    return UPGRADING_COURSES.filter((course) => course.courseName.toLowerCase().includes(query));
+  }, [search]);
+
   return (
     <>
       <ModalHeader title="Select Upgrading Course" onClose={onClose} onBack={onBack} />
@@ -24,18 +35,34 @@ export function UpgradingSelectStep({ onClose, onBack, onCourseSelect }: Upgradi
             </p>
           </div>
         ) : (
-          <div className={styles.courseList}>
-            {UPGRADING_COURSES.map((course) => (
-              <button
-                key={course.courseName}
-                className={styles.courseListItem}
-                onClick={() => onCourseSelect(course)}
-              >
-                <span className={styles.courseName}>{course.courseName}</span>
-                <span className={styles.sessionCount}>{course.sessions.length} sessions</span>
-              </button>
-            ))}
-          </div>
+          <>
+            <div className={styles.searchBox}>
+              <Search size={16} className={styles.searchIcon} />
+              <input
+                type="text"
+                placeholder="Search courses..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className={styles.searchInput}
+              />
+            </div>
+            <div className={styles.courseList}>
+              {filteredCourses.length === 0 ? (
+                <div className={styles.noResults}>No courses match "{search}"</div>
+              ) : (
+                filteredCourses.map((course) => (
+                  <button
+                    key={course.courseName}
+                    className={styles.courseListItem}
+                    onClick={() => onCourseSelect(course)}
+                  >
+                    <span className={styles.courseName}>{course.courseName}</span>
+                    <span className={styles.sessionCount}>{course.sessions.length} sessions</span>
+                  </button>
+                ))
+              )}
+            </div>
+          </>
         )}
       </div>
     </>

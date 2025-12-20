@@ -26,3 +26,9 @@ dist-ssr
 # Claude Code agent files
 agents/
 .claude/
+
+# Vercel
+.vercel/
+
+# Source PDFs
+content upgrading/
