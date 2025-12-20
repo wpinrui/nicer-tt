@@ -54,7 +54,7 @@ export function ExportMenu({ onDownload, onShare, disabled = false }: ExportMenu
   return (
     <div className={styles.container} ref={menuRef}>
       <button
-        className={styles.trigger}
+        className="header-btn"
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
         aria-expanded={isOpen}

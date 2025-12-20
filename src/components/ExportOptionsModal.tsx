@@ -22,7 +22,7 @@ export function ExportOptionsModal({
   };
 
   return (
-    <div className={styles.overlay} onClick={onCancel}>
+    <div className={styles.overlay}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>{actionLabel}</h3>
 

@@ -26,6 +26,7 @@
   width: 90%;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   animation: modalSlideIn 0.2s ease-out;
+  text-align: left;
 
   h3 {
     margin: 0 0 1rem 0;
@@ -75,6 +76,7 @@
   font-size: 0.85rem;
   color: var(--color-text-muted);
   line-height: 1.4;
+  text-align: left;
 }
 
 .actions {
