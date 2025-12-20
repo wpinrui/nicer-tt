@@ -130,5 +130,3 @@ export function ContributePage() {
     </div>
   );
 }
-
-export default ContributePage;
