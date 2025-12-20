@@ -62,7 +62,7 @@ function MainPage() {
     filterState,
     setSearchQuery,
     setSelectedDate,
-    setHidePastDates,
+    setShowPastDates,
     toggleCourse,
     handleCourseClick,
     clearFilters,
@@ -75,25 +75,25 @@ function MainPage() {
     handleCompare,
     handleExitCompare,
     uiState,
-    setShowOptions,
-    setShowShareWelcome,
-    setShowPrivacyNotice,
-    setShowShareSelect,
-    setShowCompareModal,
-    setShowCompareExplanation,
+    setOptionsPanelOpen,
+    setShareWelcomeModalOpen,
+    setPrivacyNoticeModalOpen,
+    setShareSelectModalOpen,
+    setCompareModalOpen,
+    setCompareExplanationModalOpen,
     setMobileMenuOpen,
   } = useMainPageState();
 
-  const { searchQuery, selectedCourses, selectedDate, hidePastDates } = filterState;
+  const { searchQuery, selectedCourses, selectedDate, showPastDates } = filterState;
   const { compareMode, compareTimetables, compareFilter, travelConfig, mealConfig } = compareState;
   const {
-    showOptions,
-    showShareWelcome,
-    showPrivacyNotice,
-    showShareSelect,
-    showCompareModal,
-    showCompareExplanation,
-    mobileMenuOpen,
+    isOptionsPanelOpen,
+    isShareWelcomeModalOpen,
+    isPrivacyNoticeModalOpen,
+    isShareSelectModalOpen,
+    isCompareModalOpen,
+    isCompareExplanationModalOpen,
+    isMobileMenuOpen,
   } = uiState;
 
   // Debounce search to avoid filtering on every keystroke (uses default 150ms)
@@ -101,11 +101,11 @@ function MainPage() {
 
   const hasExistingData = Boolean(events && events.length > 0);
   const {
-    showShareModal,
+    isShareModalOpen,
     shareMessage,
-    tempViewData,
+    previewData,
     matchedTimetable,
-    shareLinkFallback,
+    manualShareModal,
     createShareLink,
     confirmShare,
     viewTempShare,
@@ -113,18 +113,18 @@ function MainPage() {
     cancelShare,
     getImmediateShareData,
     clearMatchedTimetable,
-    clearShareLinkFallback,
+    clearManualShareModal,
   } = useShareData(hasExistingData, timetables);
 
-  const displayEvents = tempViewData?.events ?? events;
-  const isViewingTemp = tempViewData !== null;
+  const displayEvents = previewData?.events ?? events;
+  const isViewingPreview = previewData !== null;
 
   const { groupedByDate, totalEvents, courseColorMap, uniqueCourses, filteredCount } =
     useFilteredEvents(
       displayEvents,
       debouncedSearchQuery,
       selectedCourses,
-      hidePastDates,
+      showPastDates,
       selectedDate
     );
 
@@ -159,13 +159,13 @@ function MainPage() {
   };
 
   const handleShare = () => {
-    if (timetables.length > 1) setShowShareSelect(true);
+    if (timetables.length > 1) setShareSelectModalOpen(true);
     else if (activeTimetable)
       createShareLink(activeTimetable.events, activeTimetable.fileName || activeTimetable.name);
   };
 
   const handleShareTimetable = (timetable: (typeof timetables)[0]) => {
-    setShowShareSelect(false);
+    setShareSelectModalOpen(false);
     createShareLink(timetable.events, timetable.fileName || timetable.name);
   };
 
@@ -184,9 +184,9 @@ function MainPage() {
 
   const handleCompareClick = () => {
     if (timetables.length < 2) {
-      setShowCompareExplanation(true);
+      setCompareExplanationModalOpen(true);
     } else {
-      setShowCompareModal(true);
+      setCompareModalOpen(true);
     }
   };
 
@@ -206,7 +206,7 @@ function MainPage() {
   );
 
   return (
-    <div className={`main-page ${mobileMenuOpen ? 'menu-open' : ''}`}>
+    <div className={`main-page ${isMobileMenuOpen ? 'menu-open' : ''}`}>
       {events ? (
         <div className="compact-header no-print">
           <h1>
@@ -232,14 +232,14 @@ function MainPage() {
             <button onClick={handleShare} className="header-btn">
               <Share2 size={14} /> Share (copy timetable link)
             </button>
-            <button onClick={() => setShowOptions(true)} className="header-btn">
+            <button onClick={() => setOptionsPanelOpen(true)} className="header-btn">
               <Settings size={14} /> Options
             </button>
           </div>
-          <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}>
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-          {mobileMenuOpen && (
+          {isMobileMenuOpen && (
             <div className="mobile-menu">
               <button
                 onClick={() => {
@@ -268,7 +268,7 @@ function MainPage() {
               </button>
               <button
                 onClick={() => {
-                  setShowOptions(true);
+                  setOptionsPanelOpen(true);
                   setMobileMenuOpen(false);
                 }}
               >
@@ -303,11 +303,11 @@ function MainPage() {
             onUpload={handleUpload}
             onError={setError}
             onClear={clearTimetable}
-            onFirstUpload={() => setShowShareWelcome(true)}
+            onFirstUpload={() => setShareWelcomeModalOpen(true)}
           />
           <HelpPage
             onUploadClick={() => uploadRef.current?.triggerUpload()}
-            onPrivacyClick={() => setShowPrivacyNotice(true)}
+            onPrivacyClick={() => setPrivacyNoticeModalOpen(true)}
           />
         </>
       )}
@@ -320,7 +320,7 @@ function MainPage() {
 
       {displayEvents && (
         <div className="results">
-          {isViewingTemp && (
+          {isViewingPreview && (
             <div className="temp-view-banner no-print">
               <span>Viewing shared timetable</span>
               <button onClick={exitTempView} className="temp-view-back-btn">
@@ -396,8 +396,8 @@ function MainPage() {
                 onSearchChange={setSearchQuery}
                 selectedDate={selectedDate}
                 onDateChange={setSelectedDate}
-                hidePastDates={hidePastDates}
-                onHidePastChange={setHidePastDates}
+                showPastDates={showPastDates}
+                onShowPastChange={setShowPastDates}
                 uniqueCourses={uniqueCourses}
                 selectedCourses={selectedCourses}
                 courseColorMap={courseColorMap}
@@ -430,7 +430,7 @@ function MainPage() {
       {shareMessage && <div className="share-toast">{shareMessage}</div>}
       {switchedToast && <div className="share-toast">{switchedToast}</div>}
 
-      {showShareModal && (
+      {isShareModalOpen && (
         <Modal
           title="Add Shared Timetable?"
           onClose={cancelShare}
@@ -447,11 +447,11 @@ function MainPage() {
         </Modal>
       )}
 
-      {shareLinkFallback && (
+      {manualShareModal && (
         <Modal
-          title={`Share "${shareLinkFallback.name}"`}
-          onClose={clearShareLinkFallback}
-          onConfirm={clearShareLinkFallback}
+          title={`Share "${manualShareModal.name}"`}
+          onClose={clearManualShareModal}
+          onConfirm={clearManualShareModal}
           confirmText="Done"
           confirmVariant="primary"
           cancelText=""
@@ -460,7 +460,7 @@ function MainPage() {
           <input
             type="text"
             className="share-link-input"
-            value={shareLinkFallback.url}
+            value={manualShareModal.url}
             readOnly
             onFocus={(e) => e.target.select()}
             onClick={(e) => (e.target as HTMLInputElement).select()}
@@ -468,14 +468,14 @@ function MainPage() {
         </Modal>
       )}
 
-      {showOptions && (
+      {isOptionsPanelOpen && (
         <OptionsPanel
           darkMode={darkMode}
           showTutor={showTutor}
-          onClose={() => setShowOptions(false)}
+          onClose={() => setOptionsPanelOpen(false)}
           onDarkModeChange={setDarkMode}
           onShowTutorChange={setShowTutor}
-          onShowPrivacy={() => setShowPrivacyNotice(true)}
+          onShowPrivacy={() => setPrivacyNoticeModalOpen(true)}
           timetables={timetables}
           activeTimetableId={activeTimetable?.id || null}
           onSetActiveTimetable={setActiveTimetable}
@@ -485,33 +485,37 @@ function MainPage() {
           onViewingToast={handleViewingToast}
         />
       )}
-      {showShareWelcome && <ShareWelcomeModal onClose={() => setShowShareWelcome(false)} />}
-      {showPrivacyNotice && <PrivacyNoticeModal onClose={() => setShowPrivacyNotice(false)} />}
-      {showShareSelect && (
+      {isShareWelcomeModalOpen && (
+        <ShareWelcomeModal onClose={() => setShareWelcomeModalOpen(false)} />
+      )}
+      {isPrivacyNoticeModalOpen && (
+        <PrivacyNoticeModal onClose={() => setPrivacyNoticeModalOpen(false)} />
+      )}
+      {isShareSelectModalOpen && (
         <ShareSelectModal
           timetables={timetables}
           onShare={handleShareTimetable}
-          onClose={() => setShowShareSelect(false)}
+          onClose={() => setShareSelectModalOpen(false)}
         />
       )}
-      {showCompareModal && (
+      {isCompareModalOpen && (
         <CompareModal
           timetables={timetables}
           currentSelection={compareTimetables}
           isCompareMode={compareMode}
           onCompare={handleCompare}
           onReset={handleExitCompare}
-          onClose={() => setShowCompareModal(false)}
+          onClose={() => setCompareModalOpen(false)}
         />
       )}
 
-      {showCompareExplanation && (
+      {isCompareExplanationModalOpen && (
         <Modal
           title="Compare Timetables"
-          onClose={() => setShowCompareExplanation(false)}
+          onClose={() => setCompareExplanationModalOpen(false)}
           onConfirm={() => {
-            setShowCompareExplanation(false);
-            setShowOptions(true);
+            setCompareExplanationModalOpen(false);
+            setOptionsPanelOpen(true);
           }}
           confirmText="Go to Options"
           confirmVariant="primary"

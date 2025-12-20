@@ -1,5 +1,11 @@
 # Changelog
 
+**v1.3.13 (20 Dec 2025)**
+- Refactor Phase 11: Naming consistency improvements
+- Rename `hidePastDates` → `showPastDates` (positive boolean pattern)
+- Standardize modal state naming to `isXxxModalOpen` / `setXxxModalOpen`
+- Rename `tempViewData` → `previewData`, `shareLinkFallback` → `manualShareModal`
+
 **v1.3.12 (20 Dec 2025)**
 - Add visible border to compare filter buttons for better visibility
 

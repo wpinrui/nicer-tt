@@ -37,9 +37,9 @@ export function CompareModal({
   onReset,
   onClose,
 }: CompareModalProps) {
-  const [initial] = useState(() => getInitialSelections(timetables, currentSelection));
-  const [leftSelection, setLeftSelection] = useState<string | null>(initial[0]);
-  const [rightSelection, setRightSelection] = useState<string | null>(initial[1]);
+  const [initialSelections] = useState(() => getInitialSelections(timetables, currentSelection));
+  const [leftSelection, setLeftSelection] = useState<string | null>(initialSelections[0]);
+  const [rightSelection, setRightSelection] = useState<string | null>(initialSelections[1]);
 
   // Smart selection: when selecting in one pane, remove from other if same
   const handleLeftSelect = (id: string) => {

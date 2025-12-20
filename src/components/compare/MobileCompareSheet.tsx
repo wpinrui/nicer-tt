@@ -5,7 +5,7 @@ import { TravelConfigModalContent } from './TravelConfigForm';
 
 interface MobileCompareSheetProps {
   compareFilter: CompareFilter;
-  showConfigModal: boolean;
+  isConfigModalOpen: boolean;
   onClose: () => void;
   travelConfig: TravelConfig;
   onTravelConfigChange: (config: Partial<TravelConfig>) => void;
@@ -15,14 +15,14 @@ interface MobileCompareSheetProps {
 
 export function MobileCompareSheet({
   compareFilter,
-  showConfigModal,
+  isConfigModalOpen,
   onClose,
   travelConfig,
   onTravelConfigChange,
   mealConfig,
   onMealConfigChange,
 }: MobileCompareSheetProps) {
-  if (!showConfigModal) return null;
+  if (!isConfigModalOpen) return null;
 
   if (compareFilter === 'travel') {
     return (
