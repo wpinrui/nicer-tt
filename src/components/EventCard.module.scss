@@ -60,7 +60,6 @@
 .eventDescription {
   color: var(--color-text-secondary);
   font-size: 0.85rem;
-  min-width: 4rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -173,7 +172,6 @@
 
 .eventGroup {
   color: var(--color-text-primary);
-  min-width: 4rem;
 
   html.dark & {
     color: var(--color-text-secondary);
@@ -183,7 +181,6 @@
 .eventVenue {
   color: var(--color-text-placeholder);
   font-size: 0.8rem;
-  min-width: 12rem;
 
   html.dark & {
     color: var(--color-text-disabled);
