@@ -1,16 +1,7 @@
-import type { DisplayEventItem } from '../types';
+import type { DisplayGroupedEvent } from '../types';
 import { useRenderTimer } from '../utils/perf';
 import { EventGroup } from './EventGroup';
 import styles from './EventsList.module.scss';
-
-/**
- * Extended GroupedEvent that uses DisplayEventItem for custom event support.
- */
-interface DisplayGroupedEvent {
-  date: string;
-  sortKey: string;
-  events: DisplayEventItem[];
-}
 
 interface EventsListProps {
   groupedByDate: DisplayGroupedEvent[];

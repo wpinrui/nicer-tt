@@ -1,17 +1,8 @@
 import { useMemo } from 'react';
 
-import type { CustomEvent, DisplayEventItem, TimetableEvent } from '../types';
+import type { CustomEvent, DisplayGroupedEvent, TimetableEvent } from '../types';
 import { useCourseColorMap } from './useCourseColorMap';
 import { useFilteredGroupedEvents } from './useFilteredGroupedEvents';
-
-/**
- * Extended GroupedEvent that uses DisplayEventItem for custom event support.
- */
-interface DisplayGroupedEvent {
-  date: string;
-  sortKey: string;
-  events: DisplayEventItem[];
-}
 
 interface UseFilteredEventsResult {
   groupedByDate: DisplayGroupedEvent[];

@@ -75,6 +75,7 @@ function MainPage() {
     sortKey: string;
   } | null>(null);
   const [pendingExportAction, setPendingExportAction] = useState<'download' | 'share' | null>(null);
+  const [pendingIncludeCustomEvents, setPendingIncludeCustomEvents] = useState(false);
 
   const {
     filterState,
@@ -212,8 +213,8 @@ function MainPage() {
       downloadIcs(generateIcs(eventsToExport));
     } else if (action === 'share') {
       if (timetables.length > 1) {
-        // For share select modal, we need to handle custom event inclusion differently
-        // Store the choice and pass through
+        // Store the choice for when user selects a timetable in ShareSelectModal
+        setPendingIncludeCustomEvents(includeCustomEvents);
         setShareSelectModalOpen(true);
       } else {
         createShareLink(eventsToExport, activeTimetable.fileName || activeTimetable.name);
@@ -227,7 +228,13 @@ function MainPage() {
 
   const handleShareTimetable = (timetable: (typeof timetables)[0]) => {
     setShareSelectModalOpen(false);
-    createShareLink(timetable.events, timetable.fileName || timetable.name);
+    // Include custom events only if user chose to AND sharing the active timetable
+    const events =
+      pendingIncludeCustomEvents && timetable.id === activeTimetable?.id
+        ? [...timetable.events, ...customEvents]
+        : timetable.events;
+    createShareLink(events, timetable.fileName || timetable.name);
+    setPendingIncludeCustomEvents(false);
   };
 
   const handleViewingToast = (name: string) => {

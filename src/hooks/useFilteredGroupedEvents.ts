@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import type { CustomEvent, DisplayEventItem, TimetableEvent } from '../types';
+import type { CustomEvent, DisplayEventItem, DisplayGroupedEvent, TimetableEvent } from '../types';
 import {
   createSortKey,
   formatDateDisplay,
@@ -13,15 +13,6 @@ interface FilterOptions {
   selectedCourses: Set<string>;
   showPastDates: boolean;
   selectedDate: string | null;
-}
-
-/**
- * Extended GroupedEvent that uses DisplayEventItem for custom event support.
- */
-interface DisplayGroupedEvent {
-  date: string;
-  sortKey: string;
-  events: DisplayEventItem[];
 }
 
 interface UseFilteredGroupedEventsResult {

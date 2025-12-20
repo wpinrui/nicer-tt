@@ -195,6 +195,18 @@ export interface DisplayEventItem extends EventItem {
   description?: string;
 }
 
+/**
+ * Events grouped by date for display, using DisplayEventItem for custom event support.
+ */
+export interface DisplayGroupedEvent {
+  /** Formatted date string for display (e.g., "Monday, 15 January 2026") */
+  date: string;
+  /** Sort key in YYYYMMDD format */
+  sortKey: string;
+  /** Events occurring on this date */
+  events: DisplayEventItem[];
+}
+
 // =============================================================================
 // Content Upgrading Types
 // =============================================================================
