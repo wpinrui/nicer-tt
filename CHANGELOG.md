@@ -2,7 +2,7 @@
 
 **v1.5.1 (21 Dec 2025)**
 - Fix modal height being clipped by card container (use portals)
-- Fix dark mode tooltip arrow color mismatch
+- Fix dark mode tooltip styling (arrow + background now use CSS variables)
 - Add support for NIE prefix and basement levels in venue formatting
 - Fix modal hint text alignment
 
