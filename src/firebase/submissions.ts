@@ -13,9 +13,8 @@ export async function submitSchedule(input: NewSubmissionInput): Promise<string>
 
   // Create submission document
   const submissionData = {
-    email: input.email,
+    telegram: input.telegram || null,
     courseName: input.courseName,
-    courseCode: input.courseCode || null,
     fileUrls: uploadResults.map((r) => r.url),
     fileNames: uploadResults.map((r) => r.fileName),
     submittedAt: serverTimestamp(),

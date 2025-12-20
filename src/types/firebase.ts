@@ -2,9 +2,8 @@ import type { Timestamp } from 'firebase/firestore';
 
 export interface ScheduleSubmission {
   id: string;
-  email: string;
+  telegram?: string;
   courseName: string;
-  courseCode?: string;
   fileUrls: string[];
   fileNames: string[];
   submittedAt: Timestamp;
@@ -12,9 +11,8 @@ export interface ScheduleSubmission {
 }
 
 export interface NewSubmissionInput {
-  email: string;
+  telegram?: string;
   courseName: string;
-  courseCode?: string;
   files: File[];
   notes?: string;
 }

@@ -7,16 +7,15 @@ import { FileUploadZone } from './FileUploadZone';
 import styles from './ContributePage.module.scss';
 
 export function ContributePage() {
-  const [email, setEmail] = useState('');
+  const [telegram, setTelegram] = useState('');
   const [courseName, setCourseName] = useState('');
-  const [courseCode, setCourseCode] = useState('');
   const [notes, setNotes] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const isValid = email.trim() && courseName.trim() && files.length > 0;
+  const isValid = courseName.trim() && files.length > 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,9 +26,8 @@ export function ContributePage() {
 
     try {
       const id = await submitSchedule({
-        email: email.trim(),
+        telegram: telegram.trim() || undefined,
         courseName: courseName.trim(),
-        courseCode: courseCode.trim() || undefined,
         notes: notes.trim() || undefined,
         files,
       });
@@ -75,21 +73,6 @@ export function ContributePage() {
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.field}>
-          <label htmlFor="email">
-            Email <span className={styles.required}>*</span>
-          </label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="your@email.com"
-            required
-          />
-          <span className={styles.hint}>For follow-up questions only</span>
-        </div>
-
-        <div className={styles.field}>
           <label htmlFor="courseName">
             Course Name <span className={styles.required}>*</span>
           </label>
@@ -98,19 +81,8 @@ export function ContributePage() {
             type="text"
             value={courseName}
             onChange={(e) => setCourseName(e.target.value)}
-            placeholder="e.g., Computing for Educators"
+            placeholder="e.g., COM1234 - Computing for Educators"
             required
-          />
-        </div>
-
-        <div className={styles.field}>
-          <label htmlFor="courseCode">Course Code</label>
-          <input
-            id="courseCode"
-            type="text"
-            value={courseCode}
-            onChange={(e) => setCourseCode(e.target.value)}
-            placeholder="e.g., COM1234"
           />
         </div>
 
@@ -130,6 +102,18 @@ export function ContributePage() {
             placeholder="Any additional information..."
             rows={3}
           />
+        </div>
+
+        <div className={styles.field}>
+          <label htmlFor="telegram">Telegram Handle</label>
+          <input
+            id="telegram"
+            type="text"
+            value={telegram}
+            onChange={(e) => setTelegram(e.target.value)}
+            placeholder="@username (optional)"
+          />
+          <span className={styles.hint}>For follow-up questions only</span>
         </div>
 
         {error && <div className={styles.error}>{error}</div>}
