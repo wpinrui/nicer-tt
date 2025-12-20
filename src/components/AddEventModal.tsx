@@ -1,10 +1,13 @@
 import { Calendar, Plus, Trash2, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import type { CustomEvent } from '../types';
+import type { CustomEvent, CustomEventType } from '../types';
 import type { CustomEventInput } from '../hooks/useCustomEvents';
 import { TIMETABLE_YEAR } from '../utils/constants';
 import styles from './AddEventModal.module.scss';
+
+const DESCRIPTION_MAX = 100;
+const DESCRIPTION_SUGGESTED = 80;
 
 interface AddEventModalProps {
   onClose: () => void;
@@ -67,10 +70,10 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
   const [endTime, setEndTime] = useState(() =>
     editingEvent ? toTimeInput(editingEvent.endTime) : ''
   );
-  const [course, setCourse] = useState(editingEvent?.course || '');
-  const [group, setGroup] = useState(editingEvent?.group || '');
-  const [venue, setVenue] = useState(editingEvent?.venue || '');
-  const [tutor, setTutor] = useState(editingEvent?.tutor || '');
+  const [eventType, setEventType] = useState<CustomEventType>(
+    () => editingEvent?.eventType || 'custom'
+  );
+  const [description, setDescription] = useState(() => editingEvent?.description || '');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const firstDateRef = useRef<HTMLInputElement>(null);
@@ -128,22 +131,28 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
       day: getDayOfWeek(validDates[0]),
       startTime: fromTimeInput(startTime),
       endTime: fromTimeInput(endTime),
-      course: course.trim(),
-      group: group.trim(),
-      venue: venue.trim(),
-      tutor: tutor.trim(),
+      eventType,
+      description: description.trim(),
+      // Keep TimetableEvent compatibility with empty strings
+      course: '',
+      group: '',
+      venue: '',
+      tutor: '',
     };
 
     onSave(eventInput);
-  }, [dates, startTime, endTime, course, group, venue, tutor, onSave]);
+  }, [dates, startTime, endTime, eventType, description, onSave]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      onClose();
-    } else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-      handleSubmit();
-    }
-  }, [onClose, handleSubmit]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      } else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+        handleSubmit();
+      }
+    },
+    [onClose, handleSubmit]
+  );
 
   return (
     <div className={styles.overlay} onClick={onClose} onKeyDown={handleKeyDown}>
@@ -186,11 +195,7 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
                   )}
                 </div>
               ))}
-              <button
-                type="button"
-                className={styles.addDateBtn}
-                onClick={handleAddDate}
-              >
+              <button type="button" className={styles.addDateBtn} onClick={handleAddDate}>
                 <Plus size={14} /> Add another date
               </button>
             </div>
@@ -231,52 +236,55 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
             </div>
           </div>
 
-          {/* Optional fields */}
-          <div className={styles.optionalSection}>
-            <span className={styles.optionalLabel}>Optional fields</span>
-
-            <div className={styles.field}>
-              <label className={styles.label}>Course / Subject</label>
-              <input
-                type="text"
-                className={styles.input}
-                value={course}
-                onChange={(e) => setCourse(e.target.value)}
-                placeholder="e.g., Content Upgrading"
-              />
+          {/* Event type toggle */}
+          <div className={styles.field}>
+            <label className={styles.label}>Event Type</label>
+            <div className={styles.eventTypeToggle}>
+              <button
+                type="button"
+                className={`${styles.eventTypeBtn} ${eventType === 'custom' ? styles.eventTypeBtnActive : ''}`}
+                onClick={() => setEventType('custom')}
+              >
+                Custom
+              </button>
+              <button
+                type="button"
+                className={`${styles.eventTypeBtn} ${eventType === 'upgrading' ? styles.eventTypeBtnActive : ''}`}
+                onClick={() => setEventType('upgrading')}
+              >
+                Upgrading
+              </button>
             </div>
+          </div>
 
-            <div className={styles.field}>
-              <label className={styles.label}>Group</label>
-              <input
-                type="text"
-                className={styles.input}
-                value={group}
-                onChange={(e) => setGroup(e.target.value)}
-                placeholder="e.g., G01"
-              />
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label}>Venue</label>
-              <input
-                type="text"
-                className={styles.input}
-                value={venue}
-                onChange={(e) => setVenue(e.target.value)}
-                placeholder="e.g., LT27"
-              />
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label}>Tutor</label>
-              <input
-                type="text"
-                className={styles.input}
-                value={tutor}
-                onChange={(e) => setTutor(e.target.value)}
-                placeholder="e.g., Dr. Smith"
-              />
+          {/* Description */}
+          <div className={styles.field}>
+            <label className={styles.label}>Description</label>
+            <textarea
+              className={styles.textarea}
+              value={description}
+              onChange={(e) => {
+                if (e.target.value.length <= DESCRIPTION_MAX) {
+                  setDescription(e.target.value);
+                }
+              }}
+              placeholder="e.g., Chemistry content upgrading at LT27"
+              rows={2}
+            />
+            <div className={styles.charCounter}>
+              <span
+                className={
+                  description.length > DESCRIPTION_SUGGESTED ? styles.charCounterWarning : ''
+                }
+              >
+                {description.length}/{DESCRIPTION_MAX}
+              </span>
+              {description.length > DESCRIPTION_SUGGESTED &&
+                description.length <= DESCRIPTION_MAX && (
+                  <span className={styles.charCounterHint}>
+                    (suggested: {DESCRIPTION_SUGGESTED})
+                  </span>
+                )}
             </div>
           </div>
         </div>

@@ -67,19 +67,11 @@ export function ExportMenu({ onDownload, onShare, disabled = false }: ExportMenu
 
       {isOpen && (
         <div className={styles.menu} role="menu">
-          <button
-            className={styles.menuItem}
-            onClick={handleDownload}
-            role="menuitem"
-          >
+          <button className={styles.menuItem} onClick={handleDownload} role="menuitem">
             <Download size={16} />
             Download .ics
           </button>
-          <button
-            className={styles.menuItem}
-            onClick={handleShare}
-            role="menuitem"
-          >
+          <button className={styles.menuItem} onClick={handleShare} role="menuitem">
             <Share2 size={16} />
             Share (copy link)
           </button>

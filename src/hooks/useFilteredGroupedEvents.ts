@@ -79,7 +79,7 @@ export function useFilteredGroupedEvents(
      * Process a single event-date combination and add to the map if it passes filters.
      */
     const processEventDate = (
-      event: TimetableEvent,
+      event: TimetableEvent | CustomEvent,
       dateStr: string,
       isCustom: boolean,
       customEventId?: string
@@ -127,6 +127,8 @@ export function useFilteredGroupedEvents(
         tutor: event.tutor,
         isCustom,
         customEventId,
+        eventType: isCustom && 'eventType' in event ? event.eventType : undefined,
+        description: isCustom && 'description' in event ? event.description : undefined,
       };
       dateMap.get(sortKey)!.events.push(eventItem);
     };

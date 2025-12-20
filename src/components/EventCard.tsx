@@ -49,31 +49,36 @@ export const EventCard = memo(function EventCard({
           onClick={isClickable ? () => onCourseClick(event.course) : undefined}
           title={isClickable ? `Filter by ${event.course}` : undefined}
         >
-          {event.course || 'Custom'}
+          {isCustom
+            ? 'eventType' in event && event.eventType === 'upgrading'
+              ? 'Upgrading'
+              : 'Custom'
+            : event.course}
         </span>
       </span>
-      {isCustom && <span className={styles.customBadge}>Custom</span>}
-      <span className={styles.eventGroup}>{event.group}</span>
-      {event.venue && <span className={styles.eventVenue}>@ {formatVenue(event.venue)}</span>}
-      {event.tutor &&
-        (showTutor ? (
-          <span className={styles.eventTutor}>
-            <User size={14} />
-            {formatTutor(event.tutor)}
-          </span>
-        ) : (
-          <span className={styles.eventTutorIcon} title={formatTutor(event.tutor)}>
-            <User size={14} />
-          </span>
-        ))}
+      {isCustom && 'description' in event && event.description ? (
+        <span className={styles.eventDescription}>{event.description}</span>
+      ) : (
+        <>
+          <span className={styles.eventGroup}>{event.group}</span>
+          {event.venue && <span className={styles.eventVenue}>@ {formatVenue(event.venue)}</span>}
+          {event.tutor &&
+            (showTutor ? (
+              <span className={styles.eventTutor}>
+                <User size={14} />
+                {formatTutor(event.tutor)}
+              </span>
+            ) : (
+              <span className={styles.eventTutorIcon} title={formatTutor(event.tutor)}>
+                <User size={14} />
+              </span>
+            ))}
+        </>
+      )}
       {isCustom && (onEdit || onDelete) && (
         <span className={styles.customActions}>
           {onEdit && (
-            <button
-              className={styles.customActionBtn}
-              onClick={onEdit}
-              title="Edit custom event"
-            >
+            <button className={styles.customActionBtn} onClick={onEdit} title="Edit custom event">
               <Pencil size={14} />
             </button>
           )}

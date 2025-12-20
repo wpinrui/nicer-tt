@@ -66,15 +66,11 @@ function MainPage() {
   const uploadRef = useRef<UploadSectionHandle>(null);
 
   // Custom events
-  const {
-    customEvents,
-    addCustomEvent,
-    updateCustomEvent,
-    deleteCustomEvent,
-    getCustomEvent,
-  } = useCustomEvents(activeTimetable?.id || null);
+  const { customEvents, addCustomEvent, updateCustomEvent, deleteCustomEvent, getCustomEvent } =
+    useCustomEvents(activeTimetable?.id || null);
   const [isAddEventModalOpen, setAddEventModalOpen] = useState(false);
   const [editingCustomEvent, setEditingCustomEvent] = useState<CustomEvent | null>(null);
+  const [deletingEventId, setDeletingEventId] = useState<string | null>(null);
   const [pendingExportAction, setPendingExportAction] = useState<'download' | 'share' | null>(null);
 
   const {
@@ -275,14 +271,16 @@ function MainPage() {
     [getCustomEvent]
   );
 
-  const handleDeleteCustomEvent = useCallback(
-    (eventId: string) => {
-      if (window.confirm('Delete this custom event?')) {
-        deleteCustomEvent(eventId);
-      }
-    },
-    [deleteCustomEvent]
-  );
+  const handleDeleteCustomEvent = useCallback((eventId: string) => {
+    setDeletingEventId(eventId);
+  }, []);
+
+  const confirmDeleteCustomEvent = useCallback(() => {
+    if (deletingEventId) {
+      deleteCustomEvent(deletingEventId);
+      setDeletingEventId(null);
+    }
+  }, [deletingEventId, deleteCustomEvent]);
 
   const handleSaveCustomEvent = useCallback(
     (eventInput: CustomEventInput) => {
@@ -324,11 +322,7 @@ function MainPage() {
             <span className="brand-small">r</span> Timetable
           </h1>
           <div className="header-actions desktop-only">
-            <button
-              onClick={handleAddEventClick}
-              className="header-btn"
-              title="Add custom event"
-            >
+            <button onClick={handleAddEventClick} className="header-btn" title="Add custom event">
               <Plus size={14} /> Add Event
             </button>
             <button
@@ -583,6 +577,18 @@ function MainPage() {
             onFocus={(e) => e.target.select()}
             onClick={(e) => (e.target as HTMLInputElement).select()}
           />
+        </Modal>
+      )}
+
+      {deletingEventId && (
+        <Modal
+          title="Delete Custom Event?"
+          onClose={() => setDeletingEventId(null)}
+          onConfirm={confirmDeleteCustomEvent}
+          confirmText="Delete"
+          confirmVariant="danger"
+        >
+          <p>This action cannot be undone.</p>
         </Modal>
       )}
 

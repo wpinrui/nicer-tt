@@ -152,12 +152,21 @@ export interface MealConfig {
 // =============================================================================
 
 /**
+ * Type of custom event - determines badge display.
+ */
+export type CustomEventType = 'custom' | 'upgrading';
+
+/**
  * A custom event created by the user (not parsed from NIE).
  * Extends TimetableEvent with metadata for custom event management.
  */
 export interface CustomEvent extends TimetableEvent {
   /** Unique identifier for this custom event */
   id: string;
+  /** Type of custom event (determines badge) */
+  eventType: CustomEventType;
+  /** User-provided description (max 100 chars) */
+  description: string;
   /** When this event was created (timestamp) */
   createdAt: number;
   /** When this event was last modified (timestamp) */
@@ -180,4 +189,8 @@ export interface DisplayEventItem extends EventItem {
   isCustom?: boolean;
   /** Custom event ID (only present if isCustom is true) */
   customEventId?: string;
+  /** Type of custom event - determines badge (only for custom events) */
+  eventType?: CustomEventType;
+  /** User-provided description (only for custom events) */
+  description?: string;
 }
