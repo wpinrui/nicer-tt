@@ -4,12 +4,14 @@ import { Analytics } from '@vercel/analytics/react';
 import { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
+import { useLocalStorage } from './hooks';
 import ContributePage from './pages/ContributePage';
 import MainPage from './pages/MainPage';
 import { STORAGE_KEYS } from './utils/constants';
 import { logError } from './utils/errors';
 
 function App() {
+  const [darkMode] = useLocalStorage(STORAGE_KEYS.DARK_MODE, true);
   const [customBackground, setCustomBackground] = useState<string | null>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.CUSTOM_BACKGROUND);
@@ -19,6 +21,11 @@ function App() {
       return null;
     }
   });
+
+  // Apply dark mode class to document root
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode);
+  }, [darkMode]);
 
   // Listen for localStorage changes (from OptionsPanel)
   useEffect(() => {
