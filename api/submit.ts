@@ -25,14 +25,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { courseName, telegram, notes, fileUrls, fileNames } = req.body as SubmitRequestBody;
 
-  if (!courseName || !fileUrls || fileUrls.length === 0) {
+  const hasFiles = fileUrls && fileUrls.length > 0;
+  const hasNotes = notes && notes.trim().length > 0;
+
+  if (!courseName || (!hasFiles && !hasNotes)) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
   // Build issue body
-  const filesList = fileUrls
-    .map((url, i) => `- [${fileNames[i] || `File ${i + 1}`}](${url})`)
-    .join('\n');
+  const filesList = hasFiles
+    ? fileUrls.map((url, i) => `- [${fileNames[i] || `File ${i + 1}`}](${url})`).join('\n')
+    : '*No files uploaded*';
 
   const body = `## New Upgrading Course Submission
 

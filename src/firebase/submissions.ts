@@ -8,11 +8,16 @@ interface SubmitResponse {
 }
 
 export async function submitSchedule(input: NewSubmissionInput): Promise<string> {
-  // Generate a temporary ID for the upload folder
-  const tempId = `submission-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+  // Upload files to Firebase Storage only if files were provided
+  let fileUrls: string[] = [];
+  let fileNames: string[] = [];
 
-  // Upload files to Firebase Storage first
-  const uploadResults = await uploadFiles(tempId, input.files);
+  if (input.files.length > 0) {
+    const tempId = `submission-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+    const uploadResults = await uploadFiles(tempId, input.files);
+    fileUrls = uploadResults.map((r) => r.url);
+    fileNames = uploadResults.map((r) => r.fileName);
+  }
 
   // Call the API to create a GitHub issue
   const response = await fetch('/api/submit', {
@@ -24,8 +29,8 @@ export async function submitSchedule(input: NewSubmissionInput): Promise<string>
       courseName: input.courseName,
       telegram: input.telegram,
       notes: input.notes,
-      fileUrls: uploadResults.map((r) => r.url),
-      fileNames: uploadResults.map((r) => r.fileName),
+      fileUrls,
+      fileNames,
     }),
   });
 
