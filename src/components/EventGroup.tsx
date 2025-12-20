@@ -1,6 +1,7 @@
 import { memo, useCallback } from 'react';
 
 import type { DisplayGroupedEvent } from '../types';
+import { CUSTOM_EVENT_COLORS } from '../utils/constants';
 import { isToday } from '../utils/formatters';
 import { EventCard } from './EventCard';
 import styles from './EventGroup.module.scss';
@@ -57,7 +58,8 @@ export const EventGroup = memo(function EventGroup({
               event={event}
               showTutor={showTutor}
               courseColor={
-                courseColorMap.get(event.course) || (isUpgrading ? '#16a085' : '#9c27b0')
+                courseColorMap.get(event.course) ||
+                (isUpgrading ? CUSTOM_EVENT_COLORS.Upgrading : CUSTOM_EVENT_COLORS.Custom)
               }
               onCourseClick={onCourseClick}
               onEdit={isUpgrading ? undefined : createEditHandler(event.customEventId)}

@@ -143,14 +143,6 @@ export function processEventsWithCustom(
   return grouped;
 }
 
-// Get all unique dates from both timetables
-export function getAllDates(left: GroupedEvent[], right: GroupedEvent[]): string[] {
-  const dates = new Set<string>();
-  left.forEach((g) => dates.add(g.sortKey));
-  right.forEach((g) => dates.add(g.sortKey));
-  return Array.from(dates).sort();
-}
-
 // Check if two events are identical (same course, group, and time)
 export function eventsMatch(a: EventItem, b: EventItem): boolean {
   return (

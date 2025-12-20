@@ -8,6 +8,7 @@ import {
   eventsMatch,
   processEventsWithCustom,
 } from '../utils/compareUtils';
+import { CUSTOM_EVENT_COLORS } from '../utils/constants';
 import { formatTime12Hour, isToday } from '../utils/formatters';
 import { useRenderTimer } from '../utils/perf';
 import { EventCard } from './EventCard';
@@ -236,8 +237,8 @@ export function EventsCompareView({
                       courseColor={
                         courseColorMap.get(event.course) ||
                         ('eventType' in event && event.eventType === 'upgrading'
-                          ? '#16a085'
-                          : '#9c27b0')
+                          ? CUSTOM_EVENT_COLORS.Upgrading
+                          : CUSTOM_EVENT_COLORS.Custom)
                       }
                       isHighlighted={identicalLeft.has(i)}
                       disableCustomStyling
@@ -260,8 +261,8 @@ export function EventsCompareView({
                       courseColor={
                         courseColorMap.get(event.course) ||
                         ('eventType' in event && event.eventType === 'upgrading'
-                          ? '#16a085'
-                          : '#9c27b0')
+                          ? CUSTOM_EVENT_COLORS.Upgrading
+                          : CUSTOM_EVENT_COLORS.Custom)
                       }
                       isHighlighted={identicalRight.has(i)}
                       disableCustomStyling
