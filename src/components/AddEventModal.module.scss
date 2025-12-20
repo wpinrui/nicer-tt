@@ -98,6 +98,11 @@
   gap: 0.35rem;
 }
 
+.optionalHint {
+  font-weight: 400;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
 
 .input {
   width: 100%;

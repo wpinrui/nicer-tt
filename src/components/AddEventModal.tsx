@@ -175,6 +175,7 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
     () => editingEvent?.eventType || 'custom'
   );
   const [description, setDescription] = useState(() => editingEvent?.description || '');
+  const [venue, setVenue] = useState(() => editingEvent?.venue || '');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -274,12 +275,12 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
       description: description.trim(),
       course: eventType === 'upgrading' ? 'Upgrading' : 'Custom',
       group: '',
-      venue: '',
+      venue: venue.trim(),
       tutor: '',
     };
 
     onSave(eventInput);
-  }, [selectedDates, startTime, endTime, eventType, description, onSave]);
+  }, [selectedDates, startTime, endTime, eventType, description, venue, onSave]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -426,6 +427,20 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
                 Upgrading
               </button>
             </div>
+          </div>
+
+          {/* Venue (optional) */}
+          <div className={styles.field}>
+            <label className={styles.label}>
+              Location <span className={styles.optionalHint}>(optional)</span>
+            </label>
+            <input
+              type="text"
+              className={styles.input}
+              value={venue}
+              onChange={(e) => setVenue(e.target.value)}
+              placeholder="e.g., 7-01-TR703"
+            />
           </div>
 
           {/* Description */}
