@@ -1,0 +1,25 @@
+{
+  "courseName": "QUC501 - Chinese Etymology and Modern Chinese Script",
+  "sessions": [
+    { "date": "05/01", "startTime": "08:30", "endTime": "09:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "05/01", "startTime": "10:30", "endTime": "11:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "06/01", "startTime": "09:30", "endTime": "10:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "06/01", "startTime": "11:30", "endTime": "12:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "09/01", "startTime": "14:30", "endTime": "16:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "12/01", "startTime": "08:30", "endTime": "09:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "12/01", "startTime": "10:30", "endTime": "11:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "14/01", "startTime": "08:30", "endTime": "09:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "14/01", "startTime": "10:30", "endTime": "11:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "16/01", "startTime": "14:30", "endTime": "16:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "19/01", "startTime": "08:30", "endTime": "09:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "19/01", "startTime": "10:30", "endTime": "11:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "21/01", "startTime": "08:30", "endTime": "09:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "21/01", "startTime": "10:30", "endTime": "11:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "23/01", "startTime": "14:30", "endTime": "16:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "26/01", "startTime": "08:30", "endTime": "09:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "26/01", "startTime": "10:30", "endTime": "11:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "28/01", "startTime": "08:30", "endTime": "09:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "28/01", "startTime": "10:30", "endTime": "11:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" },
+    { "date": "30/01", "startTime": "14:30", "endTime": "16:20", "venue": "NIE3-01-LT10", "tutor": "F Xu" }
+  ]
+}

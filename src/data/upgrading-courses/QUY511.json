@@ -1,0 +1,10 @@
+{
+  "courseName": "QUY511 - General and Inorganic Chemistry",
+  "sessions": [
+    { "date": "05/01", "startTime": "08:30", "endTime": "11:30", "venue": "NIE7-01-TR703", "tutor": "Dr Teo" },
+    { "date": "12/01", "startTime": "08:30", "endTime": "11:30", "venue": "NIE7A-B1-03", "tutor": "Dr Teo" },
+    { "date": "19/01", "startTime": "08:30", "endTime": "11:30", "venue": "NIE7-01-TR703", "tutor": "Dr Teo" },
+    { "date": "26/01", "startTime": "08:30", "endTime": "11:30", "venue": "NIE7A-B1-03", "tutor": "Dr Teo" },
+    { "date": "02/02", "startTime": "11:30", "endTime": "13:30", "venue": "NIE7-01-TR717", "tutor": "Dr Teo" }
+  ]
+}

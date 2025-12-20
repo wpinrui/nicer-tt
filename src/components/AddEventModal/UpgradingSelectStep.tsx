@@ -1,8 +1,5 @@
-import { ExternalLink } from 'lucide-react';
-
 import { UPGRADING_COURSES } from '../../data/upgrading-courses';
 import type { UpgradingCourse } from '../../types';
-import { CONTRIBUTION_PAGE_URL } from '../../utils/constants';
 import styles from './AddEventModal.module.scss';
 import { ModalHeader } from './ModalHeader';
 
@@ -40,16 +37,6 @@ export function UpgradingSelectStep({ onClose, onBack, onCourseSelect }: Upgradi
             ))}
           </div>
         )}
-
-        <a
-          href={CONTRIBUTION_PAGE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.notListedLink}
-        >
-          <span>My course is not listed</span>
-          <ExternalLink size={14} />
-        </a>
       </div>
     </>
   );

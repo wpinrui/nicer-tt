@@ -1,0 +1,13 @@
+{
+  "courseName": "QUS511 - Lower Secondary Science (Group 2)",
+  "sessions": [
+    { "date": "05/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7A-B1-03", "tutor": "A/P Teo Tang Wee" },
+    { "date": "06/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7A-B1-03", "tutor": "A/P Teo Tang Wee" },
+    { "date": "12/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7A-B1-03", "tutor": "A/P Teo Tang Wee" },
+    { "date": "13/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7A-B1-03", "tutor": "A/P Teo Tang Wee" },
+    { "date": "19/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7A-B1-03", "tutor": "A/P Teo Tang Wee" },
+    { "date": "20/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7A-B1-03", "tutor": "A/P Teo Tang Wee" },
+    { "date": "26/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7A-B1-03", "tutor": "A/P Teo Tang Wee" },
+    { "date": "27/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7A-B1-03", "tutor": "A/P Teo Tang Wee" }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "courseName": "QUT503/QUT513 - Tamil Literature",
+  "sessions": [
+    { "date": "12/01", "startTime": "08:30", "endTime": "11:20", "venue": "NIE3-01-TR322", "tutor": "" },
+    { "date": "13/01", "startTime": "08:30", "endTime": "11:20", "venue": "NIE3-01-TR322", "tutor": "" },
+    { "date": "15/01", "startTime": "08:30", "endTime": "09:20", "venue": "NIE3-01-TR322", "tutor": "" },
+    { "date": "29/01", "startTime": "14:30", "endTime": "16:20", "venue": "NIE3-01-TR322", "tutor": "" }
+  ]
+}

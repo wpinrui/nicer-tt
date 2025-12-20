@@ -1,0 +1,8 @@
+{
+  "courseName": "QUG511 - Physical Geography",
+  "sessions": [
+    { "date": "07/01", "startTime": "10:30", "endTime": "13:30", "venue": "NIE3-02-27", "tutor": "A/P Wang Jingyu" },
+    { "date": "14/01", "startTime": "10:30", "endTime": "13:30", "venue": "NIE3-02-27", "tutor": "A/P Wang Jingyu" },
+    { "date": "21/01", "startTime": "10:30", "endTime": "13:30", "venue": "NIE3-02-27", "tutor": "A/P Wang Jingyu" }
+  ]
+}

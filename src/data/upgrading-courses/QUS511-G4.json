@@ -1,0 +1,13 @@
+{
+  "courseName": "QUS511 - Lower Secondary Science (Group 4)",
+  "sessions": [
+    { "date": "05/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7A-01-06", "tutor": "Mr Adrian Ong" },
+    { "date": "06/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7A-01-06", "tutor": "Mr Adrian Ong" },
+    { "date": "12/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7A-01-06", "tutor": "Mr Adrian Ong" },
+    { "date": "13/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7A-01-06", "tutor": "Mr Adrian Ong" },
+    { "date": "19/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7A-01-06", "tutor": "Mr Adrian Ong" },
+    { "date": "20/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7A-01-06", "tutor": "Mr Adrian Ong" },
+    { "date": "26/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7A-01-06", "tutor": "Mr Adrian Ong" },
+    { "date": "27/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7A-01-06", "tutor": "Mr Adrian Ong" }
+  ]
+}

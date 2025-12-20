@@ -1,0 +1,10 @@
+{
+  "courseName": "QUP511 - Mechanics and Thermal Physics",
+  "sessions": [
+    { "date": "06/01", "startTime": "10:30", "endTime": "13:30", "venue": "NIE7-B2-01", "tutor": "Prof Xu" },
+    { "date": "13/01", "startTime": "10:30", "endTime": "13:30", "venue": "NIE7-B2-01", "tutor": "Prof Xu" },
+    { "date": "20/01", "startTime": "10:30", "endTime": "13:30", "venue": "NIE7-B2-01", "tutor": "A/P Springham" },
+    { "date": "27/01", "startTime": "10:30", "endTime": "13:30", "venue": "NIE3-01-TR311", "tutor": "A/P Springham" },
+    { "date": "04/02", "startTime": "11:30", "endTime": "13:30", "venue": "NIE3-01-TR309", "tutor": "A/P Springham & Prof Xu" }
+  ]
+}

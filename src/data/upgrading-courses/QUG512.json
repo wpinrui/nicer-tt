@@ -1,0 +1,8 @@
+{
+  "courseName": "QUG512 - Human Geography",
+  "sessions": [
+    { "date": "05/01", "startTime": "09:30", "endTime": "11:30", "venue": "NIE3-02-25", "tutor": "Dr Diganta Das" },
+    { "date": "12/01", "startTime": "09:30", "endTime": "11:30", "venue": "NIE3-02-25", "tutor": "Dr Diganta Das" },
+    { "date": "19/01", "startTime": "09:30", "endTime": "11:30", "venue": "NIE3-02-25", "tutor": "Dr Diganta Das" }
+  ]
+}

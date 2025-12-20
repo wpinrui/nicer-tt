@@ -1,0 +1,10 @@
+{
+  "courseName": "QUY512 - Physical Chemistry",
+  "sessions": [
+    { "date": "09/01", "startTime": "10:30", "endTime": "13:30", "venue": "NIE7-01-TR712", "tutor": "A/P Edison Ang" },
+    { "date": "16/01", "startTime": "10:30", "endTime": "13:30", "venue": "NIE7A-B1-03", "tutor": "A/P Edison Ang" },
+    { "date": "23/01", "startTime": "10:30", "endTime": "13:30", "venue": "NIE7-01-TR712", "tutor": "A/P Edison Ang" },
+    { "date": "30/01", "startTime": "10:30", "endTime": "13:30", "venue": "NIE7A-B1-03", "tutor": "A/P Edison Ang" },
+    { "date": "13/02", "startTime": "17:30", "endTime": "19:30", "venue": "NIE7-01-TR712", "tutor": "A/P Edison Ang" }
+  ]
+}

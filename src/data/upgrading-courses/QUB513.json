@@ -1,0 +1,10 @@
+{
+  "courseName": "QUB513 - General Physiology",
+  "sessions": [
+    { "date": "07/01", "startTime": "08:30", "endTime": "11:30", "venue": "NIE7-02-34", "tutor": "A/P Chew" },
+    { "date": "14/01", "startTime": "08:30", "endTime": "11:30", "venue": "NIE7-02-34", "tutor": "A/P Chew" },
+    { "date": "21/01", "startTime": "08:30", "endTime": "11:30", "venue": "NIE7-02-34", "tutor": "A/P He Jie" },
+    { "date": "28/01", "startTime": "08:30", "endTime": "11:30", "venue": "NIE7-02-34", "tutor": "A/P He Jie" },
+    { "date": "04/02", "startTime": "11:30", "endTime": "13:30", "venue": "NIE7-02-01", "tutor": "A/P Chew" }
+  ]
+}

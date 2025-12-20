@@ -1,0 +1,10 @@
+{
+  "courseName": "QUB511 - Biodiversity and Environmental Biology",
+  "sessions": [
+    { "date": "03/01", "startTime": "15:30", "endTime": "19:30", "venue": "Berlayer Creek", "tutor": "Dr Goh" },
+    { "date": "08/01", "startTime": "08:30", "endTime": "11:30", "venue": "NIE7-01-TR713", "tutor": "Dr Lim" },
+    { "date": "15/01", "startTime": "08:30", "endTime": "11:30", "venue": "NIE7-01-TR713", "tutor": "Dr Lim" },
+    { "date": "22/01", "startTime": "08:30", "endTime": "11:30", "venue": "NIE7-01-TR713", "tutor": "Dr Lim" },
+    { "date": "29/01", "startTime": "09:00", "endTime": "11:00", "venue": "NIE7-01-TR713", "tutor": "Dr Lim" }
+  ]
+}

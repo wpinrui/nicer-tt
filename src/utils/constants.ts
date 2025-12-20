@@ -29,9 +29,6 @@ export const DEFAULT_TIMETABLE_NAMES = [
   "Someten's Timetable",
 ] as const;
 
-// Placeholder link for crowdsourcing contribution page
-export const CONTRIBUTION_PAGE_URL = 'https://example.com/contribute'; // TODO: Replace with actual Firebase page
-
 // Fixed colors for custom event types (used in course tag badges)
 export const CUSTOM_EVENT_COLORS: Record<string, string> = {
   Custom: '#9c27b0', // Purple

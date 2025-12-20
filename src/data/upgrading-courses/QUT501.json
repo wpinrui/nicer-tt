@@ -1,0 +1,13 @@
+{
+  "courseName": "QUT501/QUT511 - Language and Literary Components (Tamil)",
+  "sessions": [
+    { "date": "12/01", "startTime": "13:30", "endTime": "17:20", "venue": "NIE3-01-TR309", "tutor": "" },
+    { "date": "15/01", "startTime": "09:30", "endTime": "13:20", "venue": "NIE3-01-TR216", "tutor": "" },
+    { "date": "16/01", "startTime": "13:30", "endTime": "16:20", "venue": "NIE3-01-TR216", "tutor": "" },
+    { "date": "20/01", "startTime": "08:30", "endTime": "12:20", "venue": "NIE3-01-TR309", "tutor": "" },
+    { "date": "22/01", "startTime": "14:30", "endTime": "16:20", "venue": "NIE3-01-TR309", "tutor": "" },
+    { "date": "23/01", "startTime": "13:30", "endTime": "17:20", "venue": "NIE3-01-TR309", "tutor": "" },
+    { "date": "26/01", "startTime": "13:30", "endTime": "16:20", "venue": "NIE3-01-TR310", "tutor": "" },
+    { "date": "29/01", "startTime": "08:30", "endTime": "10:20", "venue": "NIE3-01-TR310", "tutor": "" }
+  ]
+}
