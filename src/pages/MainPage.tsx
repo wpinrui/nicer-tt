@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { Download, Share2, HelpCircle, Settings, ArrowLeft, Menu, X, GitCompare, Search } from 'lucide-react';
+import type { UploadSectionHandle } from '../components/UploadSection';
+import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents, useMainPageState, useDebouncedValue } from '../hooks';
 import { generateIcs, downloadIcs } from '../utils/generateIcs';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
-import { useTimetableStorage, useLocalStorage, useShareData, useFilteredEvents, useMainPageState, useDebouncedValue } from '../hooks';
 import { Modal, OptionsPanel, FilterSection, EventsList, ShareWelcomeModal, ShareSelectModal, PrivacyNoticeModal, CompareModal, CompareFilters, EventsCompareView, UploadSection } from '../components';
-import type { UploadSectionHandle } from '../components/UploadSection';
 import HelpPage from './HelpPage';
 import './MainPage.scss';
 

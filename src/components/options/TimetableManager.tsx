@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { Upload, Link, Pencil, Check, Eye, Trash2 } from 'lucide-react';
-import { TOAST_DURATION_MS } from '../../utils/constants';
 import type { Timetable, TimetableEvent } from '../../types';
+import { TOAST_DURATION_MS } from '../../utils/constants';
 import { parseHtmlTimetable } from '../../utils/parseHtml';
 import { parseIcs } from '../../utils/parseIcs';
 import { decodeShareUrl } from '../../utils/shareUtils';

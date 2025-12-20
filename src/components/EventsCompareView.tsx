@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
 import { ArrowRight, ArrowLeft, ArrowLeftRight, Utensils } from 'lucide-react';
-import { formatTime12Hour, isToday } from '../utils/formatters';
-import { EventCard } from './EventCard';
 import type { Timetable, CompareFilter, TravelConfig, MealConfig } from '../types';
+import { formatTime12Hour, isToday } from '../utils/formatters';
 import {
   processEvents,
   getAllDates,
@@ -10,6 +9,7 @@ import {
   calculateTravelInfo,
   calculateMealInfo,
 } from '../utils/compareUtils';
+import { EventCard } from './EventCard';
 import styles from './EventsCompareView.module.scss';
 
 interface EventsCompareViewProps {

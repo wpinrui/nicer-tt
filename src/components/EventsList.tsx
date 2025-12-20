@@ -1,5 +1,5 @@
-import { EventGroup } from './EventGroup';
 import type { GroupedEvent } from '../types';
+import { EventGroup } from './EventGroup';
 import styles from './EventsList.module.scss';
 
 interface EventsListProps {

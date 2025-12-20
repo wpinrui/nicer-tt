@@ -1,6 +1,6 @@
+import type { GroupedEvent } from '../types';
 import { isToday } from '../utils/formatters';
 import { EventCard } from './EventCard';
-import type { GroupedEvent } from '../types';
 import styles from './EventGroup.module.scss';
 
 interface EventGroupProps {

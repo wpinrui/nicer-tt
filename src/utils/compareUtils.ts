@@ -1,6 +1,6 @@
-import { createSortKey, getDateSearchString } from './formatters';
-import { MEAL_BUFFER_MINUTES, DEFAULT_MEAL_GAP_DURATION } from '../shared/constants';
 import type { TimetableEvent, EventItem, GroupedEvent, TravelInfo, MealInfo } from '../types';
+import { MEAL_BUFFER_MINUTES, DEFAULT_MEAL_GAP_DURATION } from '../shared/constants';
+import { createSortKey, getDateSearchString } from './formatters';
 
 // Convert time string "HHMM" to minutes since midnight
 export function timeToMinutes(time: string): number {

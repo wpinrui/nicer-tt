@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import MainPage from './pages/MainPage';
 import { Analytics } from '@vercel/analytics/react';
 import { STORAGE_KEYS } from './utils/constants';
 import { logError } from './utils/errors';
+import MainPage from './pages/MainPage';
 import './App.scss';
 
 function App() {
