@@ -54,10 +54,7 @@ export function ExportOptionsModal({
           )}
 
           {hasCustom && (
-            <label
-              className={styles.checkboxLabel}
-              style={{ marginTop: hasUpgrading ? '0.5rem' : 0 }}
-            >
+            <label className={styles.checkboxLabel}>
               <input
                 type="checkbox"
                 checked={includeCustom}

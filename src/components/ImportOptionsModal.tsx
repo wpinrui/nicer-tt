@@ -72,7 +72,7 @@ export function ImportOptionsModal({ shareData, onConfirm, onCancel }: ImportOpt
           </label>
 
           {hasCustom && (
-            <label className={styles.checkboxLabel} style={{ marginTop: '0.5rem' }}>
+            <label className={styles.checkboxLabel}>
               <input
                 type="checkbox"
                 checked={includeCustom}
@@ -84,7 +84,7 @@ export function ImportOptionsModal({ shareData, onConfirm, onCancel }: ImportOpt
           )}
 
           {hasUpgrading && (
-            <label className={styles.checkboxLabel} style={{ marginTop: '0.5rem' }}>
+            <label className={styles.checkboxLabel}>
               <input
                 type="checkbox"
                 checked={includeUpgrading}

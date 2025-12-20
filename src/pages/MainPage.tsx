@@ -50,6 +50,16 @@ import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
 import { downloadIcs, generateIcs } from '../utils/generateIcs';
 import HelpPage from './HelpPage';
 
+/**
+ * Filters custom events based on export options.
+ */
+function filterCustomEventsByType(events: CustomEvent[], options: ExportOptions): CustomEvent[] {
+  return events.filter((event) => {
+    if (event.eventType === 'upgrading') return options.includeUpgradingEvents;
+    return options.includeCustomEvents;
+  });
+}
+
 function MainPage() {
   const {
     events,
@@ -245,24 +255,15 @@ function MainPage() {
 
     if (action === 'download') {
       if (!displayEvents || !activeTimetable) return;
-      // Filter custom events based on options
-      const filteredCustomEvents = customEvents.filter((event) => {
-        if (event.eventType === 'upgrading') return options.includeUpgradingEvents;
-        return options.includeCustomEvents;
-      });
-      // For ICS download, merge filtered custom events into events array
+      const filteredCustomEvents = filterCustomEventsByType(customEvents, options);
       const eventsToExport =
         filteredCustomEvents.length > 0
           ? [...displayEvents, ...filteredCustomEvents]
           : displayEvents;
       downloadIcs(generateIcs(eventsToExport));
     } else if (action === 'share' && pendingShareTimetable) {
-      // Get custom events for the timetable being shared
       const timetableCustomEvents = getCustomEventsForTimetable(pendingShareTimetable.id);
-      const filteredCustomEvents = timetableCustomEvents.filter((event) => {
-        if (event.eventType === 'upgrading') return options.includeUpgradingEvents;
-        return options.includeCustomEvents;
-      });
+      const filteredCustomEvents = filterCustomEventsByType(timetableCustomEvents, options);
       createShareLink(
         pendingShareTimetable.events,
         pendingShareTimetable.fileName || pendingShareTimetable.name,
