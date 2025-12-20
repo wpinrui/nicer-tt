@@ -1,16 +1,18 @@
-import { User } from 'lucide-react';
+import { Pencil, Trash2, User } from 'lucide-react';
 import { memo } from 'react';
 
-import type { EventItem } from '../types';
+import type { DisplayEventItem, EventItem } from '../types';
 import { formatTime12Hour, formatTutor, formatVenue } from '../utils/formatters';
 import styles from './EventCard.module.scss';
 
 interface EventCardProps {
-  event: EventItem;
+  event: EventItem | DisplayEventItem;
   showTutor: boolean;
   courseColor: string;
   onCourseClick?: (course: string) => void;
   isHighlighted?: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 export const EventCard = memo(function EventCard({
@@ -19,11 +21,22 @@ export const EventCard = memo(function EventCard({
   courseColor,
   onCourseClick,
   isHighlighted = false,
+  onEdit,
+  onDelete,
 }: EventCardProps) {
   const isClickable = !!onCourseClick;
+  const isCustom = 'isCustom' in event && event.isCustom;
+
+  const classNames = [
+    styles.eventItem,
+    isHighlighted ? styles.eventHighlighted : '',
+    isCustom ? styles.eventCustom : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <li className={`${styles.eventItem} ${isHighlighted ? styles.eventHighlighted : ''}`}>
+    <li className={classNames}>
       <span className={styles.eventTime}>
         <span className={styles.timeStart}>{formatTime12Hour(event.startTime)}</span>
         <span className={styles.timeSeparator}>–</span>
@@ -36,9 +49,10 @@ export const EventCard = memo(function EventCard({
           onClick={isClickable ? () => onCourseClick(event.course) : undefined}
           title={isClickable ? `Filter by ${event.course}` : undefined}
         >
-          {event.course}
+          {event.course || 'Custom'}
         </span>
       </span>
+      {isCustom && <span className={styles.customBadge}>Custom</span>}
       <span className={styles.eventGroup}>{event.group}</span>
       {event.venue && <span className={styles.eventVenue}>@ {formatVenue(event.venue)}</span>}
       {event.tutor &&
@@ -52,6 +66,28 @@ export const EventCard = memo(function EventCard({
             <User size={14} />
           </span>
         ))}
+      {isCustom && (onEdit || onDelete) && (
+        <span className={styles.customActions}>
+          {onEdit && (
+            <button
+              className={styles.customActionBtn}
+              onClick={onEdit}
+              title="Edit custom event"
+            >
+              <Pencil size={14} />
+            </button>
+          )}
+          {onDelete && (
+            <button
+              className={`${styles.customActionBtn} ${styles.deleteBtn}`}
+              onClick={onDelete}
+              title="Delete custom event"
+            >
+              <Trash2 size={14} />
+            </button>
+          )}
+        </span>
+      )}
     </li>
   );
 });

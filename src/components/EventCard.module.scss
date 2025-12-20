@@ -25,6 +25,80 @@
   }
 }
 
+.eventCustom {
+  border-left: 3px solid var(--color-custom-border);
+  background: var(--color-custom-bg);
+  margin: 0 -0.5rem;
+  padding: 0.4rem 0.5rem 0.4rem calc(0.5rem + 3px);
+  border-radius: 0 6px 6px 0;
+  position: relative;
+
+  &.eventHighlighted {
+    background: linear-gradient(
+      to right,
+      var(--color-custom-bg),
+      rgba(100, 108, 255, 0.1)
+    );
+
+    html.dark & {
+      background: linear-gradient(
+        to right,
+        var(--color-custom-bg),
+        rgba(100, 108, 255, 0.2)
+      );
+    }
+  }
+}
+
+.customBadge {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  background: var(--color-custom-badge-bg);
+  color: var(--color-custom-badge-text);
+  border-radius: 4px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.customActions {
+  display: none;
+  gap: 0.25rem;
+  margin-left: auto;
+  flex-shrink: 0;
+
+  .eventCustom:hover & {
+    display: flex;
+  }
+
+  @include mobile {
+    // Always show on mobile since no hover
+    display: flex;
+  }
+}
+
+.customActionBtn {
+  padding: 0.25rem;
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+
+  &:hover {
+    background: var(--color-bg-hover);
+    color: var(--color-primary);
+  }
+
+  &.deleteBtn:hover {
+    color: var(--color-error);
+    background: var(--color-error-light);
+  }
+}
+
 .eventTime {
   font-size: 0.85rem;
   color: var(--color-text-primary);

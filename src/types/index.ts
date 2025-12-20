@@ -146,3 +146,38 @@ export interface MealConfig {
   /** Dinner window end hour (24-hour format) */
   dinnerEnd: number;
 }
+
+// =============================================================================
+// Custom Event Types
+// =============================================================================
+
+/**
+ * A custom event created by the user (not parsed from NIE).
+ * Extends TimetableEvent with metadata for custom event management.
+ */
+export interface CustomEvent extends TimetableEvent {
+  /** Unique identifier for this custom event */
+  id: string;
+  /** When this event was created (timestamp) */
+  createdAt: number;
+  /** When this event was last modified (timestamp) */
+  updatedAt: number;
+}
+
+/**
+ * Storage format for custom events.
+ * Custom events are stored per-timetable for isolation.
+ */
+export interface CustomEventsStore {
+  [timetableId: string]: CustomEvent[];
+}
+
+/**
+ * Extended event item for display that may be a custom event.
+ */
+export interface DisplayEventItem extends EventItem {
+  /** Whether this is a custom event */
+  isCustom?: boolean;
+  /** Custom event ID (only present if isCustom is true) */
+  customEventId?: string;
+}

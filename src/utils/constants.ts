@@ -12,6 +12,7 @@ export const STORAGE_KEYS = {
   SHOW_TUTOR: 'nie-show-tutor',
   HAS_SEEN_SHARE_TIP: 'nie-has-seen-share-tip',
   CUSTOM_BACKGROUND: 'nie-custom-background',
+  CUSTOM_EVENTS: 'nie-custom-events', // CustomEventsStore JSON
 } as const;
 
 // Default name sequence for added timetables

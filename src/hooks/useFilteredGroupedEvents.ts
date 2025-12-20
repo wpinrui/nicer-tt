@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import type { EventItem, GroupedEvent, TimetableEvent } from '../types';
+import type { CustomEvent, DisplayEventItem, TimetableEvent } from '../types';
 import {
   createSortKey,
   formatDateDisplay,
@@ -15,8 +15,17 @@ interface FilterOptions {
   selectedDate: string | null;
 }
 
+/**
+ * Extended GroupedEvent that uses DisplayEventItem for custom event support.
+ */
+interface DisplayGroupedEvent {
+  date: string;
+  sortKey: string;
+  events: DisplayEventItem[];
+}
+
 interface UseFilteredGroupedEventsResult {
-  groupedByDate: GroupedEvent[];
+  groupedByDate: DisplayGroupedEvent[];
   totalEvents: number;
   filteredCount: number;
 }
@@ -24,8 +33,10 @@ interface UseFilteredGroupedEventsResult {
 /**
  * Applies filters to events and groups them by date.
  * Filters include: search query, course selection, hide past dates, and date picker.
+ * Supports both regular events and custom events (marked with isCustom flag).
  *
  * @param events - Array of timetable events (or null if no data loaded)
+ * @param customEvents - Array of custom events to merge with regular events
  * @param filters - Filter options to apply
  * @returns groupedByDate - Filtered events grouped by date, sorted chronologically
  * @returns totalEvents - Total count before filtering
@@ -33,12 +44,13 @@ interface UseFilteredGroupedEventsResult {
  */
 export function useFilteredGroupedEvents(
   events: TimetableEvent[] | null,
+  customEvents: CustomEvent[],
   filters: FilterOptions
 ): UseFilteredGroupedEventsResult {
   const { searchQuery, selectedCourses, showPastDates, selectedDate } = filters;
 
   return useMemo(() => {
-    if (!events) {
+    if (!events && customEvents.length === 0) {
       return {
         groupedByDate: [],
         totalEvents: 0,
@@ -46,7 +58,7 @@ export function useFilteredGroupedEvents(
       };
     }
 
-    const dateMap = new Map<string, GroupedEvent>();
+    const dateMap = new Map<string, DisplayGroupedEvent>();
     let total = 0;
     let filtered = 0;
 
@@ -63,51 +75,75 @@ export function useFilteredGroupedEvents(
       filterDay = day;
     }
 
-    for (const event of events) {
-      for (const dateStr of event.dates) {
-        total++;
+    /**
+     * Process a single event-date combination and add to the map if it passes filters.
+     */
+    const processEventDate = (
+      event: TimetableEvent,
+      dateStr: string,
+      isCustom: boolean,
+      customEventId?: string
+    ) => {
+      total++;
 
-        const sortKey = createSortKey(dateStr);
+      const sortKey = createSortKey(dateStr);
 
-        // Filter past dates if not showing them
-        if (!showPastDates && sortKey < todaySortKey) {
-          continue;
+      // Filter past dates if not showing them
+      if (!showPastDates && sortKey < todaySortKey) {
+        return;
+      }
+
+      // Filter by selected date (match month and day only)
+      if (filterMonth !== null && filterDay !== null) {
+        const [eventDay, eventMonth] = dateStr.split('/').map(Number);
+        if (eventMonth !== filterMonth || eventDay !== filterDay) {
+          return;
         }
+      }
 
-        // Filter by selected date (match month and day only)
-        if (filterMonth !== null && filterDay !== null) {
-          const [eventDay, eventMonth] = dateStr.split('/').map(Number);
-          if (eventMonth !== filterMonth || eventDay !== filterDay) {
-            continue;
-          }
+      // Apply course filter (only for events with a course)
+      if (selectedCourses.size > 0 && event.course && !selectedCourses.has(event.course)) {
+        return;
+      }
+
+      // Apply search filter
+      if (!matchesEventSearch(event, dateStr, searchQuery)) {
+        return;
+      }
+
+      filtered++;
+
+      const displayDate = formatDateDisplay(dateStr);
+      if (!dateMap.has(sortKey)) {
+        dateMap.set(sortKey, { date: displayDate, sortKey, events: [] });
+      }
+
+      const eventItem: DisplayEventItem = {
+        course: event.course,
+        group: event.group,
+        startTime: event.startTime,
+        endTime: event.endTime,
+        venue: event.venue,
+        tutor: event.tutor,
+        isCustom,
+        customEventId,
+      };
+      dateMap.get(sortKey)!.events.push(eventItem);
+    };
+
+    // Process regular events
+    if (events) {
+      for (const event of events) {
+        for (const dateStr of event.dates) {
+          processEventDate(event, dateStr, false);
         }
+      }
+    }
 
-        // Apply course filter
-        if (selectedCourses.size > 0 && !selectedCourses.has(event.course)) {
-          continue;
-        }
-
-        // Apply search filter
-        if (!matchesEventSearch(event, dateStr, searchQuery)) {
-          continue;
-        }
-
-        filtered++;
-
-        const displayDate = formatDateDisplay(dateStr);
-        if (!dateMap.has(sortKey)) {
-          dateMap.set(sortKey, { date: displayDate, sortKey, events: [] });
-        }
-
-        const eventItem: EventItem = {
-          course: event.course,
-          group: event.group,
-          startTime: event.startTime,
-          endTime: event.endTime,
-          venue: event.venue,
-          tutor: event.tutor,
-        };
-        dateMap.get(sortKey)!.events.push(eventItem);
+    // Process custom events
+    for (const customEvent of customEvents) {
+      for (const dateStr of customEvent.dates) {
+        processEventDate(customEvent, dateStr, true, customEvent.id);
       }
     }
 
@@ -123,5 +159,5 @@ export function useFilteredGroupedEvents(
       totalEvents: total,
       filteredCount: hasFilters ? filtered : total,
     };
-  }, [events, searchQuery, selectedCourses, showPastDates, selectedDate]);
+  }, [events, customEvents, searchQuery, selectedCourses, showPastDates, selectedDate]);
 }

@@ -6,18 +6,22 @@ import {
   GitCompare,
   HelpCircle,
   Menu,
+  Plus,
   Search,
   Settings,
   Share2,
   X,
 } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
+  AddEventModal,
   CompareFilters,
   CompareModal,
   EventsCompareView,
   EventsList,
+  ExportMenu,
+  ExportOptionsModal,
   FilterSection,
   Modal,
   OptionsPanel,
@@ -28,6 +32,7 @@ import {
 } from '../components';
 import type { UploadSectionHandle } from '../components/UploadSection';
 import {
+  useCustomEvents,
   useDebouncedValue,
   useFilteredEvents,
   useLocalStorage,
@@ -35,6 +40,8 @@ import {
   useShareData,
   useTimetableStorage,
 } from '../hooks';
+import type { CustomEventInput } from '../hooks/useCustomEvents';
+import type { CustomEvent } from '../types';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
 import { downloadIcs, generateIcs } from '../utils/generateIcs';
 import HelpPage from './HelpPage';
@@ -57,6 +64,18 @@ function MainPage() {
   const [showTutor, setShowTutor] = useLocalStorage(STORAGE_KEYS.SHOW_TUTOR, true);
   const [switchedToast, setSwitchedToast] = useState<string | null>(null);
   const uploadRef = useRef<UploadSectionHandle>(null);
+
+  // Custom events
+  const {
+    customEvents,
+    addCustomEvent,
+    updateCustomEvent,
+    deleteCustomEvent,
+    getCustomEvent,
+  } = useCustomEvents(activeTimetable?.id || null);
+  const [isAddEventModalOpen, setAddEventModalOpen] = useState(false);
+  const [editingCustomEvent, setEditingCustomEvent] = useState<CustomEvent | null>(null);
+  const [pendingExportAction, setPendingExportAction] = useState<'download' | 'share' | null>(null);
 
   const {
     filterState,
@@ -119,9 +138,13 @@ function MainPage() {
   const displayEvents = previewData?.events ?? events;
   const isViewingPreview = previewData !== null;
 
+  // Only show custom events when viewing the active timetable (not preview)
+  const displayCustomEvents = isViewingPreview ? [] : customEvents;
+
   const { groupedByDate, totalEvents, courseColorMap, uniqueCourses, filteredCount } =
     useFilteredEvents(
       displayEvents,
+      displayCustomEvents,
       debouncedSearchQuery,
       selectedCourses,
       showPastDates,
@@ -155,13 +178,52 @@ function MainPage() {
   };
 
   const handleDownload = () => {
-    if (displayEvents) downloadIcs(generateIcs(displayEvents));
+    if (!displayEvents) return;
+    // If custom events exist, show options modal first
+    if (customEvents.length > 0) {
+      setPendingExportAction('download');
+    } else {
+      downloadIcs(generateIcs(displayEvents));
+    }
   };
 
   const handleShare = () => {
-    if (timetables.length > 1) setShareSelectModalOpen(true);
-    else if (activeTimetable)
+    // If custom events exist, show options modal first
+    if (customEvents.length > 0) {
+      setPendingExportAction('share');
+    } else if (timetables.length > 1) {
+      setShareSelectModalOpen(true);
+    } else if (activeTimetable) {
       createShareLink(activeTimetable.events, activeTimetable.fileName || activeTimetable.name);
+    }
+  };
+
+  const handleExportConfirm = (includeCustomEvents: boolean) => {
+    const action = pendingExportAction;
+    setPendingExportAction(null);
+
+    if (!displayEvents || !activeTimetable) return;
+
+    // Merge custom events if user chose to include them
+    const eventsToExport = includeCustomEvents
+      ? [...displayEvents, ...customEvents]
+      : displayEvents;
+
+    if (action === 'download') {
+      downloadIcs(generateIcs(eventsToExport));
+    } else if (action === 'share') {
+      if (timetables.length > 1) {
+        // For share select modal, we need to handle custom event inclusion differently
+        // Store the choice and pass through
+        setShareSelectModalOpen(true);
+      } else {
+        createShareLink(eventsToExport, activeTimetable.fileName || activeTimetable.name);
+      }
+    }
+  };
+
+  const handleExportCancel = () => {
+    setPendingExportAction(null);
   };
 
   const handleShareTimetable = (timetable: (typeof timetables)[0]) => {
@@ -196,6 +258,50 @@ function MainPage() {
     return compareMode ? 'Change comparison' : 'Compare timetables';
   };
 
+  // Custom event handlers
+  const handleAddEventClick = useCallback(() => {
+    setEditingCustomEvent(null);
+    setAddEventModalOpen(true);
+  }, []);
+
+  const handleEditCustomEvent = useCallback(
+    (eventId: string) => {
+      const event = getCustomEvent(eventId);
+      if (event) {
+        setEditingCustomEvent(event);
+        setAddEventModalOpen(true);
+      }
+    },
+    [getCustomEvent]
+  );
+
+  const handleDeleteCustomEvent = useCallback(
+    (eventId: string) => {
+      if (window.confirm('Delete this custom event?')) {
+        deleteCustomEvent(eventId);
+      }
+    },
+    [deleteCustomEvent]
+  );
+
+  const handleSaveCustomEvent = useCallback(
+    (eventInput: CustomEventInput) => {
+      if (editingCustomEvent) {
+        updateCustomEvent(editingCustomEvent.id, eventInput);
+      } else {
+        addCustomEvent(eventInput);
+      }
+      setAddEventModalOpen(false);
+      setEditingCustomEvent(null);
+    },
+    [editingCustomEvent, addCustomEvent, updateCustomEvent]
+  );
+
+  const handleCloseAddEventModal = useCallback(() => {
+    setAddEventModalOpen(false);
+    setEditingCustomEvent(null);
+  }, []);
+
   const leftTimetable = useMemo(
     () => (compareTimetables ? getTimetable(compareTimetables[0]) : null),
     [compareTimetables, getTimetable]
@@ -219,6 +325,13 @@ function MainPage() {
           </h1>
           <div className="header-actions desktop-only">
             <button
+              onClick={handleAddEventClick}
+              className="header-btn"
+              title="Add custom event"
+            >
+              <Plus size={14} /> Add Event
+            </button>
+            <button
               onClick={handleCompareClick}
               className={`header-btn ${compareMode ? 'header-btn-active' : ''}`}
               disabled={timetables.length === 0}
@@ -226,12 +339,7 @@ function MainPage() {
             >
               <GitCompare size={14} /> {compareMode ? 'Comparing' : 'Compare'}
             </button>
-            <button onClick={handleDownload} className="header-btn">
-              <Download size={16} /> Download .ics
-            </button>
-            <button onClick={handleShare} className="header-btn">
-              <Share2 size={14} /> Share (copy timetable link)
-            </button>
+            <ExportMenu onDownload={handleDownload} onShare={handleShare} />
             <button onClick={() => setOptionsPanelOpen(true)} className="header-btn">
               <Settings size={14} /> Options
             </button>
@@ -241,6 +349,14 @@ function MainPage() {
           </button>
           {isMobileMenuOpen && (
             <div className="mobile-menu">
+              <button
+                onClick={() => {
+                  handleAddEventClick();
+                  setMobileMenuOpen(false);
+                }}
+              >
+                <Plus size={18} /> Add Event
+              </button>
               <button
                 onClick={() => {
                   handleCompareClick();
@@ -420,6 +536,8 @@ function MainPage() {
                   courseColorMap={courseColorMap}
                   showTutor={showTutor}
                   onCourseClick={handleCourseClick}
+                  onEditCustomEvent={handleEditCustomEvent}
+                  onDeleteCustomEvent={handleDeleteCustomEvent}
                 />
               </div>
             </>
@@ -532,6 +650,23 @@ function MainPage() {
             share link or file.
           </p>
         </Modal>
+      )}
+
+      {isAddEventModalOpen && (
+        <AddEventModal
+          onClose={handleCloseAddEventModal}
+          onSave={handleSaveCustomEvent}
+          editingEvent={editingCustomEvent}
+        />
+      )}
+
+      {pendingExportAction && (
+        <ExportOptionsModal
+          customEventCount={customEvents.length}
+          actionLabel={pendingExportAction === 'download' ? 'Download .ics' : 'Share Timetable'}
+          onConfirm={handleExportConfirm}
+          onCancel={handleExportCancel}
+        />
       )}
     </div>
   );
