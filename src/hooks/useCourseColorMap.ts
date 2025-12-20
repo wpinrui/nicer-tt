@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import type { TimetableEvent } from '../types';
-import { COURSE_COLORS } from '../utils/constants';
+import { COURSE_COLORS, CUSTOM_EVENT_COLORS } from '../utils/constants';
 
 interface UseCourseColorMapResult {
   courseColorMap: Map<string, string>;
@@ -38,12 +38,6 @@ export function useCourseColorMap(events: TimetableEvent[] | null): UseCourseCol
         coursesSet.add(event.course);
       }
     }
-
-    // Fixed colors for custom event types
-    const CUSTOM_EVENT_COLORS: Record<string, string> = {
-      Custom: '#9c27b0', // Purple
-      Upgrading: '#16a085', // Teal
-    };
 
     // Sort regular courses alphabetically, then append custom event types at the end
     const regularCourses = Array.from(coursesSet)
