@@ -30,8 +30,18 @@ export async function submitSchedule(input: NewSubmissionInput): Promise<string>
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to submit');
+    // Handle non-JSON error responses (e.g., 404 from dev server)
+    const text = await response.text();
+    let message = 'Failed to submit';
+    try {
+      const error = JSON.parse(text);
+      message = error.error || message;
+    } catch {
+      if (response.status === 404) {
+        message = 'API not available. Run "vercel dev" for local testing.';
+      }
+    }
+    throw new Error(message);
   }
 
   const result: SubmitResponse = await response.json();

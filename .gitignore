@@ -30,6 +30,7 @@ agents/
 
 # Vercel
 .vercel/
+.vercel
 
 # Environment
 .env*.local
