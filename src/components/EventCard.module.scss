@@ -25,38 +25,29 @@
   }
 }
 
-.eventCustom {
-  border-left: 3px solid var(--color-custom-border);
-  background: var(--color-custom-bg);
+@mixin custom-event-style($border-color, $bg-color) {
+  border-left: 3px solid $border-color;
+  background: $bg-color;
   margin: 0 -0.5rem 0 calc(-0.5rem - 3px);
   padding: 0.4rem 0.5rem;
   border-radius: 0 6px 6px 0;
   position: relative;
 
   &.eventHighlighted {
-    background: linear-gradient(to right, var(--color-custom-bg), rgba(100, 108, 255, 0.1));
+    background: linear-gradient(to right, $bg-color, rgba(100, 108, 255, 0.1));
 
     html.dark & {
-      background: linear-gradient(to right, var(--color-custom-bg), rgba(100, 108, 255, 0.2));
+      background: linear-gradient(to right, $bg-color, rgba(100, 108, 255, 0.2));
     }
   }
 }
 
+.eventCustom {
+  @include custom-event-style(var(--color-custom-border), var(--color-custom-bg));
+}
+
 .eventUpgrading {
-  border-left: 3px solid var(--color-upgrading-border);
-  background: var(--color-upgrading-bg);
-  margin: 0 -0.5rem 0 calc(-0.5rem - 3px);
-  padding: 0.4rem 0.5rem;
-  border-radius: 0 6px 6px 0;
-  position: relative;
-
-  &.eventHighlighted {
-    background: linear-gradient(to right, var(--color-upgrading-bg), rgba(100, 108, 255, 0.1));
-
-    html.dark & {
-      background: linear-gradient(to right, var(--color-upgrading-bg), rgba(100, 108, 255, 0.2));
-    }
-  }
+  @include custom-event-style(var(--color-upgrading-border), var(--color-upgrading-bg));
 }
 
 .customBadge {
