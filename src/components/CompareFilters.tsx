@@ -10,7 +10,7 @@ import {
   Users,
   Utensils,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import type { CompareFilter, MealConfig, TravelConfig } from '../types';
 import { MealConfigForm, MobileCompareSheet, TravelConfigForm } from './compare';
@@ -77,23 +77,29 @@ export function CompareFilters({
   const [isConfigModalOpen, setConfigModalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(() => window.matchMedia(MOBILE_BREAKPOINT).matches);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia(MOBILE_BREAKPOINT);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
+  const handleMediaQueryChange = useCallback((e: MediaQueryListEvent) => {
+    setIsMobile(e.matches);
   }, []);
 
-  const handleFilterClick = (filter: CompareFilter) => {
-    if (compareFilter === filter) {
-      onFilterChange('none');
-    } else {
-      onFilterChange(filter);
-      if (isMobile && (filter === 'travel' || filter === 'eat')) {
-        setConfigModalOpen(true);
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(MOBILE_BREAKPOINT);
+    mediaQuery.addEventListener('change', handleMediaQueryChange);
+    return () => mediaQuery.removeEventListener('change', handleMediaQueryChange);
+  }, [handleMediaQueryChange]);
+
+  const handleFilterClick = useCallback(
+    (filter: CompareFilter) => {
+      if (compareFilter === filter) {
+        onFilterChange('none');
+      } else {
+        onFilterChange(filter);
+        if (isMobile && (filter === 'travel' || filter === 'eat')) {
+          setConfigModalOpen(true);
+        }
       }
-    }
-  };
+    },
+    [compareFilter, onFilterChange, isMobile]
+  );
 
   const activeFilterLabel = FILTER_BUTTONS.find((f) => f.id === compareFilter)?.label || 'None';
   const needsConfig = compareFilter === 'travel' || compareFilter === 'eat';

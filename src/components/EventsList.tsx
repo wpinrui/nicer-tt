@@ -1,4 +1,5 @@
 import type { GroupedEvent } from '../types';
+import { useRenderTimer } from '../utils/perf';
 import { EventGroup } from './EventGroup';
 import styles from './EventsList.module.scss';
 
@@ -15,6 +16,8 @@ export function EventsList({
   showTutor,
   onCourseClick,
 }: EventsListProps) {
+  useRenderTimer('EventsList');
+
   if (groupedByDate.length === 0) {
     return <div className={styles.noResults}>No events match your filters</div>;
   }
