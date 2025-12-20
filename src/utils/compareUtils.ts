@@ -1,6 +1,6 @@
 import { DEFAULT_MEAL_GAP_DURATION, MEAL_BUFFER_MINUTES } from '../shared/constants';
 import type { EventItem, GroupedEvent, MealInfo, TimetableEvent, TravelInfo } from '../types';
-import { createSortKey, getDateSearchString } from './formatters';
+import { createSortKey, formatDateFromParts, matchesEventSearch } from './formatters';
 
 // Convert time string "HHMM" to minutes since midnight
 export function timeToMinutes(time: string): number {
@@ -19,26 +19,13 @@ export function minutesToTime(minutes: number): string {
 // Process timetable events into grouped format
 export function processEvents(events: TimetableEvent[], searchQuery: string): GroupedEvent[] {
   const dateMap = new Map<string, EventItem[]>();
-  const searchLower = searchQuery.toLowerCase();
 
   for (const event of events) {
     for (const dateStr of event.dates) {
       const sortKey = createSortKey(dateStr);
 
       // Apply search filter
-      if (searchQuery) {
-        const searchFields = [
-          event.course,
-          event.group,
-          event.venue,
-          event.tutor,
-          getDateSearchString(dateStr),
-        ]
-          .join(' ')
-          .toLowerCase();
-
-        if (!searchFields.includes(searchLower)) continue;
-      }
+      if (!matchesEventSearch(event, dateStr, searchQuery)) continue;
 
       if (!dateMap.has(sortKey)) {
         dateMap.set(sortKey, []);
@@ -61,15 +48,10 @@ export function processEvents(events: TimetableEvent[], searchQuery: string): Gr
     // Sort events by start time
     eventsList.sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
 
-    // Format date display
     const [year, month, day] = sortKey.split('-').map(Number);
-    const date = new Date(year, month - 1, day);
-    const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
-    const monthName = date.toLocaleDateString('en-US', { month: 'long' });
-
     grouped.push({
       sortKey,
-      date: `${dayName}, ${day} ${monthName}`,
+      date: formatDateFromParts(year, month, day),
       events: eventsList,
     });
   }

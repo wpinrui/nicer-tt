@@ -4,8 +4,8 @@ import type { EventItem, GroupedEvent, TimetableEvent } from '../types';
 import {
   createSortKey,
   formatDateDisplay,
-  getDateSearchString,
   getTodaySortKey,
+  matchesEventSearch,
 } from '../utils/formatters';
 
 interface FilterOptions {
@@ -50,9 +50,8 @@ export function useFilteredGroupedEvents(
     let total = 0;
     let filtered = 0;
 
-    const query = searchQuery.toLowerCase();
     const hasFilters =
-      selectedCourses.size > 0 || query.length > 0 || !showPastDates || selectedDate !== null;
+      selectedCourses.size > 0 || searchQuery.length > 0 || !showPastDates || selectedDate !== null;
     const todaySortKey = getTodaySortKey();
 
     // Parse selected date for filtering (format: YYYY-MM-DD from date input)
@@ -89,15 +88,7 @@ export function useFilteredGroupedEvents(
         }
 
         // Apply search filter
-        const dateSearchStr = getDateSearchString(dateStr);
-        if (
-          query &&
-          !event.course.toLowerCase().includes(query) &&
-          !event.group.toLowerCase().includes(query) &&
-          !event.venue.toLowerCase().includes(query) &&
-          !event.tutor.toLowerCase().includes(query) &&
-          !dateSearchStr.toLowerCase().includes(query)
-        ) {
+        if (!matchesEventSearch(event, dateStr, searchQuery)) {
           continue;
         }
 
