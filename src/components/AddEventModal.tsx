@@ -1,5 +1,5 @@
-import { X } from 'lucide-react';
-import { forwardRef, useCallback, useState } from 'react';
+import { ChevronDown, X } from 'lucide-react';
+import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -44,51 +44,93 @@ function getDayOfWeek(date: Date): string {
   return date.toLocaleDateString('en-US', { weekday: 'long' });
 }
 
+// Time state as { hour, minute } or null
+interface TimeValue {
+  hour: string;
+  minute: string;
+}
+
 /**
- * Converts HHMM string to Date object (for time picker).
+ * Converts HHMM string to TimeValue.
  */
-function timeStringToDate(time: string): Date | null {
+function parseTimeString(time: string): TimeValue | null {
   if (!time || time.length < 4) return null;
-  const hours = parseInt(time.slice(0, 2), 10);
-  const minutes = parseInt(time.slice(2, 4), 10);
-  const date = new Date();
-  date.setHours(hours, minutes, 0, 0);
-  return date;
+  return {
+    hour: time.slice(0, 2),
+    minute: time.slice(2, 4),
+  };
 }
 
 /**
- * Converts Date to HHMM string for storage.
+ * Converts TimeValue to HHMM string for storage.
  */
-function dateToTimeString(date: Date | null): string {
-  if (!date) return '';
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  return `${hours}${minutes}`;
+function timeValueToString(time: TimeValue | null): string {
+  if (!time) return '';
+  return `${time.hour}${time.minute}`;
 }
 
-/**
- * Formats Date to display string for time input.
- */
-function formatTimeDisplay(date: Date | null): string {
-  if (!date) return '';
-  return date.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  });
+// Hours ordered by working hours first (08-18), then evening (19-23), then early morning (00-07)
+const HOURS = [
+  '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18',
+  '19', '20', '21', '22', '23', '00', '01', '02', '03', '04', '05', '06', '07',
+];
+// Minutes as buttons (00, 15, 30, 45)
+const MINUTES = ['00', '15', '30', '45'];
+
+interface TimeDropdownProps {
+  value: string;
+  options: string[];
+  placeholder: string;
+  onChange: (value: string) => void;
 }
 
-// Default times for new events (12:00 PM and 2:00 PM)
-function getDefaultStartTime(): Date {
-  const date = new Date();
-  date.setHours(12, 0, 0, 0);
-  return date;
-}
+function TimeDropdown({ value, options, placeholder, onChange }: TimeDropdownProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-function getDefaultEndTime(): Date {
-  const date = new Date();
-  date.setHours(14, 0, 0, 0);
-  return date;
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isOpen]);
+
+  return (
+    <div className={styles.timeDropdown} ref={containerRef}>
+      <button
+        type="button"
+        className={styles.timeDropdownBtn}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className={value ? '' : styles.timeDropdownPlaceholder}>
+          {value || placeholder}
+        </span>
+        <ChevronDown size={14} />
+      </button>
+      {isOpen && (
+        <div className={styles.timeDropdownList}>
+          {options.map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              className={`${styles.timeDropdownItem} ${opt === value ? styles.timeDropdownItemActive : ''}`}
+              onClick={() => {
+                onChange(opt);
+                setIsOpen(false);
+              }}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 interface CustomInputProps {
@@ -123,11 +165,11 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
     return [];
   });
 
-  const [startTime, setStartTime] = useState<Date | null>(() =>
-    editingEvent ? timeStringToDate(editingEvent.startTime) : null
+  const [startTime, setStartTime] = useState<TimeValue | null>(() =>
+    editingEvent ? parseTimeString(editingEvent.startTime) : null
   );
-  const [endTime, setEndTime] = useState<Date | null>(() =>
-    editingEvent ? timeStringToDate(editingEvent.endTime) : null
+  const [endTime, setEndTime] = useState<TimeValue | null>(() =>
+    editingEvent ? parseTimeString(editingEvent.endTime) : null
   );
   const [eventType, setEventType] = useState<CustomEventType>(
     () => editingEvent?.eventType || 'custom'
@@ -202,8 +244,12 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
     if (!endTime) {
       newErrors.endTime = 'End time is required';
     }
-    if (startTime && endTime && startTime >= endTime) {
-      newErrors.endTime = 'End time must be after start time';
+    if (startTime && endTime) {
+      const startMinutes = parseInt(startTime.hour) * 60 + parseInt(startTime.minute);
+      const endMinutes = parseInt(endTime.hour) * 60 + parseInt(endTime.minute);
+      if (startMinutes >= endMinutes) {
+        newErrors.endTime = 'End time must be after start time';
+      }
     }
 
     // Validate description
@@ -222,8 +268,8 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
     const eventInput: CustomEventInput = {
       dates: sortedDates.map((d) => dateToIso(d)),
       day: getDayOfWeek(sortedDates[0]),
-      startTime: dateToTimeString(startTime),
-      endTime: dateToTimeString(endTime),
+      startTime: timeValueToString(startTime),
+      endTime: timeValueToString(endTime),
       eventType,
       description: description.trim(),
       course: eventType === 'upgrading' ? 'Upgrading' : 'Custom',
@@ -311,52 +357,50 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
           <div className={styles.timeRow}>
             <div className={styles.field}>
               <label className={styles.label}>Start Time</label>
-              <div className={styles.datePickerWrapper}>
-                <DatePicker
-                  selected={startTime}
-                  onChange={(date: Date | null) => {
-                    setStartTime(date);
+              <div className={styles.timeSelect}>
+                <TimeDropdown
+                  value={startTime?.hour || ''}
+                  options={HOURS}
+                  placeholder="HH"
+                  onChange={(hour) => {
+                    setStartTime({ hour, minute: startTime?.minute || '00' });
                     setErrors((prev) => ({ ...prev, startTime: '' }));
                   }}
-                  showTimeSelect
-                  showTimeSelectOnly
-                  timeIntervals={15}
-                  timeCaption="Time"
-                  dateFormat="h:mm aa"
-                  openToDate={getDefaultStartTime()}
-                  customInput={
-                    <CustomDateInput
-                      placeholder="Select time"
-                      value={formatTimeDisplay(startTime)}
-                    />
-                  }
-                  popperClassName={styles.datePickerPopper}
+                />
+                <span className={styles.timeSeparator}>:</span>
+                <TimeDropdown
+                  value={startTime?.minute || ''}
+                  options={MINUTES}
+                  placeholder="MM"
+                  onChange={(minute) => {
+                    setStartTime({ hour: startTime?.hour || '08', minute });
+                    setErrors((prev) => ({ ...prev, startTime: '' }));
+                  }}
                 />
               </div>
               {errors.startTime && <span className={styles.error}>{errors.startTime}</span>}
             </div>
             <div className={styles.field}>
               <label className={styles.label}>End Time</label>
-              <div className={styles.datePickerWrapper}>
-                <DatePicker
-                  selected={endTime}
-                  onChange={(date: Date | null) => {
-                    setEndTime(date);
+              <div className={styles.timeSelect}>
+                <TimeDropdown
+                  value={endTime?.hour || ''}
+                  options={HOURS}
+                  placeholder="HH"
+                  onChange={(hour) => {
+                    setEndTime({ hour, minute: endTime?.minute || '00' });
                     setErrors((prev) => ({ ...prev, endTime: '' }));
                   }}
-                  showTimeSelect
-                  showTimeSelectOnly
-                  timeIntervals={15}
-                  timeCaption="Time"
-                  dateFormat="h:mm aa"
-                  openToDate={getDefaultEndTime()}
-                  customInput={
-                    <CustomDateInput
-                      placeholder="Select time"
-                      value={formatTimeDisplay(endTime)}
-                    />
-                  }
-                  popperClassName={styles.datePickerPopper}
+                />
+                <span className={styles.timeSeparator}>:</span>
+                <TimeDropdown
+                  value={endTime?.minute || ''}
+                  options={MINUTES}
+                  placeholder="MM"
+                  onChange={(minute) => {
+                    setEndTime({ hour: endTime?.hour || '10', minute });
+                    setErrors((prev) => ({ ...prev, endTime: '' }));
+                  }}
                 />
               </div>
               {errors.endTime && <span className={styles.error}>{errors.endTime}</span>}
