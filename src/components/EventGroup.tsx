@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import type { GroupedEvent } from '../types';
 import { isToday } from '../utils/formatters';
 import { EventCard } from './EventCard';
@@ -10,7 +12,12 @@ interface EventGroupProps {
   onCourseClick?: (course: string) => void;
 }
 
-export function EventGroup({ group, showTutor, courseColorMap, onCourseClick }: EventGroupProps) {
+export const EventGroup = memo(function EventGroup({
+  group,
+  showTutor,
+  courseColorMap,
+  onCourseClick,
+}: EventGroupProps) {
   return (
     <div className={styles.dateGroup}>
       <div
@@ -34,4 +41,4 @@ export function EventGroup({ group, showTutor, courseColorMap, onCourseClick }: 
       </ul>
     </div>
   );
-}
+});

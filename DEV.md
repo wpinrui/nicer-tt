@@ -1,5 +1,11 @@
 # Changelog
 
+**v1.3.14 (20 Dec 2025)**
+- Refactor Phase 12: Performance & memory optimizations
+- Wrap event handlers in useCallback (CompareFilters, useShareData)
+- Add React.memo to pure display components (EventCard, EventGroup, FilterSection)
+- Add dev-mode performance monitoring (useRenderTimer in key components)
+
 **v1.3.13 (20 Dec 2025)**
 - Refactor Phase 11: Naming consistency improvements
 - Rename `hidePastDates` → `showPastDates` (positive boolean pattern)

@@ -54,38 +54,42 @@ export function useShareData(hasExistingData: boolean, timetables: Timetable[]) 
     [timetables]
   );
 
+  /**
+   * Processes share data from URL hash.
+   * Wrapped in useCallback for stable reference in event listener.
+   */
+  const processShareHash = useCallback(() => {
+    const decoded = getShareDataFromUrl();
+    if (!decoded) return;
+
+    clearShareHash();
+
+    // Check if shared data matches any existing timetable
+    const match = findMatchingTimetable(decoded.events);
+
+    if (match) {
+      // Found a match - consumer will auto-switch
+      setMatchedTimetable(match);
+      setPendingShareData(null);
+    } else if (hasExistingData) {
+      // No match, but user has data - show modal
+      setPendingShareData(decoded);
+      setShareModalOpen(true);
+      setMatchedTimetable(null);
+    } else {
+      // No match, no existing data - consumer will auto-add
+      setPendingShareData(decoded);
+      setMatchedTimetable(null);
+    }
+  }, [hasExistingData, findMatchingTimetable]);
+
   // Handle share data from URL on mount and hash changes
   useEffect(() => {
-    const processShareHash = () => {
-      const decoded = getShareDataFromUrl();
-      if (!decoded) return;
-
-      clearShareHash();
-
-      // Check if shared data matches any existing timetable
-      const match = findMatchingTimetable(decoded.events);
-
-      if (match) {
-        // Found a match - consumer will auto-switch
-        setMatchedTimetable(match);
-        setPendingShareData(null);
-      } else if (hasExistingData) {
-        // No match, but user has data - show modal
-        setPendingShareData(decoded);
-        setShareModalOpen(true);
-        setMatchedTimetable(null);
-      } else {
-        // No match, no existing data - consumer will auto-add
-        setPendingShareData(decoded);
-        setMatchedTimetable(null);
-      }
-    };
-
     processShareHash();
 
     window.addEventListener('hashchange', processShareHash);
     return () => window.removeEventListener('hashchange', processShareHash);
-  }, [hasExistingData, findMatchingTimetable]);
+  }, [processShareHash]);
 
   /**
    * Creates a share link and copies to clipboard.

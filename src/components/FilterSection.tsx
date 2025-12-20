@@ -1,6 +1,7 @@
 import { Calendar, ChevronDown, ChevronUp, Filter, Search, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 
+import { useRenderTimer } from '../utils/perf';
 import styles from './FilterSection.module.scss';
 
 interface FilterSectionProps {
@@ -24,7 +25,7 @@ function formatDatePill(dateStr: string): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-export function FilterSection({
+export const FilterSection = memo(function FilterSection({
   searchQuery,
   onSearchChange,
   selectedDate,
@@ -38,6 +39,7 @@ export function FilterSection({
   onClearFilters,
   hasActiveFilters,
 }: FilterSectionProps) {
+  useRenderTimer('FilterSection');
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const dateInputRef = useRef<HTMLInputElement>(null);
 
@@ -169,4 +171,4 @@ export function FilterSection({
       )}
     </div>
   );
-}
+});

@@ -10,6 +10,7 @@ import {
   processEvents,
 } from '../utils/compareUtils';
 import { formatTime12Hour, isToday } from '../utils/formatters';
+import { useRenderTimer } from '../utils/perf';
 import { EventCard } from './EventCard';
 import styles from './EventsCompareView.module.scss';
 
@@ -34,6 +35,8 @@ export function EventsCompareView({
   showTutor,
   courseColorMap,
 }: EventsCompareViewProps) {
+  useRenderTimer('EventsCompareView');
+
   const leftGrouped = useMemo(
     () => processEvents(leftTimetable.events, searchQuery),
     [leftTimetable.events, searchQuery]

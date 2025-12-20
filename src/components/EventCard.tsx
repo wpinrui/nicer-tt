@@ -1,4 +1,5 @@
 import { User } from 'lucide-react';
+import { memo } from 'react';
 
 import type { EventItem } from '../types';
 import { formatTime12Hour, formatTutor, formatVenue } from '../utils/formatters';
@@ -12,7 +13,7 @@ interface EventCardProps {
   isHighlighted?: boolean;
 }
 
-export function EventCard({
+export const EventCard = memo(function EventCard({
   event,
   showTutor,
   courseColor,
@@ -53,4 +54,4 @@ export function EventCard({
         ))}
     </li>
   );
-}
+});
