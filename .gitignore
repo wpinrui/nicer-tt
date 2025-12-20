@@ -26,9 +26,14 @@ dist-ssr
 # Claude Code agent files
 agents/
 .claude/
+.claudeignore
 
 # Vercel
 .vercel/
+.vercel
+
+# Environment
+.env*.local
 
 # Source PDFs
 content upgrading/

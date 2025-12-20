@@ -2,12 +2,16 @@ import './App.scss';
 
 import { Analytics } from '@vercel/analytics/react';
 import { useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 
+import { useLocalStorage } from './hooks';
+import ContributePage from './pages/ContributePage';
 import MainPage from './pages/MainPage';
 import { STORAGE_KEYS } from './utils/constants';
 import { logError } from './utils/errors';
 
 function App() {
+  const [darkMode] = useLocalStorage(STORAGE_KEYS.DARK_MODE, true);
   const [customBackground, setCustomBackground] = useState<string | null>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.CUSTOM_BACKGROUND);
@@ -17,6 +21,11 @@ function App() {
       return null;
     }
   });
+
+  // Apply dark mode class to document root
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode);
+  }, [darkMode]);
 
   // Listen for localStorage changes (from OptionsPanel)
   useEffect(() => {
@@ -60,11 +69,28 @@ function App() {
 
   return (
     <div className={`app${isPlainBackground ? ' plain-bg' : ''}`} style={backgroundStyle}>
-      <div className="card">
-        <div className="card-content">
-          <MainPage />
-        </div>
-      </div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div className="card">
+              <div className="card-content">
+                <MainPage />
+              </div>
+            </div>
+          }
+        />
+        <Route
+          path="/contribute"
+          element={
+            <div className="card">
+              <div className="card-content">
+                <ContributePage />
+              </div>
+            </div>
+          }
+        />
+      </Routes>
       <footer className="page-footer">
         <span className="photo-credit">
           {!customBackground && (
