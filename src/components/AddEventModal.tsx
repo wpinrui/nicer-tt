@@ -232,7 +232,7 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
                 onChange={handleDateChange}
                 customInput={<CustomDateInput placeholder="Click to select dates" />}
                 highlightDates={selectedDates}
-                minDate={new Date(CURRENT_YEAR, 0, 1)}
+                minDate={new Date()}
                 maxDate={new Date(CURRENT_YEAR + 1, 11, 31)}
                 calendarClassName={styles.datePicker}
                 popperClassName={styles.datePickerPopper}
