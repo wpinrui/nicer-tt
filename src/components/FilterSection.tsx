@@ -8,8 +8,8 @@ interface FilterSectionProps {
   onSearchChange: (value: string) => void;
   selectedDate: string | null;
   onDateChange: (value: string | null) => void;
-  hidePastDates: boolean;
-  onHidePastChange: (value: boolean) => void;
+  showPastDates: boolean;
+  onShowPastChange: (value: boolean) => void;
   uniqueCourses: string[];
   selectedCourses: Set<string>;
   courseColorMap: Map<string, string>;
@@ -29,8 +29,8 @@ export function FilterSection({
   onSearchChange,
   selectedDate,
   onDateChange,
-  hidePastDates,
-  onHidePastChange,
+  showPastDates,
+  onShowPastChange,
   uniqueCourses,
   selectedCourses,
   courseColorMap,
@@ -98,8 +98,8 @@ export function FilterSection({
         <label className={`${styles.hidePastToggle} ${styles.desktopOnly}`}>
           <input
             type="checkbox"
-            checked={hidePastDates}
-            onChange={(e) => onHidePastChange(e.target.checked)}
+            checked={!showPastDates}
+            onChange={(e) => onShowPastChange(!e.target.checked)}
           />
           <span>Hide past</span>
         </label>
@@ -137,8 +137,8 @@ export function FilterSection({
           <label className={styles.hidePastToggle}>
             <input
               type="checkbox"
-              checked={hidePastDates}
-              onChange={(e) => onHidePastChange(e.target.checked)}
+              checked={!showPastDates}
+              onChange={(e) => onShowPastChange(!e.target.checked)}
             />
             <span>Hide past</span>
           </label>

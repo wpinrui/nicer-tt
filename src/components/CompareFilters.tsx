@@ -74,7 +74,7 @@ export function CompareFilters({
   rightName,
 }: CompareFiltersProps) {
   const [filtersExpanded, setFiltersExpanded] = useState(false);
-  const [showConfigModal, setShowConfigModal] = useState(false);
+  const [isConfigModalOpen, setConfigModalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(() => window.matchMedia(MOBILE_BREAKPOINT).matches);
 
   useEffect(() => {
@@ -90,7 +90,7 @@ export function CompareFilters({
     } else {
       onFilterChange(filter);
       if (isMobile && (filter === 'travel' || filter === 'eat')) {
-        setShowConfigModal(true);
+        setConfigModalOpen(true);
       }
     }
   };
@@ -122,7 +122,7 @@ export function CompareFilters({
       </div>
 
       {needsConfig && (
-        <button className={styles.mobileConfigBtn} onClick={() => setShowConfigModal(true)}>
+        <button className={styles.mobileConfigBtn} onClick={() => setConfigModalOpen(true)}>
           <Settings size={14} />
           <span>Configure {compareFilter === 'travel' ? 'Travel' : 'Meal'} Options</span>
         </button>
@@ -145,8 +145,8 @@ export function CompareFilters({
 
       <MobileCompareSheet
         compareFilter={compareFilter}
-        showConfigModal={showConfigModal}
-        onClose={() => setShowConfigModal(false)}
+        isConfigModalOpen={isConfigModalOpen}
+        onClose={() => setConfigModalOpen(false)}
         travelConfig={travelConfig}
         onTravelConfigChange={onTravelConfigChange}
         mealConfig={mealConfig}

@@ -11,7 +11,7 @@ import {
 interface FilterOptions {
   searchQuery: string;
   selectedCourses: Set<string>;
-  hidePastDates: boolean;
+  showPastDates: boolean;
   selectedDate: string | null;
 }
 
@@ -35,7 +35,7 @@ export function useFilteredGroupedEvents(
   events: TimetableEvent[] | null,
   filters: FilterOptions
 ): UseFilteredGroupedEventsResult {
-  const { searchQuery, selectedCourses, hidePastDates, selectedDate } = filters;
+  const { searchQuery, selectedCourses, showPastDates, selectedDate } = filters;
 
   return useMemo(() => {
     if (!events) {
@@ -52,7 +52,7 @@ export function useFilteredGroupedEvents(
 
     const query = searchQuery.toLowerCase();
     const hasFilters =
-      selectedCourses.size > 0 || query.length > 0 || hidePastDates || selectedDate !== null;
+      selectedCourses.size > 0 || query.length > 0 || !showPastDates || selectedDate !== null;
     const todaySortKey = getTodaySortKey();
 
     // Parse selected date for filtering (format: YYYY-MM-DD from date input)
@@ -70,8 +70,8 @@ export function useFilteredGroupedEvents(
 
         const sortKey = createSortKey(dateStr);
 
-        // Filter past dates if toggle is on
-        if (hidePastDates && sortKey < todaySortKey) {
+        // Filter past dates if not showing them
+        if (!showPastDates && sortKey < todaySortKey) {
           continue;
         }
 
@@ -132,5 +132,5 @@ export function useFilteredGroupedEvents(
       totalEvents: total,
       filteredCount: hasFilters ? filtered : total,
     };
-  }, [events, searchQuery, selectedCourses, hidePastDates, selectedDate]);
+  }, [events, searchQuery, selectedCourses, showPastDates, selectedDate]);
 }

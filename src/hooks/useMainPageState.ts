@@ -7,7 +7,7 @@ export interface FilterState {
   searchQuery: string;
   selectedCourses: Set<string>;
   selectedDate: string | null;
-  hidePastDates: boolean;
+  showPastDates: boolean;
 }
 
 export interface CompareState {
@@ -19,13 +19,13 @@ export interface CompareState {
 }
 
 export interface UIState {
-  showOptions: boolean;
-  showShareWelcome: boolean;
-  showPrivacyNotice: boolean;
-  showShareSelect: boolean;
-  showCompareModal: boolean;
-  showCompareExplanation: boolean;
-  mobileMenuOpen: boolean;
+  isOptionsPanelOpen: boolean;
+  isShareWelcomeModalOpen: boolean;
+  isPrivacyNoticeModalOpen: boolean;
+  isShareSelectModalOpen: boolean;
+  isCompareModalOpen: boolean;
+  isCompareExplanationModalOpen: boolean;
+  isMobileMenuOpen: boolean;
 }
 
 const DEFAULT_MEAL_CONFIG: MealConfig = {
@@ -51,7 +51,7 @@ export function useMainPageState() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [hidePastDates, setHidePastDates] = useState(true);
+  const [showPastDates, setShowPastDates] = useState(false);
 
   // Compare state
   const [compareMode, setCompareMode] = useState(false);
@@ -64,13 +64,13 @@ export function useMainPageState() {
   const [mealConfig, setMealConfig] = useState<MealConfig>(DEFAULT_MEAL_CONFIG);
 
   // UI state
-  const [showOptions, setShowOptions] = useState(false);
-  const [showShareWelcome, setShowShareWelcome] = useState(false);
-  const [showPrivacyNotice, setShowPrivacyNotice] = useState(false);
-  const [showShareSelect, setShowShareSelect] = useState(false);
-  const [showCompareModal, setShowCompareModal] = useState(false);
-  const [showCompareExplanation, setShowCompareExplanation] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isOptionsPanelOpen, setOptionsPanelOpen] = useState(false);
+  const [isShareWelcomeModalOpen, setShareWelcomeModalOpen] = useState(false);
+  const [isPrivacyNoticeModalOpen, setPrivacyNoticeModalOpen] = useState(false);
+  const [isShareSelectModalOpen, setShareSelectModalOpen] = useState(false);
+  const [isCompareModalOpen, setCompareModalOpen] = useState(false);
+  const [isCompareExplanationModalOpen, setCompareExplanationModalOpen] = useState(false);
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Filter handlers
   const toggleCourse = useCallback((course: string) => {
@@ -121,7 +121,7 @@ export function useMainPageState() {
   const handleCompare = useCallback((selection: [string, string]) => {
     setCompareTimetables(selection);
     setCompareMode(true);
-    setShowCompareModal(false);
+    setCompareModalOpen(false);
     setCompareFilter('none');
   }, []);
 
@@ -129,7 +129,7 @@ export function useMainPageState() {
     setCompareMode(false);
     setCompareTimetables(null);
     setCompareFilter('none');
-    setShowCompareModal(false);
+    setCompareModalOpen(false);
   }, []);
 
   // Reset filters when uploading new file
@@ -144,11 +144,11 @@ export function useMainPageState() {
       searchQuery,
       selectedCourses,
       selectedDate,
-      hidePastDates,
+      showPastDates,
     },
     setSearchQuery,
     setSelectedDate,
-    setHidePastDates,
+    setShowPastDates,
     toggleCourse,
     handleCourseClick,
     clearFilters,
@@ -171,20 +171,20 @@ export function useMainPageState() {
 
     // UI state
     uiState: {
-      showOptions,
-      showShareWelcome,
-      showPrivacyNotice,
-      showShareSelect,
-      showCompareModal,
-      showCompareExplanation,
-      mobileMenuOpen,
+      isOptionsPanelOpen,
+      isShareWelcomeModalOpen,
+      isPrivacyNoticeModalOpen,
+      isShareSelectModalOpen,
+      isCompareModalOpen,
+      isCompareExplanationModalOpen,
+      isMobileMenuOpen,
     },
-    setShowOptions,
-    setShowShareWelcome,
-    setShowPrivacyNotice,
-    setShowShareSelect,
-    setShowCompareModal,
-    setShowCompareExplanation,
+    setOptionsPanelOpen,
+    setShareWelcomeModalOpen,
+    setPrivacyNoticeModalOpen,
+    setShareSelectModalOpen,
+    setCompareModalOpen,
+    setCompareExplanationModalOpen,
     setMobileMenuOpen,
   };
 }

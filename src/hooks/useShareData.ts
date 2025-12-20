@@ -11,7 +11,7 @@ interface MatchedTimetable {
   name: string;
 }
 
-interface ShareLinkFallback {
+interface ManualShareModal {
   url: string;
   name: string;
 }
@@ -23,19 +23,19 @@ interface ShareLinkFallback {
  * 1. No share data → Normal operation
  * 2. Share data matches existing timetable → Auto-switch (matchedTimetable set)
  * 3. Share data + no existing data → Auto-add (pendingShareData, no modal)
- * 4. Share data + existing data → Show modal (pendingShareData + showShareModal)
- * 5. User viewing temp → tempViewData set
+ * 4. Share data + existing data → Show modal (pendingShareData + isShareModalOpen)
+ * 5. User viewing temp → previewData set
  *
  * @param hasExistingData - Whether user has any timetable data
  * @param timetables - Array of user's timetables for matching
  */
 export function useShareData(hasExistingData: boolean, timetables: Timetable[]) {
   const [pendingShareData, setPendingShareData] = useState<ShareData | null>(null);
-  const [showShareModal, setShowShareModal] = useState(false);
+  const [isShareModalOpen, setShareModalOpen] = useState(false);
   const [shareMessage, setShareMessage] = useState<string | null>(null);
-  const [tempViewData, setTempViewData] = useState<ShareData | null>(null);
+  const [previewData, setPreviewData] = useState<ShareData | null>(null);
   const [matchedTimetable, setMatchedTimetable] = useState<MatchedTimetable | null>(null);
-  const [shareLinkFallback, setShareLinkFallback] = useState<ShareLinkFallback | null>(null);
+  const [manualShareModal, setManualShareModal] = useState<ManualShareModal | null>(null);
 
   /**
    * Checks if events match any existing timetable.
@@ -72,7 +72,7 @@ export function useShareData(hasExistingData: boolean, timetables: Timetable[]) 
       } else if (hasExistingData) {
         // No match, but user has data - show modal
         setPendingShareData(decoded);
-        setShowShareModal(true);
+        setShareModalOpen(true);
         setMatchedTimetable(null);
       } else {
         // No match, no existing data - consumer will auto-add
@@ -101,13 +101,13 @@ export function useShareData(hasExistingData: boolean, timetables: Timetable[]) 
       setTimeout(() => setShareMessage(null), TOAST_DURATION_MS);
     } catch (e) {
       logError('useShareData:clipboard', e);
-      setShareLinkFallback({ url: shareUrl, name: timetableName });
+      setManualShareModal({ url: shareUrl, name: timetableName });
     }
   }, []);
 
   /** User confirmed adding shared timetable */
   const confirmShare = useCallback(() => {
-    setShowShareModal(false);
+    setShareModalOpen(false);
     const data = pendingShareData;
     setPendingShareData(null);
     return data;
@@ -115,21 +115,21 @@ export function useShareData(hasExistingData: boolean, timetables: Timetable[]) 
 
   /** User chose to view shared timetable temporarily */
   const viewTempShare = useCallback(() => {
-    setShowShareModal(false);
+    setShareModalOpen(false);
     if (pendingShareData) {
-      setTempViewData(pendingShareData);
+      setPreviewData(pendingShareData);
     }
     setPendingShareData(null);
   }, [pendingShareData]);
 
   /** Exit temporary view mode */
   const exitTempView = useCallback(() => {
-    setTempViewData(null);
+    setPreviewData(null);
   }, []);
 
   /** User cancelled the share modal */
   const cancelShare = useCallback(() => {
-    setShowShareModal(false);
+    setShareModalOpen(false);
     setPendingShareData(null);
   }, []);
 
@@ -138,16 +138,16 @@ export function useShareData(hasExistingData: boolean, timetables: Timetable[]) 
    * Only returns data when modal is not shown (no existing data case).
    */
   const getImmediateShareData = useCallback(() => {
-    if (pendingShareData && !showShareModal) {
+    if (pendingShareData && !isShareModalOpen) {
       const data = pendingShareData;
       setPendingShareData(null);
       return data;
     }
     return null;
-  }, [pendingShareData, showShareModal]);
+  }, [pendingShareData, isShareModalOpen]);
 
-  const clearShareLinkFallback = useCallback(() => {
-    setShareLinkFallback(null);
+  const clearManualShareModal = useCallback(() => {
+    setManualShareModal(null);
   }, []);
 
   const clearMatchedTimetable = useCallback(() => {
@@ -156,11 +156,11 @@ export function useShareData(hasExistingData: boolean, timetables: Timetable[]) 
 
   return {
     pendingShareData,
-    showShareModal,
+    isShareModalOpen,
     shareMessage,
-    tempViewData,
+    previewData,
     matchedTimetable,
-    shareLinkFallback,
+    manualShareModal,
     createShareLink,
     confirmShare,
     viewTempShare,
@@ -168,6 +168,6 @@ export function useShareData(hasExistingData: boolean, timetables: Timetable[]) 
     cancelShare,
     getImmediateShareData,
     clearMatchedTimetable,
-    clearShareLinkFallback,
+    clearManualShareModal,
   };
 }
