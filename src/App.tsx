@@ -2,7 +2,9 @@ import './App.scss';
 
 import { Analytics } from '@vercel/analytics/react';
 import { useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 
+import ContributePage from './pages/ContributePage';
 import MainPage from './pages/MainPage';
 import { STORAGE_KEYS } from './utils/constants';
 import { logError } from './utils/errors';
@@ -60,11 +62,28 @@ function App() {
 
   return (
     <div className={`app${isPlainBackground ? ' plain-bg' : ''}`} style={backgroundStyle}>
-      <div className="card">
-        <div className="card-content">
-          <MainPage />
-        </div>
-      </div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div className="card">
+              <div className="card-content">
+                <MainPage />
+              </div>
+            </div>
+          }
+        />
+        <Route
+          path="/contribute"
+          element={
+            <div className="card">
+              <div className="card-content">
+                <ContributePage />
+              </div>
+            </div>
+          }
+        />
+      </Routes>
       <footer className="page-footer">
         <span className="photo-credit">
           {!customBackground && (

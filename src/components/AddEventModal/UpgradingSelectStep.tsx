@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Search } from 'lucide-react';
+import { ArrowRight, Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 import { UPGRADING_COURSES } from '../../data/upgrading-courses';
 import type { UpgradingCourse } from '../../types';
@@ -64,6 +65,11 @@ export function UpgradingSelectStep({ onClose, onBack, onCourseSelect }: Upgradi
             </div>
           </>
         )}
+
+        <Link to="/contribute" className={styles.notListedLink}>
+          <span>My course is not listed</span>
+          <ArrowRight size={14} />
+        </Link>
       </div>
     </>
   );

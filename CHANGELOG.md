@@ -1,5 +1,11 @@
 # Changelog
 
+### v1.5.0 (20 Dec 2025) - Crowdsourcing Contribution
+- Add contribution page for users to submit their content upgrading schedules
+- Firebase integration for storing submissions (Firestore + Storage)
+- Drag-and-drop file upload supporting HTML, PDF, and images
+- React Router integration for multi-page navigation
+
 ### v1.4.0 (20 Dec 2025) - Custom Events
 - Add custom events feature for personal events not in NIE timetable (e.g., content upgrading classes)
 - Create, edit, and delete custom events with multi-date picker
