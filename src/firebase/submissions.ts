@@ -1,27 +1,41 @@
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-
 import type { NewSubmissionInput } from '../types/firebase';
-import { db } from './config';
 import { uploadFiles } from './storage';
+
+interface SubmitResponse {
+  success: boolean;
+  issueNumber: number;
+  issueUrl: string;
+}
 
 export async function submitSchedule(input: NewSubmissionInput): Promise<string> {
   // Generate a temporary ID for the upload folder
-  const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+  const tempId = `submission-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
-  // Upload files first
+  // Upload files to Firebase Storage first
   const uploadResults = await uploadFiles(tempId, input.files);
 
-  // Create submission document
-  const submissionData = {
-    telegram: input.telegram || null,
-    courseName: input.courseName,
-    fileUrls: uploadResults.map((r) => r.url),
-    fileNames: uploadResults.map((r) => r.fileName),
-    submittedAt: serverTimestamp(),
-    notes: input.notes || null,
-  };
+  // Call the API to create a GitHub issue
+  const response = await fetch('/api/submit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      courseName: input.courseName,
+      telegram: input.telegram,
+      notes: input.notes,
+      fileUrls: uploadResults.map((r) => r.url),
+      fileNames: uploadResults.map((r) => r.fileName),
+    }),
+  });
 
-  const docRef = await addDoc(collection(db, 'submissions'), submissionData);
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to submit');
+  }
 
-  return docRef.id;
+  const result: SubmitResponse = await response.json();
+
+  // Return issue number as the reference ID
+  return `#${result.issueNumber}`;
 }

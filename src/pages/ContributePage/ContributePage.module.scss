@@ -27,7 +27,9 @@
   height: 36px;
   border-radius: 50%;
   color: var(--color-text-secondary);
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 
   &:hover {
     background-color: var(--color-bg-tertiary);
@@ -67,7 +69,9 @@
     font-size: 0.875rem;
     background-color: var(--color-input-bg);
     color: var(--color-text-primary);
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
 
     &::placeholder {
       color: var(--color-text-placeholder);
@@ -108,7 +112,9 @@
   padding: 1.5rem;
   text-align: center;
   cursor: pointer;
-  transition: border-color 0.2s, background-color 0.2s;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -189,7 +195,9 @@
   color: var(--color-text-muted);
   cursor: pointer;
   border-radius: 4px;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 
   &:hover {
     background-color: var(--color-error-light);

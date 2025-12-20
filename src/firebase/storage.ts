@@ -7,10 +7,7 @@ export interface UploadResult {
   fileName: string;
 }
 
-export async function uploadFile(
-  submissionId: string,
-  file: File
-): Promise<UploadResult> {
+export async function uploadFile(submissionId: string, file: File): Promise<UploadResult> {
   const storageRef = ref(storage, `uploads/${submissionId}/${file.name}`);
   await uploadBytes(storageRef, file);
   const url = await getDownloadURL(storageRef);
@@ -21,10 +18,7 @@ export async function uploadFile(
   };
 }
 
-export async function uploadFiles(
-  submissionId: string,
-  files: File[]
-): Promise<UploadResult[]> {
+export async function uploadFiles(submissionId: string, files: File[]): Promise<UploadResult[]> {
   const uploadPromises = files.map((file) => uploadFile(submissionId, file));
   return Promise.all(uploadPromises);
 }
