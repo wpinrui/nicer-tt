@@ -1,6 +1,7 @@
 import { memo, useCallback } from 'react';
 
 import type { DisplayGroupedEvent } from '../types';
+import { CUSTOM_EVENT_COLORS } from '../utils/constants';
 import { isToday } from '../utils/formatters';
 import { EventCard } from './EventCard';
 import styles from './EventGroup.module.scss';
@@ -49,20 +50,23 @@ export const EventGroup = memo(function EventGroup({
         </span>
       </div>
       <ul className={styles.eventsList}>
-        {group.events.map((event, i) => (
-          <EventCard
-            key={event.customEventId || i}
-            event={event}
-            showTutor={showTutor}
-            courseColor={
-              courseColorMap.get(event.course) ||
-              (event.eventType === 'upgrading' ? '#16a085' : '#9c27b0')
-            }
-            onCourseClick={onCourseClick}
-            onEdit={createEditHandler(event.customEventId)}
-            onDelete={createDeleteHandler(event.customEventId, group.sortKey)}
-          />
-        ))}
+        {group.events.map((event, i) => {
+          const isUpgrading = event.eventType === 'upgrading';
+          return (
+            <EventCard
+              key={event.customEventId || i}
+              event={event}
+              showTutor={showTutor}
+              courseColor={
+                courseColorMap.get(event.course) ||
+                (isUpgrading ? CUSTOM_EVENT_COLORS.Upgrading : CUSTOM_EVENT_COLORS.Custom)
+              }
+              onCourseClick={onCourseClick}
+              onEdit={isUpgrading ? undefined : createEditHandler(event.customEventId)}
+              onDelete={createDeleteHandler(event.customEventId, group.sortKey)}
+            />
+          );
+        })}
       </ul>
     </div>
   );

@@ -1,12 +1,7 @@
 import pako from 'pako';
 
-import type { TimetableEvent } from '../types';
+import type { CustomEvent, ShareData, ShareDataV2, TimetableEvent } from '../types';
 import { logError } from './errors';
-
-export interface ShareData {
-  events: TimetableEvent[];
-  fileName: string;
-}
 
 // URL-safe base64 encoding
 export function toUrlSafeBase64(bytes: Uint8Array): string {
@@ -27,12 +22,27 @@ export function fromUrlSafeBase64(str: string): Uint8Array {
   return bytes;
 }
 
-export function encodeShareData(events: TimetableEvent[], fileName: string): string {
-  const data = JSON.stringify({ events, fileName });
-  const compressed = pako.deflate(data);
+/**
+ * Encodes share data to a URL-safe base64 string.
+ * Uses V2 format when customEvents are provided, V1 otherwise for compatibility.
+ */
+export function encodeShareData(
+  events: TimetableEvent[],
+  fileName: string,
+  customEvents?: CustomEvent[]
+): string {
+  const data: ShareData =
+    customEvents && customEvents.length > 0
+      ? { version: 2, events, customEvents, fileName }
+      : { events, fileName };
+  const compressed = pako.deflate(JSON.stringify(data));
   return toUrlSafeBase64(compressed);
 }
 
+/**
+ * Decodes share data from a URL-safe base64 string.
+ * Handles both V1 (legacy) and V2 formats.
+ */
 export function decodeShareData(encoded: string): ShareData | null {
   // Try compressed format first (new)
   try {
@@ -59,3 +69,6 @@ export function decodeShareUrl(url: string): ShareData | null {
   const encoded = url.substring(hashIndex + 7);
   return decodeShareData(encoded);
 }
+
+// Re-export types for convenience
+export type { ShareData, ShareDataV2 };

@@ -1,0 +1,13 @@
+{
+  "courseName": "QUS511 - Lower Secondary Science (Group 1)",
+  "sessions": [
+    { "date": "05/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7A-B1-07", "tutor": "Ast/P Lee Gyeonggeon" },
+    { "date": "06/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7A-B1-07", "tutor": "Ast/P Lee Gyeonggeon" },
+    { "date": "12/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7A-B1-07", "tutor": "Ast/P Lee Gyeonggeon" },
+    { "date": "13/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7A-B1-07", "tutor": "Ast/P Lee Gyeonggeon" },
+    { "date": "19/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7A-B1-07", "tutor": "Ast/P Lee Gyeonggeon" },
+    { "date": "20/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7A-B1-07", "tutor": "Ast/P Lee Gyeonggeon" },
+    { "date": "26/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7A-B1-07", "tutor": "Ast/P Lee Gyeonggeon" },
+    { "date": "27/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7A-B1-07", "tutor": "Ast/P Lee Gyeonggeon" }
+  ]
+}

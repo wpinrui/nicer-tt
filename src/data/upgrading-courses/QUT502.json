@@ -1,0 +1,9 @@
+{
+  "courseName": "QUT502/QUT512 - Tamil Grammar",
+  "sessions": [
+    { "date": "22/01", "startTime": "08:30", "endTime": "12:20", "venue": "NIE3-01-TR313", "tutor": "" },
+    { "date": "23/01", "startTime": "10:30", "endTime": "12:20", "venue": "NIE3-01-TR313", "tutor": "" },
+    { "date": "27/01", "startTime": "08:30", "endTime": "12:20", "venue": "NIE3-01-TR309", "tutor": "" },
+    { "date": "29/01", "startTime": "10:30", "endTime": "12:20", "venue": "NIE3-01-TR309", "tutor": "" }
+  ]
+}

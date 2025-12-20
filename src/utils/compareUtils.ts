@@ -1,5 +1,14 @@
 import { DEFAULT_MEAL_GAP_DURATION, MEAL_BUFFER_MINUTES } from '../shared/constants';
-import type { EventItem, GroupedEvent, MealInfo, TimetableEvent, TravelInfo } from '../types';
+import type {
+  CustomEvent,
+  DisplayEventItem,
+  DisplayGroupedEvent,
+  EventItem,
+  GroupedEvent,
+  MealInfo,
+  TimetableEvent,
+  TravelInfo,
+} from '../types';
 import { createSortKey, formatDateFromParts, matchesEventSearch } from './formatters';
 
 // Convert time string "HHMM" to minutes since midnight
@@ -60,12 +69,78 @@ export function processEvents(events: TimetableEvent[], searchQuery: string): Gr
   return grouped;
 }
 
-// Get all unique dates from both timetables
-export function getAllDates(left: GroupedEvent[], right: GroupedEvent[]): string[] {
-  const dates = new Set<string>();
-  left.forEach((g) => dates.add(g.sortKey));
-  right.forEach((g) => dates.add(g.sortKey));
-  return Array.from(dates).sort();
+/**
+ * Process timetable events with custom events for compare view.
+ * Returns DisplayGroupedEvent with custom event metadata preserved.
+ */
+export function processEventsWithCustom(
+  events: TimetableEvent[],
+  customEvents: CustomEvent[],
+  searchQuery: string
+): DisplayGroupedEvent[] {
+  const dateMap = new Map<string, DisplayEventItem[]>();
+
+  // Process regular timetable events
+  for (const event of events) {
+    for (const dateStr of event.dates) {
+      const sortKey = createSortKey(dateStr);
+      if (!matchesEventSearch(event, dateStr, searchQuery)) continue;
+
+      if (!dateMap.has(sortKey)) {
+        dateMap.set(sortKey, []);
+      }
+
+      dateMap.get(sortKey)!.push({
+        course: event.course,
+        group: event.group,
+        startTime: event.startTime,
+        endTime: event.endTime,
+        venue: event.venue,
+        tutor: event.tutor,
+      });
+    }
+  }
+
+  // Process custom events (with metadata preserved)
+  for (const event of customEvents) {
+    for (const dateStr of event.dates) {
+      const sortKey = createSortKey(dateStr);
+      if (!matchesEventSearch(event, dateStr, searchQuery)) continue;
+
+      if (!dateMap.has(sortKey)) {
+        dateMap.set(sortKey, []);
+      }
+
+      dateMap.get(sortKey)!.push({
+        course: event.course,
+        group: event.group,
+        startTime: event.startTime,
+        endTime: event.endTime,
+        venue: event.venue,
+        tutor: event.tutor,
+        isCustom: true,
+        customEventId: event.id,
+        eventType: event.eventType,
+        description: event.description,
+      });
+    }
+  }
+
+  // Convert to array and sort
+  const grouped: DisplayGroupedEvent[] = [];
+  for (const [sortKey, eventsList] of dateMap) {
+    eventsList.sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
+
+    const [year, month, day] = sortKey.split('-').map(Number);
+    grouped.push({
+      sortKey,
+      date: formatDateFromParts(year, month, day),
+      events: eventsList,
+    });
+  }
+
+  grouped.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+  return grouped;
 }
 
 // Check if two events are identical (same course, group, and time)

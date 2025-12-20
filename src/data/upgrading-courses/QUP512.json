@@ -1,0 +1,10 @@
+{
+  "courseName": "QUP512 - Electricity and Magnetism and Optics",
+  "sessions": [
+    { "date": "07/01", "startTime": "09:30", "endTime": "12:30", "venue": "NIE7-B1-28", "tutor": "Prof Rajdeep Rawat" },
+    { "date": "14/01", "startTime": "09:30", "endTime": "12:30", "venue": "NIE7-B1-28", "tutor": "Prof Rajdeep Rawat" },
+    { "date": "21/01", "startTime": "09:30", "endTime": "12:30", "venue": "NIE7-B1-28", "tutor": "Prof Kwek Leong Chuan" },
+    { "date": "28/01", "startTime": "09:30", "endTime": "12:30", "venue": "NIE7-B1-28", "tutor": "Prof Kwek Leong Chuan" },
+    { "date": "02/02", "startTime": "18:30", "endTime": "20:30", "venue": "NIE3-01-TR311", "tutor": "Prof Rajdeep Rawat & Prof Kwek Leong Chuan" }
+  ]
+}

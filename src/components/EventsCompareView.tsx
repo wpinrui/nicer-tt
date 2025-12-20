@@ -1,14 +1,14 @@
 import { ArrowLeft, ArrowLeftRight, ArrowRight, Utensils } from 'lucide-react';
 import { useMemo } from 'react';
 
-import type { CompareFilter, MealConfig, Timetable, TravelConfig } from '../types';
+import type { CompareFilter, CustomEvent, MealConfig, Timetable, TravelConfig } from '../types';
 import {
   calculateMealInfo,
   calculateTravelInfo,
   eventsMatch,
-  getAllDates,
-  processEvents,
+  processEventsWithCustom,
 } from '../utils/compareUtils';
+import { CUSTOM_EVENT_COLORS } from '../utils/constants';
 import { formatTime12Hour, isToday } from '../utils/formatters';
 import { useRenderTimer } from '../utils/perf';
 import { EventCard } from './EventCard';
@@ -17,6 +17,8 @@ import styles from './EventsCompareView.module.scss';
 interface EventsCompareViewProps {
   leftTimetable: Timetable;
   rightTimetable: Timetable;
+  leftCustomEvents?: CustomEvent[];
+  rightCustomEvents?: CustomEvent[];
   searchQuery: string;
   compareFilter: CompareFilter;
   travelConfig: TravelConfig;
@@ -28,6 +30,8 @@ interface EventsCompareViewProps {
 export function EventsCompareView({
   leftTimetable,
   rightTimetable,
+  leftCustomEvents = [],
+  rightCustomEvents = [],
   searchQuery,
   compareFilter,
   travelConfig,
@@ -38,19 +42,22 @@ export function EventsCompareView({
   useRenderTimer('EventsCompareView');
 
   const leftGrouped = useMemo(
-    () => processEvents(leftTimetable.events, searchQuery),
-    [leftTimetable.events, searchQuery]
+    () => processEventsWithCustom(leftTimetable.events, leftCustomEvents, searchQuery),
+    [leftTimetable.events, leftCustomEvents, searchQuery]
   );
 
   const rightGrouped = useMemo(
-    () => processEvents(rightTimetable.events, searchQuery),
-    [rightTimetable.events, searchQuery]
+    () => processEventsWithCustom(rightTimetable.events, rightCustomEvents, searchQuery),
+    [rightTimetable.events, rightCustomEvents, searchQuery]
   );
 
-  const allDates = useMemo(
-    () => getAllDates(leftGrouped, rightGrouped),
-    [leftGrouped, rightGrouped]
-  );
+  // Get all unique dates from both timetables
+  const allDates = useMemo(() => {
+    const dates = new Set<string>();
+    leftGrouped.forEach((g) => dates.add(g.sortKey));
+    rightGrouped.forEach((g) => dates.add(g.sortKey));
+    return Array.from(dates).sort();
+  }, [leftGrouped, rightGrouped]);
   const leftByDate = useMemo(() => new Map(leftGrouped.map((g) => [g.sortKey, g])), [leftGrouped]);
   const rightByDate = useMemo(
     () => new Map(rightGrouped.map((g) => [g.sortKey, g])),
@@ -230,10 +237,11 @@ export function EventsCompareView({
                       courseColor={
                         courseColorMap.get(event.course) ||
                         ('eventType' in event && event.eventType === 'upgrading'
-                          ? '#16a085'
-                          : '#9c27b0')
+                          ? CUSTOM_EVENT_COLORS.Upgrading
+                          : CUSTOM_EVENT_COLORS.Custom)
                       }
                       isHighlighted={identicalLeft.has(i)}
+                      disableCustomStyling
                     />
                   ))}
                 </ul>
@@ -253,10 +261,11 @@ export function EventsCompareView({
                       courseColor={
                         courseColorMap.get(event.course) ||
                         ('eventType' in event && event.eventType === 'upgrading'
-                          ? '#16a085'
-                          : '#9c27b0')
+                          ? CUSTOM_EVENT_COLORS.Upgrading
+                          : CUSTOM_EVENT_COLORS.Custom)
                       }
                       isHighlighted={identicalRight.has(i)}
+                      disableCustomStyling
                     />
                   ))}
                 </ul>

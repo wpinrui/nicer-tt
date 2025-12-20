@@ -1,0 +1,8 @@
+{
+  "courseName": "QUH513 - Understanding History as a Discipline",
+  "sessions": [
+    { "date": "08/01", "startTime": "12:30", "endTime": "15:30", "venue": "NIE3-01-TR320", "tutor": "Dr Suhaimi" },
+    { "date": "15/01", "startTime": "12:30", "endTime": "15:30", "venue": "NIE3-01-TR320", "tutor": "Dr Suhaimi" },
+    { "date": "29/01", "startTime": "12:30", "endTime": "15:30", "venue": "NIE3-01-TR320", "tutor": "Dr Suhaimi" }
+  ]
+}

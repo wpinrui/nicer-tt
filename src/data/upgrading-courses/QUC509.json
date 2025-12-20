@@ -1,0 +1,28 @@
+{
+  "courseName": "QUC509 - Modern Chinese Phonology and Hanyu Pinyin",
+  "sessions": [
+    { "date": "05/01", "startTime": "14:30", "endTime": "15:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "05/01", "startTime": "16:30", "endTime": "17:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "07/01", "startTime": "08:30", "endTime": "10:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "07/01", "startTime": "15:30", "endTime": "16:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "07/01", "startTime": "17:30", "endTime": "18:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "12/01", "startTime": "14:30", "endTime": "15:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "12/01", "startTime": "16:30", "endTime": "17:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "13/01", "startTime": "09:30", "endTime": "10:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "13/01", "startTime": "11:30", "endTime": "12:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "14/01", "startTime": "15:30", "endTime": "16:20", "venue": "NIE7-01-LT2", "tutor": "Cui Jiaoyang" },
+    { "date": "14/01", "startTime": "17:30", "endTime": "18:20", "venue": "NIE7-01-LT2", "tutor": "Cui Jiaoyang" },
+    { "date": "19/01", "startTime": "14:30", "endTime": "15:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "19/01", "startTime": "16:30", "endTime": "17:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "20/01", "startTime": "09:30", "endTime": "10:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "20/01", "startTime": "11:30", "endTime": "12:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "21/01", "startTime": "15:30", "endTime": "16:20", "venue": "NIE7-01-LT2", "tutor": "Cui Jiaoyang" },
+    { "date": "21/01", "startTime": "17:30", "endTime": "18:20", "venue": "NIE7-01-LT2", "tutor": "Cui Jiaoyang" },
+    { "date": "26/01", "startTime": "14:30", "endTime": "15:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "26/01", "startTime": "16:30", "endTime": "17:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "27/01", "startTime": "09:30", "endTime": "10:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "27/01", "startTime": "11:30", "endTime": "12:20", "venue": "NIE3-01-LT10", "tutor": "Cui Jiaoyang" },
+    { "date": "28/01", "startTime": "15:30", "endTime": "16:20", "venue": "NIE7-01-LT2", "tutor": "Cui Jiaoyang" },
+    { "date": "28/01", "startTime": "17:30", "endTime": "18:20", "venue": "NIE7-01-LT2", "tutor": "Cui Jiaoyang" }
+  ]
+}

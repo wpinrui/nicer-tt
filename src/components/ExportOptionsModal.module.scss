@@ -64,6 +64,11 @@
     accent-color: var(--color-primary);
     cursor: pointer;
   }
+
+  // Spacing between consecutive checkbox labels
+  & + & {
+    margin-top: 0.5rem;
+  }
 }
 
 .count {

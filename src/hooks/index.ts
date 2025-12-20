@@ -1,5 +1,5 @@
 export { useCourseColorMap } from './useCourseColorMap';
-export { useCustomEvents } from './useCustomEvents';
+export { toCustomEventInput, useCustomEvents } from './useCustomEvents';
 export { useDebouncedValue } from './useDebouncedValue';
 export { useFilteredEvents } from './useFilteredEvents';
 export { useFilteredGroupedEvents } from './useFilteredGroupedEvents';

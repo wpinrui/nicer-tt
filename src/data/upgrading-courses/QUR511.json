@@ -1,0 +1,13 @@
+{
+  "courseName": "QUR511 - Approaches to the Critical Reading of Literature",
+  "sessions": [
+    { "date": "05/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7-01-TR708", "tutor": "Dennis" },
+    { "date": "07/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7-01-TR708", "tutor": "Dennis" },
+    { "date": "12/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7-01-TR708", "tutor": "Ann" },
+    { "date": "14/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7-01-TR708", "tutor": "Ann" },
+    { "date": "19/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7-01-TR708", "tutor": "Ian" },
+    { "date": "21/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7-01-TR708", "tutor": "Ian" },
+    { "date": "26/01", "startTime": "13:30", "endTime": "16:30", "venue": "NIE7-01-TR708", "tutor": "Ken" },
+    { "date": "28/01", "startTime": "14:30", "endTime": "17:30", "venue": "NIE7-01-TR708", "tutor": "Ken" }
+  ]
+}

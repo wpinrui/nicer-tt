@@ -1,0 +1,7 @@
+{
+  "courseName": "QUH512 - History of Singapore",
+  "sessions": [
+    { "date": "08/01", "startTime": "10:30", "endTime": "11:30", "venue": "NIE3-01-TR318", "tutor": "A/P Ivy Maria Lim" },
+    { "date": "29/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE3-01-TR318", "tutor": "A/P Ivy Maria Lim" }
+  ]
+}

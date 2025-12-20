@@ -1,23 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import type { CustomEvent, CustomEventsStore, TimetableEvent } from '../types';
-import { STORAGE_KEYS, TIMETABLE_YEAR } from '../utils/constants';
+import { STORAGE_KEYS } from '../utils/constants';
+import { migrateDateFormat } from '../utils/dateMigration';
 import { logError } from '../utils/errors';
 import { generateId } from '../utils/id';
-
-/**
- * Migrate date from DD/MM format to YYYY-MM-DD format.
- * Returns original if already in ISO format.
- */
-function migrateDateFormat(dateStr: string): string {
-  if (dateStr.includes('/')) {
-    // Old DD/MM format - convert to YYYY-MM-DD
-    const [day, month] = dateStr.split('/');
-    return `${TIMETABLE_YEAR}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-  }
-  // Already in YYYY-MM-DD format
-  return dateStr;
-}
 
 /**
  * Migrate custom events store from old DD/MM format to YYYY-MM-DD format.
@@ -90,6 +77,15 @@ function saveCustomEventsStore(store: CustomEventsStore): void {
 export type CustomEventInput = Omit<CustomEvent, 'id' | 'createdAt' | 'updatedAt'>;
 
 /**
+ * Converts a CustomEvent to CustomEventInput by stripping auto-generated fields.
+ * Useful when importing/copying events between timetables.
+ */
+export function toCustomEventInput(event: CustomEvent): CustomEventInput {
+  const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, ...input } = event;
+  return input;
+}
+
+/**
  * Input for updating a custom event.
  * All fields are optional except we need to preserve TimetableEvent structure.
  */
@@ -114,15 +110,12 @@ export function useCustomEvents(activeTimetableId: string | null) {
   );
 
   /**
-   * Adds a new custom event to the active timetable.
+   * Adds a new custom event to a specific timetable.
+   * Use this when the timetable ID is known but may not be the active one yet.
    * @returns The ID of the newly created custom event
    */
-  const addCustomEvent = useCallback(
-    (input: CustomEventInput): string => {
-      if (!activeTimetableId) {
-        throw new Error('Cannot add custom event without an active timetable');
-      }
-
+  const addCustomEventToTimetable = useCallback(
+    (timetableId: string, input: CustomEventInput): string => {
       const id = generateId('ce');
       const now = Date.now();
       const newEvent: CustomEvent = {
@@ -133,10 +126,10 @@ export function useCustomEvents(activeTimetableId: string | null) {
       };
 
       setStore((prev) => {
-        const timetableEvents = prev[activeTimetableId] || [];
+        const timetableEvents = prev[timetableId] || [];
         const updated: CustomEventsStore = {
           ...prev,
-          [activeTimetableId]: [...timetableEvents, newEvent],
+          [timetableId]: [...timetableEvents, newEvent],
         };
         saveCustomEventsStore(updated);
         return updated;
@@ -144,7 +137,21 @@ export function useCustomEvents(activeTimetableId: string | null) {
 
       return id;
     },
-    [activeTimetableId]
+    []
+  );
+
+  /**
+   * Adds a new custom event to the active timetable.
+   * @returns The ID of the newly created custom event
+   */
+  const addCustomEvent = useCallback(
+    (input: CustomEventInput): string => {
+      if (!activeTimetableId) {
+        throw new Error('Cannot add custom event without an active timetable');
+      }
+      return addCustomEventToTimetable(activeTimetableId, input);
+    },
+    [activeTimetableId, addCustomEventToTimetable]
   );
 
   /**
@@ -242,6 +249,7 @@ export function useCustomEvents(activeTimetableId: string | null) {
   return {
     customEvents,
     addCustomEvent,
+    addCustomEventToTimetable,
     updateCustomEvent,
     deleteCustomEvent,
     getCustomEvent,
