@@ -1,10 +1,60 @@
 import { useCallback, useState } from 'react';
 
 import type { Timetable, TimetableEvent } from '../types';
-import { DEFAULT_TIMETABLE_NAMES, STORAGE_KEYS } from '../utils/constants';
+import { DEFAULT_TIMETABLE_NAMES, STORAGE_KEYS, TIMETABLE_YEAR } from '../utils/constants';
 import { logError } from '../utils/errors';
 import { generateId } from '../utils/id';
 import { useLocalStorageJson } from './useLocalStorage';
+
+/**
+ * Migrate date from DD/MM format to YYYY-MM-DD format.
+ * Returns original if already in ISO format.
+ */
+function migrateDateFormat(dateStr: string): string {
+  if (dateStr.includes('/')) {
+    const [day, month] = dateStr.split('/');
+    return `${TIMETABLE_YEAR}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  }
+  return dateStr;
+}
+
+/**
+ * Migrate timetable events from old DD/MM format to YYYY-MM-DD format.
+ */
+function migrateTimetableEvents(events: TimetableEvent[]): TimetableEvent[] {
+  return events.map((event) => ({
+    ...event,
+    dates: event.dates.map(migrateDateFormat),
+  }));
+}
+
+/**
+ * Migrate timetables array from old DD/MM format to YYYY-MM-DD format.
+ */
+function migrateTimetables(timetables: Timetable[]): Timetable[] {
+  let needsMigration = false;
+
+  for (const timetable of timetables) {
+    for (const event of timetable.events) {
+      if (event.dates?.some((d) => d.includes('/'))) {
+        needsMigration = true;
+        break;
+      }
+    }
+    if (needsMigration) break;
+  }
+
+  if (!needsMigration) return timetables;
+
+  const migrated = timetables.map((timetable) => ({
+    ...timetable,
+    events: migrateTimetableEvents(timetable.events),
+  }));
+
+  localStorage.setItem(STORAGE_KEYS.TIMETABLES_DATA, JSON.stringify(migrated));
+
+  return migrated;
+}
 
 /**
  * Gets the next available default name for a new timetable.
@@ -37,7 +87,7 @@ function loadInitialTimetables(): Timetable[] {
     if (stored) {
       const data = JSON.parse(stored);
       if (Array.isArray(data)) {
-        return data;
+        return migrateTimetables(data);
       }
     }
 
@@ -50,7 +100,7 @@ function loadInitialTimetables(): Timetable[] {
           {
             id: generateId('tt'),
             name: 'My Timetable',
-            events: data.events,
+            events: migrateTimetableEvents(data.events),
             fileName: data.fileName || null,
             isPrimary: true,
           },
