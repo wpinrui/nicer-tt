@@ -1,6 +1,6 @@
 import { DEFAULT_MEAL_GAP_DURATION, MEAL_BUFFER_MINUTES } from '../shared/constants';
 import type { EventItem, GroupedEvent, MealInfo, TimetableEvent, TravelInfo } from '../types';
-import { createSortKey, getDateSearchString } from './formatters';
+import { createSortKey, matchesDateSearch } from './formatters';
 
 // Convert time string "HHMM" to minutes since midnight
 export function timeToMinutes(time: string): number {
@@ -27,17 +27,13 @@ export function processEvents(events: TimetableEvent[], searchQuery: string): Gr
 
       // Apply search filter
       if (searchQuery) {
-        const searchFields = [
-          event.course,
-          event.group,
-          event.venue,
-          event.tutor,
-          getDateSearchString(dateStr),
-        ]
-          .join(' ')
-          .toLowerCase();
+        const matchesText =
+          event.course.toLowerCase().includes(searchLower) ||
+          event.group.toLowerCase().includes(searchLower) ||
+          event.venue.toLowerCase().includes(searchLower) ||
+          event.tutor.toLowerCase().includes(searchLower);
 
-        if (!searchFields.includes(searchLower)) continue;
+        if (!matchesText && !matchesDateSearch(dateStr, searchQuery)) continue;
       }
 
       if (!dateMap.has(sortKey)) {

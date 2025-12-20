@@ -1,5 +1,9 @@
 # Changelog
 
+**v1.3.15 (20 Dec 2025)**
+- Add flexible date search with permutation support (e.g., "March 17", "17 Mar", "17/3", "26-03-17")
+- Date search now uses token-based matching allowing any order of day, month, year
+
 **v1.3.14 (20 Dec 2025)**
 - Refactor Phase 12: Performance & memory optimizations
 - Wrap event handlers in useCallback (CompareFilters, useShareData)
