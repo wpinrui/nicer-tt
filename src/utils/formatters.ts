@@ -110,8 +110,31 @@ export function matchesDateSearch(dateStr: string, query: string): boolean {
 
   const dateTokens = getDateSearchTokens(dateStr);
 
-  // Each query token must match at least one date token (partial match allowed)
-  return queryTokens.every((qt) => dateTokens.some((dt) => dt.includes(qt) || qt.includes(dt)));
+  // Each query token must match at least one date token
+  // Only check dt.includes(qt), not qt.includes(dt), to avoid false positives
+  // e.g., "19" would wrongly match month "1" if we allowed qt.includes(dt)
+  return queryTokens.every((qt) => dateTokens.some((dt) => dt.includes(qt)));
+}
+
+/**
+ * Check if an event matches a search query (text fields + date).
+ * Shared logic used by both main timetable and compare views.
+ */
+export function matchesEventSearch(
+  event: { course: string; group: string; venue: string; tutor: string },
+  dateStr: string,
+  query: string
+): boolean {
+  if (!query) return true;
+
+  const queryLower = query.toLowerCase();
+  const matchesText =
+    event.course.toLowerCase().includes(queryLower) ||
+    event.group.toLowerCase().includes(queryLower) ||
+    event.venue.toLowerCase().includes(queryLower) ||
+    event.tutor.toLowerCase().includes(queryLower);
+
+  return matchesText || matchesDateSearch(dateStr, query);
 }
 
 export function formatTime12Hour(time: string): string {
