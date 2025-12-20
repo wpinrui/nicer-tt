@@ -92,7 +92,7 @@ function App() {
             Made by Ivan | v{__APP_VERSION__}
           </a>{' '}
           <a
-            href="https://github.com/wpinrui/nicer-tt/blob/main/DEV.md"
+            href="https://github.com/wpinrui/nicer-tt/blob/main/CHANGELOG.md"
             target="_blank"
             rel="noopener noreferrer"
           >
