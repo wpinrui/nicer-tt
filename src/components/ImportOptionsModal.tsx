@@ -96,8 +96,9 @@ export function ImportOptionsModal({ shareData, onConfirm, onCancel }: ImportOpt
           )}
 
           <p className={styles.hint}>
-            This shared timetable includes {hasCustom || hasUpgrading ? 'additional' : ''} events.
-            Choose which ones to import.
+            {hasCustom || hasUpgrading
+              ? 'This shared timetable includes additional events. Choose which ones to import.'
+              : 'Choose which events to import.'}
           </p>
         </div>
 
