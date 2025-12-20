@@ -17,15 +17,6 @@ export function isToday(sortKey: string): boolean {
   return sortKey === getTodaySortKey();
 }
 
-export function getDateSearchString(dateStr: string): string {
-  const [day, month] = dateStr.split('/').map(Number);
-  const date = new Date(TIMETABLE_YEAR, month - 1, day);
-  const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
-  const monthShort = date.toLocaleDateString('en-US', { month: 'short' });
-  const monthLong = date.toLocaleDateString('en-US', { month: 'long' });
-  return `${day} ${monthShort} ${monthLong} ${dayName} ${TIMETABLE_YEAR} ${dateStr} ${day}/${month}`;
-}
-
 /**
  * Get all searchable tokens for a date string.
  * Returns an array of lowercase tokens that can be matched against search queries.
