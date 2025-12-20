@@ -1,13 +1,17 @@
-import { Calendar, Plus, Trash2, X } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { X } from 'lucide-react';
+import { forwardRef, useCallback, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 import type { CustomEvent, CustomEventType } from '../types';
 import type { CustomEventInput } from '../hooks/useCustomEvents';
-import { TIMETABLE_YEAR } from '../utils/constants';
 import styles from './AddEventModal.module.scss';
 
 const DESCRIPTION_MAX = 100;
 const DESCRIPTION_SUGGESTED = 80;
+
+// Support current year and next year for custom events
+const CURRENT_YEAR = new Date().getFullYear();
 
 interface AddEventModalProps {
   onClose: () => void;
@@ -16,7 +20,17 @@ interface AddEventModalProps {
 }
 
 /**
- * Converts a date string from YYYY-MM-DD to DD/MM format.
+ * Converts a Date object to YYYY-MM-DD string.
+ */
+function dateToIso(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/**
+ * Converts YYYY-MM-DD to DD/MM format for storage.
  */
 function toDisplayDate(isoDate: string): string {
   const [, month, day] = isoDate.split('-');
@@ -24,18 +38,17 @@ function toDisplayDate(isoDate: string): string {
 }
 
 /**
- * Converts a date string from DD/MM to YYYY-MM-DD format.
+ * Converts DD/MM to Date object.
  */
-function toIsoDate(displayDate: string): string {
+function displayDateToDate(displayDate: string, year: number = CURRENT_YEAR): Date {
   const [day, month] = displayDate.split('/');
-  return `${TIMETABLE_YEAR}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  return new Date(year, parseInt(month, 10) - 1, parseInt(day, 10));
 }
 
 /**
- * Gets the day of week name from a YYYY-MM-DD date string.
+ * Gets the day of week name from a Date object.
  */
-function getDayOfWeek(isoDate: string): string {
-  const date = new Date(isoDate);
+function getDayOfWeek(date: Date): string {
   return date.toLocaleDateString('en-US', { weekday: 'long' });
 }
 
@@ -54,21 +67,43 @@ function fromTimeInput(time: string): string {
   return time.replace(':', '');
 }
 
+interface CustomInputProps {
+  value?: string;
+  onClick?: () => void;
+  placeholder?: string;
+}
+
+const CustomDateInput = forwardRef<HTMLInputElement, CustomInputProps>(
+  ({ value, onClick, placeholder }, ref) => (
+    <input
+      type="text"
+      className={styles.input}
+      value={value}
+      onClick={onClick}
+      placeholder={placeholder}
+      readOnly
+      ref={ref}
+    />
+  )
+);
+CustomDateInput.displayName = 'CustomDateInput';
+
 export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalProps) {
   const isEditing = !!editingEvent;
 
-  // Form state
-  const [dates, setDates] = useState<string[]>(() => {
+  // Selected dates as Date objects
+  const [selectedDates, setSelectedDates] = useState<Date[]>(() => {
     if (editingEvent?.dates?.length) {
-      return editingEvent.dates.map(toIsoDate);
+      return editingEvent.dates.map((d) => displayDateToDate(d, CURRENT_YEAR));
     }
-    return [''];
+    return [];
   });
+
   const [startTime, setStartTime] = useState(() =>
-    editingEvent ? toTimeInput(editingEvent.startTime) : ''
+    editingEvent ? toTimeInput(editingEvent.startTime) : '12:00'
   );
   const [endTime, setEndTime] = useState(() =>
-    editingEvent ? toTimeInput(editingEvent.endTime) : ''
+    editingEvent ? toTimeInput(editingEvent.endTime) : '14:00'
   );
   const [eventType, setEventType] = useState<CustomEventType>(
     () => editingEvent?.eventType || 'custom'
@@ -76,36 +111,63 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
   const [description, setDescription] = useState(() => editingEvent?.description || '');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const firstDateRef = useRef<HTMLInputElement>(null);
 
-  // Focus first date input on mount
-  useEffect(() => {
-    firstDateRef.current?.focus();
-  }, []);
-
-  const handleAddDate = useCallback(() => {
-    setDates((prev) => [...prev, '']);
-  }, []);
-
-  const handleRemoveDate = useCallback((index: number) => {
-    setDates((prev) => prev.filter((_, i) => i !== index));
-  }, []);
-
-  const handleDateChange = useCallback((index: number, value: string) => {
-    setDates((prev) => {
-      const updated = [...prev];
-      updated[index] = value;
-      return updated;
+  const handleDateChange = useCallback((dates: Date | [Date | null, Date | null] | null) => {
+    if (!dates) return;
+    // For multi-select, dates is the array of selected dates
+    if (Array.isArray(dates)) {
+      // This shouldn't happen with our config, but handle it
+      return;
+    }
+    // Toggle the date
+    setSelectedDates((prev) => {
+      const existing = prev.find(
+        (d) =>
+          d.getFullYear() === dates.getFullYear() &&
+          d.getMonth() === dates.getMonth() &&
+          d.getDate() === dates.getDate()
+      );
+      if (existing) {
+        return prev.filter((d) => d !== existing);
+      } else {
+        return [...prev, dates].sort((a, b) => a.getTime() - b.getTime());
+      }
     });
     setErrors((prev) => ({ ...prev, dates: '' }));
   }, []);
+
+  const removeDate = useCallback((dateToRemove: Date) => {
+    setSelectedDates((prev) =>
+      prev.filter(
+        (d) =>
+          d.getFullYear() !== dateToRemove.getFullYear() ||
+          d.getMonth() !== dateToRemove.getMonth() ||
+          d.getDate() !== dateToRemove.getDate()
+      )
+    );
+  }, []);
+
+  const formatDateChip = useCallback((date: Date): string => {
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' });
+  }, []);
+
+  const getInputDisplayValue = useCallback((): string => {
+    if (selectedDates.length === 0) return '';
+    if (selectedDates.length === 1) {
+      return selectedDates[0].toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+    }
+    return `${selectedDates.length} dates selected`;
+  }, [selectedDates]);
 
   const handleSubmit = useCallback(() => {
     const newErrors: Record<string, string> = {};
 
     // Validate dates
-    const validDates = dates.filter((d) => d.trim() !== '');
-    if (validDates.length === 0) {
+    if (selectedDates.length === 0) {
       newErrors.dates = 'At least one date is required';
     }
 
@@ -125,23 +187,24 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
       return;
     }
 
+    const sortedDates = [...selectedDates].sort((a, b) => a.getTime() - b.getTime());
+
     // Build event input
     const eventInput: CustomEventInput = {
-      dates: validDates.map(toDisplayDate),
-      day: getDayOfWeek(validDates[0]),
+      dates: sortedDates.map((d) => toDisplayDate(dateToIso(d))),
+      day: getDayOfWeek(sortedDates[0]),
       startTime: fromTimeInput(startTime),
       endTime: fromTimeInput(endTime),
       eventType,
       description: description.trim(),
-      // Keep TimetableEvent compatibility with empty strings
-      course: '',
+      course: eventType === 'upgrading' ? 'Upgrading' : 'Custom',
       group: '',
       venue: '',
       tutor: '',
     };
 
     onSave(eventInput);
-  }, [dates, startTime, endTime, eventType, description, onSave]);
+  }, [selectedDates, startTime, endTime, eventType, description, onSave]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -155,7 +218,7 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
   );
 
   return (
-    <div className={styles.overlay} onClick={onClose} onKeyDown={handleKeyDown}>
+    <div className={styles.overlay} onKeyDown={handleKeyDown}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h3>{isEditing ? 'Edit Custom Event' : 'Add Custom Event'}</h3>
@@ -165,40 +228,55 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
         </div>
 
         <div className={styles.content}>
-          {/* Dates section */}
+          {/* Date picker section */}
           <div className={styles.field}>
             <label className={styles.label}>
-              <Calendar size={14} />
-              Dates <span className={styles.required}>*</span>
+              Select Dates <span className={styles.required}>*</span>
             </label>
-            <div className={styles.datesContainer}>
-              {dates.map((date, index) => (
-                <div key={index} className={styles.dateRow}>
-                  <input
-                    ref={index === 0 ? firstDateRef : undefined}
-                    type="date"
-                    className={styles.dateInput}
-                    value={date}
-                    onChange={(e) => handleDateChange(index, e.target.value)}
-                    min={`${TIMETABLE_YEAR}-01-01`}
-                    max={`${TIMETABLE_YEAR}-12-31`}
-                  />
-                  {dates.length > 1 && (
+
+            <div className={styles.datePickerWrapper}>
+              <DatePicker
+                selected={null}
+                onChange={handleDateChange}
+                customInput={<CustomDateInput placeholder="Click to select dates" />}
+                highlightDates={selectedDates}
+                minDate={new Date(CURRENT_YEAR, 0, 1)}
+                maxDate={new Date(CURRENT_YEAR + 1, 11, 31)}
+                calendarClassName={styles.datePicker}
+                popperClassName={styles.datePickerPopper}
+                value={getInputDisplayValue()}
+                shouldCloseOnSelect={false}
+                dayClassName={(date) =>
+                  selectedDates.some(
+                    (d) =>
+                      d.getFullYear() === date.getFullYear() &&
+                      d.getMonth() === date.getMonth() &&
+                      d.getDate() === date.getDate()
+                  )
+                    ? styles.datePickerDaySelected
+                    : ''
+                }
+              />
+            </div>
+
+            {/* Selected dates chips */}
+            {selectedDates.length > 0 && (
+              <div className={styles.selectedDates}>
+                {selectedDates.map((date) => (
+                  <span key={date.toISOString()} className={styles.dateChip}>
+                    {formatDateChip(date)}
                     <button
                       type="button"
-                      className={styles.removeDateBtn}
-                      onClick={() => handleRemoveDate(index)}
-                      title="Remove date"
+                      className={styles.dateChipRemove}
+                      onClick={() => removeDate(date)}
                     >
-                      <Trash2 size={14} />
+                      <X size={12} />
                     </button>
-                  )}
-                </div>
-              ))}
-              <button type="button" className={styles.addDateBtn} onClick={handleAddDate}>
-                <Plus size={14} /> Add another date
-              </button>
-            </div>
+                  </span>
+                ))}
+              </div>
+            )}
+
             {errors.dates && <span className={styles.error}>{errors.dates}</span>}
           </div>
 
