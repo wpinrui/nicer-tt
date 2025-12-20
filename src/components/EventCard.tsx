@@ -57,7 +57,10 @@ export const EventCard = memo(function EventCard({
         </span>
       </span>
       {isCustom && 'description' in event && event.description ? (
-        <span className={styles.eventDescription}>{event.description}</span>
+        <>
+          <span className={styles.eventDescription}>{event.description}</span>
+          {event.venue && <span className={styles.eventVenue}>@ {formatVenue(event.venue)}</span>}
+        </>
       ) : (
         <>
           <span className={styles.eventGroup}>{event.group}</span>
