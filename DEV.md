@@ -1,5 +1,12 @@
 # Changelog
 
+**v1.3.11 (19 Dec 2025)**
+- Refactor hooks: split useFilteredEvents into useCourseColorMap, useGroupedEvents, useFilteredGroupedEvents
+- Simplify useShareData with extracted URL utilities (src/utils/shareUrl.ts)
+- Simplify useTimetableStorage to use useLocalStorageJson
+- Add JSDoc documentation to all hooks
+- Add useDebouncedValue hook and debounce search filtering (150ms)
+
 **v1.3.10 (19 Dec 2025)**
 - Extract shared EventCard and EventGroup components
 - Remove duplicated event rendering logic from EventsList and EventsCompareView

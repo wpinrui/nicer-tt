@@ -35,6 +35,16 @@ const DEFAULT_MEAL_CONFIG: MealConfig = {
   dinnerEnd: 20,
 };
 
+/**
+ * Centralized state management for the main page.
+ *
+ * Manages three categories of state:
+ * - Filter state: search, course selection, date filter, hide past dates
+ * - Compare state: compare mode, timetable selection, filter options
+ * - UI state: modal visibility, mobile menu
+ *
+ * @returns Filter, compare, and UI state with handlers
+ */
 export function useMainPageState() {
   // Filter state
   const [searchQuery, setSearchQuery] = useState('');
