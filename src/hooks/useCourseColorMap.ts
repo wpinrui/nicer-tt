@@ -30,13 +30,38 @@ export function useCourseColorMap(events: TimetableEvent[] | null): UseCourseCol
     const coursesSet = new Set<string>();
 
     for (const event of events) {
-      coursesSet.add(event.course);
+      if (event.course) {
+        coursesSet.add(event.course);
+      } else if ('eventType' in event && event.eventType) {
+        // Handle custom events with empty course (legacy format)
+        const courseName = event.eventType === 'upgrading' ? 'Upgrading' : 'Custom';
+        coursesSet.add(courseName);
+      }
     }
 
-    const coursesArray = Array.from(coursesSet).sort();
+    // Fixed colors for custom event types
+    const CUSTOM_EVENT_COLORS: Record<string, string> = {
+      Custom: '#9c27b0', // Purple
+      Upgrading: '#16a085', // Teal
+    };
 
-    coursesArray.forEach((course, index) => {
-      colorMap.set(course, COURSE_COLORS[index % COURSE_COLORS.length]);
+    // Sort regular courses alphabetically, then append custom event types at the end
+    const regularCourses = Array.from(coursesSet)
+      .filter((c) => !CUSTOM_EVENT_COLORS[c])
+      .sort();
+    const customCourses = Array.from(coursesSet)
+      .filter((c) => CUSTOM_EVENT_COLORS[c])
+      .sort();
+    const coursesArray = [...regularCourses, ...customCourses];
+
+    let paletteIndex = 0;
+    coursesArray.forEach((course) => {
+      if (CUSTOM_EVENT_COLORS[course]) {
+        colorMap.set(course, CUSTOM_EVENT_COLORS[course]);
+      } else {
+        colorMap.set(course, COURSE_COLORS[paletteIndex % COURSE_COLORS.length]);
+        paletteIndex++;
+      }
     });
 
     return {
