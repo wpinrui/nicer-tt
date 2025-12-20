@@ -1,11 +1,18 @@
 import { TIMETABLE_YEAR } from './constants';
 
-export function formatDateDisplay(dateStr: string): string {
-  const [day, month] = dateStr.split('/').map(Number);
-  const date = new Date(TIMETABLE_YEAR, month - 1, day);
+/**
+ * Format a date from year, month, day numbers to "DayName, Day MonthName" format.
+ */
+export function formatDateFromParts(year: number, month: number, day: number): string {
+  const date = new Date(year, month - 1, day);
   const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
   const monthName = date.toLocaleDateString('en-US', { month: 'long' });
   return `${dayName}, ${day} ${monthName}`;
+}
+
+export function formatDateDisplay(dateStr: string): string {
+  const [day, month] = dateStr.split('/').map(Number);
+  return formatDateFromParts(TIMETABLE_YEAR, month, day);
 }
 
 export function getTodaySortKey(): string {
