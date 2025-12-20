@@ -7,7 +7,7 @@ export interface UploadResult {
   fileName: string;
 }
 
-export async function uploadFile(submissionId: string, file: File): Promise<UploadResult> {
+async function uploadFile(submissionId: string, file: File): Promise<UploadResult> {
   const storageRef = ref(storage, `uploads/${submissionId}/${file.name}`);
   await uploadBytes(storageRef, file);
   const url = await getDownloadURL(storageRef);
