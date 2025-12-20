@@ -174,6 +174,11 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
       newErrors.endTime = 'End time must be after start time';
     }
 
+    // Validate description
+    if (!description.trim()) {
+      newErrors.description = 'Description is required';
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -222,9 +227,7 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
         <div className={styles.content}>
           {/* Date picker section */}
           <div className={styles.field}>
-            <label className={styles.label}>
-              Select Dates <span className={styles.required}>*</span>
-            </label>
+            <label className={styles.label}>Select Dates</label>
 
             <div className={styles.datePickerWrapper}>
               <DatePicker
@@ -275,9 +278,7 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
           {/* Time section */}
           <div className={styles.timeRow}>
             <div className={styles.field}>
-              <label className={styles.label}>
-                Start Time <span className={styles.required}>*</span>
-              </label>
+              <label className={styles.label}>Start Time</label>
               <input
                 type="time"
                 className={styles.input}
@@ -290,9 +291,7 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
               {errors.startTime && <span className={styles.error}>{errors.startTime}</span>}
             </div>
             <div className={styles.field}>
-              <label className={styles.label}>
-                End Time <span className={styles.required}>*</span>
-              </label>
+              <label className={styles.label}>End Time</label>
               <input
                 type="time"
                 className={styles.input}
@@ -336,11 +335,13 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
               onChange={(e) => {
                 if (e.target.value.length <= DESCRIPTION_MAX) {
                   setDescription(e.target.value);
+                  setErrors((prev) => ({ ...prev, description: '' }));
                 }
               }}
               placeholder="e.g., Chemistry content upgrading at LT27"
               rows={2}
             />
+            {errors.description && <span className={styles.error}>{errors.description}</span>}
             <div className={styles.charCounter}>
               <span
                 className={

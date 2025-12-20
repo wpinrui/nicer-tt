@@ -98,9 +98,6 @@
   gap: 0.35rem;
 }
 
-.required {
-  color: var(--color-error);
-}
 
 .input {
   width: 100%;
@@ -279,6 +276,7 @@
 .error {
   font-size: 0.8rem;
   color: var(--color-error);
+  align-self: flex-start;
 }
 
 .actions {
