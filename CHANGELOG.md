@@ -1,5 +1,13 @@
 # Changelog
 
+### v1.4.0 (20 Dec 2025) - Custom Events
+- Add custom events feature for personal events not in NIE timetable (e.g., content upgrading classes)
+- Create, edit, and delete custom events with multi-date picker
+- Custom events display with distinct purple styling and "Custom" badge
+- Choose whether to include custom events when downloading ICS or sharing
+- Consolidate Download and Share buttons into Export dropdown menu
+- Add "Add Event" button to desktop header and mobile menu
+
 **v1.3.15 (20 Dec 2025)**
 - Add flexible date search with permutation support (e.g., "March 17", "17 Mar", "17/3", "26-03-17")
 - Date search now uses token-based matching allowing any order of day, month, year

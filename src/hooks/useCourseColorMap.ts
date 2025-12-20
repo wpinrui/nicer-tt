@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import type { TimetableEvent } from '../types';
-import { COURSE_COLORS } from '../utils/constants';
+import { COURSE_COLORS, CUSTOM_EVENT_COLORS } from '../utils/constants';
 
 interface UseCourseColorMapResult {
   courseColorMap: Map<string, string>;
@@ -30,13 +30,32 @@ export function useCourseColorMap(events: TimetableEvent[] | null): UseCourseCol
     const coursesSet = new Set<string>();
 
     for (const event of events) {
-      coursesSet.add(event.course);
+      // Check for custom/upgrading events first (they use special filter names)
+      if ('eventType' in event && event.eventType) {
+        const courseName = event.eventType === 'upgrading' ? 'Upgrading' : 'Custom';
+        coursesSet.add(courseName);
+      } else if (event.course) {
+        coursesSet.add(event.course);
+      }
     }
 
-    const coursesArray = Array.from(coursesSet).sort();
+    // Sort regular courses alphabetically, then append custom event types at the end
+    const regularCourses = Array.from(coursesSet)
+      .filter((c) => !CUSTOM_EVENT_COLORS[c])
+      .sort();
+    const customCourses = Array.from(coursesSet)
+      .filter((c) => CUSTOM_EVENT_COLORS[c])
+      .sort();
+    const coursesArray = [...regularCourses, ...customCourses];
 
-    coursesArray.forEach((course, index) => {
-      colorMap.set(course, COURSE_COLORS[index % COURSE_COLORS.length]);
+    let paletteIndex = 0;
+    coursesArray.forEach((course) => {
+      if (CUSTOM_EVENT_COLORS[course]) {
+        colorMap.set(course, CUSTOM_EVENT_COLORS[course]);
+      } else {
+        colorMap.set(course, COURSE_COLORS[paletteIndex % COURSE_COLORS.length]);
+        paletteIndex++;
+      }
     });
 
     return {

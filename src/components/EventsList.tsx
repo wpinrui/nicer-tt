@@ -1,13 +1,15 @@
-import type { GroupedEvent } from '../types';
+import type { DisplayGroupedEvent } from '../types';
 import { useRenderTimer } from '../utils/perf';
 import { EventGroup } from './EventGroup';
 import styles from './EventsList.module.scss';
 
 interface EventsListProps {
-  groupedByDate: GroupedEvent[];
+  groupedByDate: DisplayGroupedEvent[];
   courseColorMap: Map<string, string>;
   showTutor: boolean;
   onCourseClick: (course: string) => void;
+  onEditCustomEvent?: (eventId: string) => void;
+  onDeleteCustomEvent?: (eventId: string, date: string) => void;
 }
 
 export function EventsList({
@@ -15,6 +17,8 @@ export function EventsList({
   courseColorMap,
   showTutor,
   onCourseClick,
+  onEditCustomEvent,
+  onDeleteCustomEvent,
 }: EventsListProps) {
   useRenderTimer('EventsList');
 
@@ -31,6 +35,8 @@ export function EventsList({
           showTutor={showTutor}
           courseColorMap={courseColorMap}
           onCourseClick={onCourseClick}
+          onEditCustomEvent={onEditCustomEvent}
+          onDeleteCustomEvent={onDeleteCustomEvent}
         />
       ))}
     </>

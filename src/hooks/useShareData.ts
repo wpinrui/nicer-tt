@@ -85,10 +85,14 @@ export function useShareData(hasExistingData: boolean, timetables: Timetable[]) 
 
   // Handle share data from URL on mount and hash changes
   useEffect(() => {
-    processShareHash();
+    // Defer initial processing to avoid synchronous setState in effect body
+    const timeoutId = setTimeout(processShareHash, 0);
 
     window.addEventListener('hashchange', processShareHash);
-    return () => window.removeEventListener('hashchange', processShareHash);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('hashchange', processShareHash);
+    };
   }, [processShareHash]);
 
   /**

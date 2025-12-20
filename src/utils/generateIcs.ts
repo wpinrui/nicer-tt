@@ -1,13 +1,15 @@
 import type { TimetableEvent } from '../types';
-import { TIMETABLE_YEAR } from './constants';
 
 function formatTimeForIcs(time: string): string {
   return time.padEnd(6, '0');
 }
 
-function parseDateDDMM(dateStr: string): Date {
-  const [day, month] = dateStr.split('/').map(Number);
-  return new Date(TIMETABLE_YEAR, month - 1, day);
+/**
+ * Parse YYYY-MM-DD date string to Date object.
+ */
+function parseIsoDate(dateStr: string): Date {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day);
 }
 
 function formatDateForIcs(date: Date, time: string): string {
@@ -34,7 +36,7 @@ export function generateIcs(events: TimetableEvent[]): string {
 
   for (const event of events) {
     for (const dateStr of event.dates) {
-      const date = parseDateDDMM(dateStr);
+      const date = parseIsoDate(dateStr);
 
       const summary = `${event.course} - ${event.group}`;
       const location = event.venue;

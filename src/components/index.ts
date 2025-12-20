@@ -1,7 +1,10 @@
+export { AddEventModal } from './AddEventModal';
 export { CompareFilters } from './CompareFilters';
 export { CompareModal } from './CompareModal';
 export { EventsCompareView } from './EventsCompareView';
 export { EventsList } from './EventsList';
+export { ExportMenu } from './ExportMenu';
+export { ExportOptionsModal } from './ExportOptionsModal';
 export { FilterSection } from './FilterSection';
 export { Modal } from './Modal';
 export { OptionsPanel } from './OptionsPanel';

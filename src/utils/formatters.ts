@@ -1,18 +1,19 @@
-import { TIMETABLE_YEAR } from './constants';
-
 /**
- * Format a date from year, month, day numbers to "DayName, Day MonthName" format.
+ * Format a date from year, month, day numbers to "DayName, Day MonthName Year" format.
  */
 export function formatDateFromParts(year: number, month: number, day: number): string {
   const date = new Date(year, month - 1, day);
   const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
   const monthName = date.toLocaleDateString('en-US', { month: 'long' });
-  return `${dayName}, ${day} ${monthName}`;
+  return `${dayName}, ${day} ${monthName} ${year}`;
 }
 
+/**
+ * Format YYYY-MM-DD date string to display format "DayName, Day MonthName Year".
+ */
 export function formatDateDisplay(dateStr: string): string {
-  const [day, month] = dateStr.split('/').map(Number);
-  return formatDateFromParts(TIMETABLE_YEAR, month, day);
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return formatDateFromParts(year, month, day);
 }
 
 export function getTodaySortKey(): string {
@@ -25,12 +26,12 @@ export function isToday(sortKey: string): boolean {
 }
 
 /**
- * Get all searchable tokens for a date string.
+ * Get all searchable tokens for a date string (YYYY-MM-DD format).
  * Returns an array of lowercase tokens that can be matched against search queries.
  */
 export function getDateSearchTokens(dateStr: string): string[] {
-  const [day, month] = dateStr.split('/').map(Number);
-  const date = new Date(TIMETABLE_YEAR, month - 1, day);
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
 
   const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
   const dayShort = date.toLocaleDateString('en-US', { weekday: 'short' });
@@ -39,7 +40,7 @@ export function getDateSearchTokens(dateStr: string): string[] {
 
   const dayPadded = String(day).padStart(2, '0');
   const monthPadded = String(month).padStart(2, '0');
-  const yearShort = String(TIMETABLE_YEAR).slice(-2);
+  const yearShort = String(year).slice(-2);
 
   return [
     // Day, month, year standalone
@@ -47,7 +48,7 @@ export function getDateSearchTokens(dateStr: string): string[] {
     dayPadded,
     String(month),
     monthPadded,
-    String(TIMETABLE_YEAR),
+    String(year),
     yearShort,
 
     // Month names
@@ -165,7 +166,10 @@ export function formatTutor(tutor: string): string {
   return name;
 }
 
+/**
+ * Create a sort key from a YYYY-MM-DD date string.
+ * Since dates are already in ISO format, this just returns the date string.
+ */
 export function createSortKey(dateStr: string): string {
-  const [day, month] = dateStr.split('/');
-  return `${TIMETABLE_YEAR}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  return dateStr;
 }

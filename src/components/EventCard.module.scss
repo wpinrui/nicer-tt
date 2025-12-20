@@ -25,6 +25,98 @@
   }
 }
 
+@mixin custom-event-style($border-color, $bg-color) {
+  border-left: 3px solid $border-color;
+  background: $bg-color;
+  margin: 0 -0.5rem 0 calc(-0.5rem - 3px);
+  padding: 0.4rem 0.5rem;
+  border-radius: 0 6px 6px 0;
+  position: relative;
+
+  &.eventHighlighted {
+    background: linear-gradient(to right, $bg-color, rgba(100, 108, 255, 0.1));
+
+    html.dark & {
+      background: linear-gradient(to right, $bg-color, rgba(100, 108, 255, 0.2));
+    }
+  }
+}
+
+.eventCustom {
+  @include custom-event-style(var(--color-custom-border), var(--color-custom-bg));
+}
+
+.eventUpgrading {
+  @include custom-event-style(var(--color-upgrading-border), var(--color-upgrading-bg));
+}
+
+.customBadge {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  background: var(--color-custom-badge-bg);
+  color: var(--color-custom-badge-text);
+  border-radius: 4px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.customBadgeUpgrading {
+  background: var(--color-upgrading-badge-bg, #16a085);
+  color: var(--color-upgrading-badge-text, #fff);
+}
+
+.eventDescription {
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  html.dark & {
+    color: var(--color-text-muted);
+  }
+}
+
+.customActions {
+  display: none;
+  gap: 0.25rem;
+  margin-left: auto;
+  flex-shrink: 0;
+
+  .eventCustom:hover &,
+  .eventUpgrading:hover & {
+    display: flex;
+  }
+
+  @include mobile {
+    // Always show on mobile since no hover
+    display: flex;
+  }
+}
+
+.customActionBtn {
+  padding: 0.25rem;
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+
+  &:hover {
+    background: var(--color-bg-hover);
+    color: var(--color-primary);
+  }
+
+  &.deleteBtn:hover {
+    color: var(--color-error);
+    background: var(--color-error-light);
+  }
+}
+
 .eventTime {
   font-size: 0.85rem;
   color: var(--color-text-primary);
@@ -57,7 +149,7 @@
   color: var(--color-text-secondary);
 
   html.dark & {
-    color: #bbb;
+    color: var(--color-text-muted);
   }
 }
 
@@ -89,7 +181,6 @@
 
 .eventGroup {
   color: var(--color-text-primary);
-  min-width: 4rem;
 
   html.dark & {
     color: var(--color-text-secondary);
@@ -99,7 +190,6 @@
 .eventVenue {
   color: var(--color-text-placeholder);
   font-size: 0.8rem;
-  min-width: 12rem;
 
   html.dark & {
     color: var(--color-text-disabled);

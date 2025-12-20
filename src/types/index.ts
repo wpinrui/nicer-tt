@@ -146,3 +146,94 @@ export interface MealConfig {
   /** Dinner window end hour (24-hour format) */
   dinnerEnd: number;
 }
+
+// =============================================================================
+// Custom Event Types
+// =============================================================================
+
+/**
+ * Type of custom event - determines badge display.
+ */
+export type CustomEventType = 'custom' | 'upgrading';
+
+/**
+ * A custom event created by the user (not parsed from NIE).
+ * Extends TimetableEvent with metadata for custom event management.
+ */
+export interface CustomEvent extends TimetableEvent {
+  /** Unique identifier for this custom event */
+  id: string;
+  /** Type of custom event (determines badge) */
+  eventType: CustomEventType;
+  /** User-provided description (max 100 chars) */
+  description: string;
+  /** When this event was created (timestamp) */
+  createdAt: number;
+  /** When this event was last modified (timestamp) */
+  updatedAt: number;
+}
+
+/**
+ * Storage format for custom events.
+ * Custom events are stored per-timetable for isolation.
+ */
+export interface CustomEventsStore {
+  [timetableId: string]: CustomEvent[];
+}
+
+/**
+ * Extended event item for display that may be a custom event.
+ */
+export interface DisplayEventItem extends EventItem {
+  /** Whether this is a custom event */
+  isCustom?: boolean;
+  /** Custom event ID (only present if isCustom is true) */
+  customEventId?: string;
+  /** Type of custom event - determines badge (only for custom events) */
+  eventType?: CustomEventType;
+  /** User-provided description (only for custom events) */
+  description?: string;
+}
+
+/**
+ * Events grouped by date for display, using DisplayEventItem for custom event support.
+ */
+export interface DisplayGroupedEvent {
+  /** Formatted date string for display (e.g., "Monday, 15 January 2026") */
+  date: string;
+  /** Sort key in YYYYMMDD format */
+  sortKey: string;
+  /** Events occurring on this date */
+  events: DisplayEventItem[];
+}
+
+// =============================================================================
+// Content Upgrading Types
+// =============================================================================
+
+/**
+ * A single session in an upgrading course.
+ */
+export interface UpgradingSession {
+  /** Date in DD/MM format */
+  date: string;
+  /** Start time in HH:MM format (24-hour) */
+  startTime: string;
+  /** End time in HH:MM format (24-hour) */
+  endTime: string;
+  /** Venue/location */
+  venue: string;
+  /** Tutor/instructor name */
+  tutor: string;
+}
+
+/**
+ * A content upgrading course preset.
+ * Each JSON file in src/data/upgrading-courses/ represents one course.
+ */
+export interface UpgradingCourse {
+  /** Course name (may include code, e.g., "COM1234 - Computing for Educators") */
+  courseName: string;
+  /** Array of sessions for this course */
+  sessions: UpgradingSession[];
+}

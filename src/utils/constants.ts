@@ -12,6 +12,7 @@ export const STORAGE_KEYS = {
   SHOW_TUTOR: 'nie-show-tutor',
   HAS_SEEN_SHARE_TIP: 'nie-has-seen-share-tip',
   CUSTOM_BACKGROUND: 'nie-custom-background',
+  CUSTOM_EVENTS: 'nie-custom-events', // CustomEventsStore JSON
 } as const;
 
 // Default name sequence for added timetables
@@ -27,6 +28,15 @@ export const DEFAULT_TIMETABLE_NAMES = [
   "Somenine's Timetable",
   "Someten's Timetable",
 ] as const;
+
+// Placeholder link for crowdsourcing contribution page
+export const CONTRIBUTION_PAGE_URL = 'https://example.com/contribute'; // TODO: Replace with actual Firebase page
+
+// Fixed colors for custom event types (used in course tag badges)
+export const CUSTOM_EVENT_COLORS: Record<string, string> = {
+  Custom: '#9c27b0', // Purple
+  Upgrading: '#16a085', // Teal
+} as const;
 
 // Color palette for course codes (darker shades for white text)
 export const COURSE_COLORS = [
