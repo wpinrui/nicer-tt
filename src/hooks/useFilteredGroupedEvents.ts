@@ -101,9 +101,16 @@ export function useFilteredGroupedEvents(
         }
       }
 
-      // Apply course filter (only for events with a course)
-      if (selectedCourses.size > 0 && event.course && !selectedCourses.has(event.course)) {
-        return;
+      // Apply course filter
+      if (selectedCourses.size > 0) {
+        // Get effective course name (handles legacy custom events with empty course)
+        let effectiveCourse = event.course;
+        if (!effectiveCourse && 'eventType' in event && event.eventType) {
+          effectiveCourse = event.eventType === 'upgrading' ? 'Upgrading' : 'Custom';
+        }
+        if (effectiveCourse && !selectedCourses.has(effectiveCourse)) {
+          return;
+        }
       }
 
       // Apply search filter
