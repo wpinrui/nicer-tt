@@ -15,7 +15,7 @@ export function ContributePage() {
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const isValid = courseName.trim() && files.length > 0;
+  const isValid = courseName.trim() && (files.length > 0 || notes.trim());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,14 +87,12 @@ export function ContributePage() {
         </div>
 
         <div className={styles.field}>
-          <label>
-            Schedule File <span className={styles.required}>*</span>
-          </label>
+          <label>Schedule File</label>
           <FileUploadZone files={files} onChange={setFiles} />
         </div>
 
         <div className={styles.field}>
-          <label htmlFor="notes">Notes</label>
+          <label htmlFor="notes">Notes {files.length === 0 && <span className={styles.required}>*</span>}</label>
           <textarea
             id="notes"
             value={notes}
