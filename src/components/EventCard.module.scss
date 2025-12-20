@@ -60,8 +60,7 @@
 .eventDescription {
   color: var(--color-text-secondary);
   font-size: 0.85rem;
-  flex: 1;
-  min-width: 0;
+  min-width: 4rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
