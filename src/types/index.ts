@@ -171,6 +171,8 @@ export interface CustomEvent extends TimetableEvent {
   createdAt: number;
   /** When this event was last modified (timestamp) */
   updatedAt: number;
+  /** Group ID for linked events (e.g., upgrading course sessions) - delete together */
+  groupId?: string;
 }
 
 /**
