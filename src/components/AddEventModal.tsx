@@ -92,10 +92,10 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
   });
 
   const [startTime, setStartTime] = useState(() =>
-    editingEvent ? toTimeInput(editingEvent.startTime) : '12:00'
+    editingEvent ? toTimeInput(editingEvent.startTime) : ''
   );
   const [endTime, setEndTime] = useState(() =>
-    editingEvent ? toTimeInput(editingEvent.endTime) : '14:00'
+    editingEvent ? toTimeInput(editingEvent.endTime) : ''
   );
   const [eventType, setEventType] = useState<CustomEventType>(
     () => editingEvent?.eventType || 'custom'
