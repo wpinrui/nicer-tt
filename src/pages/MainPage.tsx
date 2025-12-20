@@ -70,7 +70,10 @@ function MainPage() {
     useCustomEvents(activeTimetable?.id || null);
   const [isAddEventModalOpen, setAddEventModalOpen] = useState(false);
   const [editingCustomEvent, setEditingCustomEvent] = useState<CustomEvent | null>(null);
-  const [deletingEventId, setDeletingEventId] = useState<string | null>(null);
+  const [deletingEvent, setDeletingEvent] = useState<{
+    id: string;
+    sortKey: string;
+  } | null>(null);
   const [pendingExportAction, setPendingExportAction] = useState<'download' | 'share' | null>(null);
 
   const {
@@ -271,16 +274,38 @@ function MainPage() {
     [getCustomEvent]
   );
 
-  const handleDeleteCustomEvent = useCallback((eventId: string) => {
-    setDeletingEventId(eventId);
+  const handleDeleteCustomEvent = useCallback((eventId: string, sortKey: string) => {
+    setDeletingEvent({ id: eventId, sortKey });
   }, []);
 
-  const confirmDeleteCustomEvent = useCallback(() => {
-    if (deletingEventId) {
-      deleteCustomEvent(deletingEventId);
-      setDeletingEventId(null);
-    }
-  }, [deletingEventId, deleteCustomEvent]);
+  // Get the event being deleted to check date count
+  const deletingEventData = deletingEvent ? getCustomEvent(deletingEvent.id) : null;
+  const isMultiDateDelete = deletingEventData && deletingEventData.dates.length > 1;
+
+  // Convert sortKey (YYYYMMDD) to DD/MM format for matching
+  const sortKeyToDisplayDate = (sortKey: string): string => {
+    const day = sortKey.slice(6, 8);
+    const month = sortKey.slice(4, 6);
+    return `${day}/${month}`;
+  };
+
+  const confirmDeleteCustomEvent = useCallback(
+    (deleteAll: boolean) => {
+      if (!deletingEvent || !deletingEventData) return;
+
+      if (deleteAll || deletingEventData.dates.length === 1) {
+        // Delete the entire event
+        deleteCustomEvent(deletingEvent.id);
+      } else {
+        // Remove only this date from the event
+        const dateToRemove = sortKeyToDisplayDate(deletingEvent.sortKey);
+        const newDates = deletingEventData.dates.filter((d) => d !== dateToRemove);
+        updateCustomEvent(deletingEvent.id, { dates: newDates });
+      }
+      setDeletingEvent(null);
+    },
+    [deletingEvent, deletingEventData, deleteCustomEvent, updateCustomEvent]
+  );
 
   const handleSaveCustomEvent = useCallback(
     (eventInput: CustomEventInput) => {
@@ -580,15 +605,21 @@ function MainPage() {
         </Modal>
       )}
 
-      {deletingEventId && (
+      {deletingEvent && (
         <Modal
           title="Delete Custom Event?"
-          onClose={() => setDeletingEventId(null)}
-          onConfirm={confirmDeleteCustomEvent}
-          confirmText="Delete"
+          onClose={() => setDeletingEvent(null)}
+          onConfirm={() => confirmDeleteCustomEvent(true)}
+          confirmText={isMultiDateDelete ? 'Delete All Occurrences' : 'Delete'}
           confirmVariant="danger"
+          onSecondary={isMultiDateDelete ? () => confirmDeleteCustomEvent(false) : undefined}
+          secondaryText={isMultiDateDelete ? 'Delete This Occurrence' : undefined}
         >
-          <p>This action cannot be undone.</p>
+          <p>
+            {isMultiDateDelete
+              ? `This event has ${deletingEventData?.dates.length} occurrences. Delete just this one or all?`
+              : 'This action cannot be undone.'}
+          </p>
         </Modal>
       )}
 
