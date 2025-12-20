@@ -90,6 +90,15 @@ function saveCustomEventsStore(store: CustomEventsStore): void {
 export type CustomEventInput = Omit<CustomEvent, 'id' | 'createdAt' | 'updatedAt'>;
 
 /**
+ * Converts a CustomEvent to CustomEventInput by stripping auto-generated fields.
+ * Useful when importing/copying events between timetables.
+ */
+export function toCustomEventInput(event: CustomEvent): CustomEventInput {
+  const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, ...input } = event;
+  return input;
+}
+
+/**
  * Input for updating a custom event.
  * All fields are optional except we need to preserve TimetableEvent structure.
  */

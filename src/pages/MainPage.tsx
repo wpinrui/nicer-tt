@@ -34,6 +34,7 @@ import {
 import type { ExportOptions, ImportOptions } from '../components';
 import type { UploadSectionHandle } from '../components/UploadSection';
 import {
+  toCustomEventInput,
   useCustomEvents,
   useDebouncedValue,
   useFilteredEvents,
@@ -187,18 +188,7 @@ function MainPage() {
         if (timetableId) {
           // Then add custom events
           for (const event of sharedData.customEvents) {
-            addCustomEventToTimetable(timetableId, {
-              course: event.course,
-              group: event.group,
-              day: event.day,
-              startTime: event.startTime,
-              endTime: event.endTime,
-              dates: event.dates,
-              venue: event.venue,
-              tutor: event.tutor,
-              eventType: event.eventType,
-              description: event.description,
-            });
+            addCustomEventToTimetable(timetableId, toCustomEventInput(event));
           }
         }
       } else {
@@ -219,18 +209,7 @@ function MainPage() {
     // If ICS file contained custom events, add them to the timetable
     if (importedCustomEvents && importedCustomEvents.length > 0 && timetableId) {
       for (const event of importedCustomEvents) {
-        addCustomEventToTimetable(timetableId, {
-          course: event.course,
-          group: event.group,
-          day: event.day,
-          startTime: event.startTime,
-          endTime: event.endTime,
-          dates: event.dates,
-          venue: event.venue,
-          tutor: event.tutor,
-          eventType: event.eventType,
-          description: event.description,
-        });
+        addCustomEventToTimetable(timetableId, toCustomEventInput(event));
       }
     }
   };
@@ -358,18 +337,7 @@ function MainPage() {
 
           // Add each custom event directly to the new timetable
           for (const event of customEventsToImport) {
-            addCustomEventToTimetable(newId, {
-              course: event.course,
-              group: event.group,
-              day: event.day,
-              startTime: event.startTime,
-              endTime: event.endTime,
-              dates: event.dates,
-              venue: event.venue,
-              tutor: event.tutor,
-              eventType: event.eventType,
-              description: event.description,
-            });
+            addCustomEventToTimetable(newId, toCustomEventInput(event));
           }
         }
       }
