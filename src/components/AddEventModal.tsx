@@ -45,18 +45,50 @@ function getDayOfWeek(date: Date): string {
 }
 
 /**
- * Formats time from HHMM to HH:MM for input.
+ * Converts HHMM string to Date object (for time picker).
  */
-function toTimeInput(time: string): string {
-  if (!time || time.length < 4) return '';
-  return `${time.slice(0, 2)}:${time.slice(2, 4)}`;
+function timeStringToDate(time: string): Date | null {
+  if (!time || time.length < 4) return null;
+  const hours = parseInt(time.slice(0, 2), 10);
+  const minutes = parseInt(time.slice(2, 4), 10);
+  const date = new Date();
+  date.setHours(hours, minutes, 0, 0);
+  return date;
 }
 
 /**
- * Formats time from HH:MM to HHMM for storage.
+ * Converts Date to HHMM string for storage.
  */
-function fromTimeInput(time: string): string {
-  return time.replace(':', '');
+function dateToTimeString(date: Date | null): string {
+  if (!date) return '';
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${hours}${minutes}`;
+}
+
+/**
+ * Formats Date to display string for time input.
+ */
+function formatTimeDisplay(date: Date | null): string {
+  if (!date) return '';
+  return date.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+}
+
+// Default times for new events (12:00 PM and 2:00 PM)
+function getDefaultStartTime(): Date {
+  const date = new Date();
+  date.setHours(12, 0, 0, 0);
+  return date;
+}
+
+function getDefaultEndTime(): Date {
+  const date = new Date();
+  date.setHours(14, 0, 0, 0);
+  return date;
 }
 
 interface CustomInputProps {
@@ -91,11 +123,11 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
     return [];
   });
 
-  const [startTime, setStartTime] = useState(() =>
-    editingEvent ? toTimeInput(editingEvent.startTime) : ''
+  const [startTime, setStartTime] = useState<Date | null>(() =>
+    editingEvent ? timeStringToDate(editingEvent.startTime) : null
   );
-  const [endTime, setEndTime] = useState(() =>
-    editingEvent ? toTimeInput(editingEvent.endTime) : ''
+  const [endTime, setEndTime] = useState<Date | null>(() =>
+    editingEvent ? timeStringToDate(editingEvent.endTime) : null
   );
   const [eventType, setEventType] = useState<CustomEventType>(
     () => editingEvent?.eventType || 'custom'
@@ -190,8 +222,8 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
     const eventInput: CustomEventInput = {
       dates: sortedDates.map((d) => dateToIso(d)),
       day: getDayOfWeek(sortedDates[0]),
-      startTime: fromTimeInput(startTime),
-      endTime: fromTimeInput(endTime),
+      startTime: dateToTimeString(startTime),
+      endTime: dateToTimeString(endTime),
       eventType,
       description: description.trim(),
       course: eventType === 'upgrading' ? 'Upgrading' : 'Custom',
@@ -279,28 +311,54 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
           <div className={styles.timeRow}>
             <div className={styles.field}>
               <label className={styles.label}>Start Time</label>
-              <input
-                type="time"
-                className={styles.input}
-                value={startTime}
-                onChange={(e) => {
-                  setStartTime(e.target.value);
-                  setErrors((prev) => ({ ...prev, startTime: '' }));
-                }}
-              />
+              <div className={styles.datePickerWrapper}>
+                <DatePicker
+                  selected={startTime}
+                  onChange={(date: Date | null) => {
+                    setStartTime(date);
+                    setErrors((prev) => ({ ...prev, startTime: '' }));
+                  }}
+                  showTimeSelect
+                  showTimeSelectOnly
+                  timeIntervals={15}
+                  timeCaption="Time"
+                  dateFormat="h:mm aa"
+                  openToDate={getDefaultStartTime()}
+                  customInput={
+                    <CustomDateInput
+                      placeholder="Select time"
+                      value={formatTimeDisplay(startTime)}
+                    />
+                  }
+                  popperClassName={styles.datePickerPopper}
+                />
+              </div>
               {errors.startTime && <span className={styles.error}>{errors.startTime}</span>}
             </div>
             <div className={styles.field}>
               <label className={styles.label}>End Time</label>
-              <input
-                type="time"
-                className={styles.input}
-                value={endTime}
-                onChange={(e) => {
-                  setEndTime(e.target.value);
-                  setErrors((prev) => ({ ...prev, endTime: '' }));
-                }}
-              />
+              <div className={styles.datePickerWrapper}>
+                <DatePicker
+                  selected={endTime}
+                  onChange={(date: Date | null) => {
+                    setEndTime(date);
+                    setErrors((prev) => ({ ...prev, endTime: '' }));
+                  }}
+                  showTimeSelect
+                  showTimeSelectOnly
+                  timeIntervals={15}
+                  timeCaption="Time"
+                  dateFormat="h:mm aa"
+                  openToDate={getDefaultEndTime()}
+                  customInput={
+                    <CustomDateInput
+                      placeholder="Select time"
+                      value={formatTimeDisplay(endTime)}
+                    />
+                  }
+                  popperClassName={styles.datePickerPopper}
+                />
+              </div>
               {errors.endTime && <span className={styles.error}>{errors.endTime}</span>}
             </div>
           </div>
