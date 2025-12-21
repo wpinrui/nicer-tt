@@ -106,6 +106,7 @@ function MainPage() {
     setSelectedDate,
     setShowPastDates,
     toggleCourse,
+    deselectCourse,
     handleCourseClick,
     clearFilters,
     hasActiveFilters,
@@ -173,6 +174,11 @@ function MainPage() {
       showPastDates,
       selectedDate
     );
+
+  const handleDeselectCourse = useCallback(
+    (course: string) => deselectCourse(course, uniqueCourses),
+    [deselectCourse, uniqueCourses]
+  );
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
@@ -666,6 +672,7 @@ function MainPage() {
                 selectedCourses={selectedCourses}
                 courseColorMap={courseColorMap}
                 onToggleCourse={toggleCourse}
+                onDeselectCourse={handleDeselectCourse}
                 onClearFilters={clearFilters}
                 hasActiveFilters={hasActiveFilters}
               />

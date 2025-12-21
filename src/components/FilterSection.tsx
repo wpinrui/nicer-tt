@@ -15,6 +15,7 @@ interface FilterSectionProps {
   selectedCourses: Set<string>;
   courseColorMap: Map<string, string>;
   onToggleCourse: (course: string) => void;
+  onDeselectCourse: (course: string) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }
@@ -36,6 +37,7 @@ export const FilterSection = memo(function FilterSection({
   selectedCourses,
   courseColorMap,
   onToggleCourse,
+  onDeselectCourse,
   onClearFilters,
   hasActiveFilters,
 }: FilterSectionProps) {
@@ -128,6 +130,10 @@ export const FilterSection = memo(function FilterSection({
               opacity: selectedCourses.size === 0 || selectedCourses.has(course) ? 1 : 0.5,
             }}
             onClick={() => onToggleCourse(course)}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              onDeselectCourse(course);
+            }}
           >
             {course}
           </button>
@@ -162,6 +168,10 @@ export const FilterSection = memo(function FilterSection({
                   opacity: selectedCourses.size === 0 || selectedCourses.has(course) ? 1 : 0.5,
                 }}
                 onClick={() => onToggleCourse(course)}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  onDeselectCourse(course);
+                }}
               >
                 {course}
               </button>

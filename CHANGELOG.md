@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.5.4 (21 Dec 2025)**
+- Add right-click on course filter pill to deselect that course
+
 **v1.5.3 (21 Dec 2025)**
 - Fix clicking Upgrading pill in events pane now correctly filters to upgrading events
 
