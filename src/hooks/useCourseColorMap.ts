@@ -48,14 +48,25 @@ export function useCourseColorMap(events: TimetableEvent[] | null): UseCourseCol
       .sort();
     const coursesArray = [...regularCourses, ...customCourses];
 
-    let paletteIndex = 0;
-    coursesArray.forEach((course) => {
-      if (CUSTOM_EVENT_COLORS[course]) {
-        colorMap.set(course, CUSTOM_EVENT_COLORS[course]);
+    // Distribute colors evenly across the palette so users always see
+    // the full spectrum (first and last colors) regardless of course count
+    const paletteLength = COURSE_COLORS.length;
+    const regularCount = regularCourses.length;
+
+    regularCourses.forEach((course, i) => {
+      let colorIndex: number;
+      if (regularCount === 1) {
+        colorIndex = 0;
       } else {
-        colorMap.set(course, COURSE_COLORS[paletteIndex % COURSE_COLORS.length]);
-        paletteIndex++;
+        // Spread evenly: first course gets index 0, last gets index (paletteLength - 1)
+        colorIndex = Math.round((i * (paletteLength - 1)) / (regularCount - 1));
       }
+      colorMap.set(course, COURSE_COLORS[colorIndex]);
+    });
+
+    // Custom event types use their fixed colors
+    customCourses.forEach((course) => {
+      colorMap.set(course, CUSTOM_EVENT_COLORS[course]);
     });
 
     return {

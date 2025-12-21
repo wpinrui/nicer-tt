@@ -1,5 +1,10 @@
 # Changelog
 
+**v1.5.7 (21 Dec 2025)**
+- Improve light mode contrast for better readability
+- Fix placeholder/disabled text colors (#888/#999 → #757575/#6b6b6b)
+- Add CSS variables for compare accent colors with proper light/dark values
+
 **v1.5.6 (21 Dec 2025)**
 - Replace hardcoded #ccc with CSS variable for inactive course filter buttons
 

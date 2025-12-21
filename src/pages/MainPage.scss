@@ -338,7 +338,8 @@ header h1 {
 }
 
 .events-preview {
-  background: var(--color-bg-tertiary);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-card);
   padding: 1rem 1.25rem;
   border-radius: 10px;
   margin-bottom: 1rem;
@@ -348,6 +349,10 @@ header h1 {
   min-height: 100px;
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+
+  html.dark & {
+    border: none;
+  }
 }
 
 .events-preview::-webkit-scrollbar {
@@ -756,7 +761,7 @@ html.dark .reset-button:hover {
 
 html.dark .theme-toggle-button {
   background: rgba(255, 255, 255, 0.1);
-  color: #ffc107;
+  color: var(--color-compare-accent);
 }
 
 html.dark .theme-toggle-button:hover {
@@ -1086,17 +1091,17 @@ html.dark .file-button-tertiary:hover {
     width: 100%;
     padding: 0.75rem 1rem;
     margin-top: 0.5rem;
-    background: rgba(255, 193, 7, 0.1);
+    background: var(--color-compare-accent-bg);
     border: 1px solid rgba(255, 193, 7, 0.3);
     border-radius: 8px;
-    color: #f9a825;
+    color: var(--color-compare-accent);
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
   }
 
   .mobile-config-btn:hover {
-    background: rgba(255, 193, 7, 0.15);
+    background: var(--color-compare-accent-bg-hover);
   }
 
   .filters-toggle {
@@ -1104,10 +1109,10 @@ html.dark .file-button-tertiary:hover {
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: rgba(255, 193, 7, 0.1);
+    background: var(--color-compare-accent-bg);
     border: 1px solid rgba(255, 193, 7, 0.2);
     border-radius: 8px;
-    color: #f9a825;
+    color: var(--color-compare-accent);
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
@@ -1115,7 +1120,7 @@ html.dark .file-button-tertiary:hover {
   }
 
   .filters-toggle:hover {
-    background: rgba(255, 193, 7, 0.15);
+    background: var(--color-compare-accent-bg-hover);
   }
 
   /* Mobile menu disabled state */
@@ -1154,29 +1159,27 @@ html.dark .file-button-tertiary:hover {
 
 /* Compare button active state (yellow for compare mode) */
 .header-btn-active {
-  background: rgba(255, 193, 7, 0.3);
-  color: #f9a825;
+  background: var(--color-compare-accent-bg-hover);
+  color: var(--color-compare-accent);
 }
 
 /* Exit Compare button - yellow accent */
 .exit-compare-btn {
-  background: rgba(255, 193, 7, 0.15) !important;
+  background: var(--color-compare-accent-bg) !important;
   border-color: rgba(255, 193, 7, 0.3) !important;
-  color: #f9a825 !important;
+  color: var(--color-compare-accent) !important;
 }
 
 .exit-compare-btn:hover {
-  background: rgba(255, 193, 7, 0.25) !important;
+  background: var(--color-compare-accent-bg-hover) !important;
 }
 
 html.dark .exit-compare-btn {
-  background: rgba(255, 193, 7, 0.2) !important;
   border-color: rgba(255, 193, 7, 0.4) !important;
-  color: #ffc107 !important;
 }
 
 html.dark .exit-compare-btn:hover {
-  background: rgba(255, 193, 7, 0.3) !important;
+  background: var(--color-compare-accent-bg-hover) !important;
 }
 
 .header-btn:disabled {
@@ -1187,11 +1190,6 @@ html.dark .exit-compare-btn:hover {
 .header-btn:disabled:hover {
   background: rgba(100, 108, 255, 0.1);
   transform: none;
-}
-
-html.dark .header-btn-active {
-  background: rgba(255, 193, 7, 0.35);
-  color: #ffc107;
 }
 
 html.dark .header-btn:disabled {
@@ -1280,12 +1278,6 @@ html.dark .compare-column-name {
   }
 
   html.dark .mobile-config-btn {
-    background: rgba(255, 193, 7, 0.15);
     border-color: rgba(255, 193, 7, 0.35);
-    color: #ffc107;
-  }
-
-  html.dark .mobile-config-btn:hover {
-    background: rgba(255, 193, 7, 0.25);
   }
 }
