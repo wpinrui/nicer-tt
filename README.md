@@ -16,10 +16,15 @@ NIcEr Timetable transforms your clunky NIE Portal timetable into a clean, search
 
 - **Clean Interface** - See your schedule at a glance, organized by date
 - **Smart Filtering** - Search by course, venue, tutor, or date; filter by course code; hide past events
-- **Shareable Links** - Share your timetable with classmates via URL
+- **Compare Timetables** - Compare schedules side-by-side with filters like Common Days, Travel Together, and Eat Together
+- **Custom Events** - Add personal events not in your NIE timetable (e.g., content upgrading classes)
+- **Multi-Timetable Storage** - Save multiple timetables, switch between them, and share specific ones
+- **Shareable Links** - Share your timetable with classmates via compressed URL
 - **Calendar Export** - Download an ICS file for Google Calendar, Outlook, or Apple Calendar
+- **Custom Backgrounds** - Use your own background image or a plain background
 - **Auto-Save** - Your timetable is saved locally so you can return anytime
 - **Dark Mode** - Easy on the eyes
+- **Mobile Support** - Full mobile experience with hamburger menu and touch-friendly controls
 - **Privacy-First** - Everything runs in your browser; no data is sent to any server
 
 ## :book: Usage
@@ -48,13 +53,17 @@ npm run build
 
 ### Deploy
 
-Push to `main` to trigger a Vercel deploy.
+Force push `main` to the `deploy` branch to trigger a Vercel deploy:
+
+```bash
+git push origin origin/main:deploy --force
+```
 
 ## Tech Stack
 
 - React + TypeScript
 - Vite
-- CSS (no framework)
+- SCSS with CSS variables
 
 ## Credits
 
