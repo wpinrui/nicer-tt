@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.5.5 (21 Dec 2025)**
+- Update README with current features, correct deploy instructions, and SCSS tech stack
+
 **v1.5.4 (21 Dec 2025)**
 - Add right-click on course filter pill to deselect that course
 
