@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.5.6 (21 Dec 2025)**
+- Replace hardcoded #ccc with CSS variable for inactive course filter buttons
+
 **v1.5.5 (21 Dec 2025)**
 - Update README with current features, correct deploy instructions, and SCSS tech stack
 
