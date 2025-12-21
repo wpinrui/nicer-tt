@@ -54,6 +54,28 @@ export const FilterSection = memo(function FilterSection({
     onDateChange(null);
   };
 
+  const renderCourseButtons = () =>
+    uniqueCourses.map((course) => (
+      <button
+        key={course}
+        className={styles.courseFilterBtn}
+        style={{
+          backgroundColor:
+            selectedCourses.has(course) || selectedCourses.size === 0
+              ? courseColorMap.get(course)
+              : '#ccc',
+          opacity: selectedCourses.size === 0 || selectedCourses.has(course) ? 1 : 0.5,
+        }}
+        onClick={() => onToggleCourse(course)}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          onDeselectCourse(course);
+        }}
+      >
+        {course}
+      </button>
+    ));
+
   return (
     <div className={`${styles.section} no-print`}>
       <div className={styles.searchRow}>
@@ -117,28 +139,7 @@ export const FilterSection = memo(function FilterSection({
         )}
       </div>
       {/* Desktop: always visible course filters */}
-      <div className={`${styles.courseFilters} ${styles.desktopOnly}`}>
-        {uniqueCourses.map((course) => (
-          <button
-            key={course}
-            className={styles.courseFilterBtn}
-            style={{
-              backgroundColor:
-                selectedCourses.has(course) || selectedCourses.size === 0
-                  ? courseColorMap.get(course)
-                  : '#ccc',
-              opacity: selectedCourses.size === 0 || selectedCourses.has(course) ? 1 : 0.5,
-            }}
-            onClick={() => onToggleCourse(course)}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              onDeselectCourse(course);
-            }}
-          >
-            {course}
-          </button>
-        ))}
-      </div>
+      <div className={`${styles.courseFilters} ${styles.desktopOnly}`}>{renderCourseButtons()}</div>
       {/* Mobile: expandable filters panel */}
       {filtersExpanded && (
         <div className={styles.mobileFiltersPanel}>
@@ -155,28 +156,7 @@ export const FilterSection = memo(function FilterSection({
               <X size={14} /> Clear
             </button>
           )}
-          <div className={styles.courseFilters}>
-            {uniqueCourses.map((course) => (
-              <button
-                key={course}
-                className={styles.courseFilterBtn}
-                style={{
-                  backgroundColor:
-                    selectedCourses.has(course) || selectedCourses.size === 0
-                      ? courseColorMap.get(course)
-                      : '#ccc',
-                  opacity: selectedCourses.size === 0 || selectedCourses.has(course) ? 1 : 0.5,
-                }}
-                onClick={() => onToggleCourse(course)}
-                onContextMenu={(e) => {
-                  e.preventDefault();
-                  onDeselectCourse(course);
-                }}
-              >
-                {course}
-              </button>
-            ))}
-          </div>
+          <div className={styles.courseFilters}>{renderCourseButtons()}</div>
         </div>
       )}
     </div>
