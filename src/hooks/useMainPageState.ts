@@ -85,6 +85,19 @@ export function useMainPageState() {
     });
   }, []);
 
+  const deselectCourse = useCallback((course: string, allCourses: string[]) => {
+    setSelectedCourses((prev) => {
+      if (prev.size === 0) {
+        // All courses shown - select all EXCEPT this one
+        return new Set(allCourses.filter((c) => c !== course));
+      }
+      // Some selected - just remove this course
+      const newSet = new Set(prev);
+      newSet.delete(course);
+      return newSet;
+    });
+  }, []);
+
   const handleCourseClick = useCallback((course: string) => {
     setSelectedCourses((prev) => {
       if (prev.size === 0) {
@@ -150,6 +163,7 @@ export function useMainPageState() {
     setSelectedDate,
     setShowPastDates,
     toggleCourse,
+    deselectCourse,
     handleCourseClick,
     clearFilters,
     hasActiveFilters,
