@@ -339,6 +339,7 @@ header h1 {
 
 .events-preview {
   background: var(--color-bg-card);
+  border: 1px solid var(--color-border-card);
   padding: 1rem 1.25rem;
   border-radius: 10px;
   margin-bottom: 1rem;
@@ -348,6 +349,10 @@ header h1 {
   min-height: 100px;
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+
+  html.dark & {
+    border: none;
+  }
 }
 
 .events-preview::-webkit-scrollbar {
