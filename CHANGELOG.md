@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.5.3 (21 Dec 2025)**
+- Fix clicking Upgrading pill in events pane now correctly filters to upgrading events
+
 **v1.5.2 (21 Dec 2025)**
 - Fix upgrading courses with multiple sessions per day showing duplicate events with same timeslot
 - Upgrading course sessions are linked via groupId - deleting one deletes all
