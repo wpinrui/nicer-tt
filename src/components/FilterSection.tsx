@@ -63,7 +63,7 @@ export const FilterSection = memo(function FilterSection({
           backgroundColor:
             selectedCourses.has(course) || selectedCourses.size === 0
               ? courseColorMap.get(course)
-              : '#ccc',
+              : 'var(--color-btn-inactive-bg)',
           opacity: selectedCourses.size === 0 || selectedCourses.has(course) ? 1 : 0.5,
         }}
         onClick={() => onToggleCourse(course)}
