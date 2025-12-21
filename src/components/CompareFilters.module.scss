@@ -13,17 +13,17 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: rgba(255, 193, 7, 0.1);
+  background: var(--color-compare-accent-bg);
   border: 1px solid rgba(255, 193, 7, 0.2);
   border-radius: 8px;
-  color: #f9a825;
+  color: var(--color-compare-accent);
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
   margin-bottom: 0.75rem;
 
   &:hover {
-    background: rgba(255, 193, 7, 0.15);
+    background: var(--color-compare-accent-bg-hover);
   }
 
   @include mobile {
@@ -31,12 +31,10 @@
   }
 
   html.dark & {
-    background: rgba(255, 193, 7, 0.15);
     border-color: rgba(255, 193, 7, 0.3);
-    color: #ffc107;
 
     &:hover {
-      background: rgba(255, 193, 7, 0.25);
+      background: var(--color-compare-accent-bg-hover);
     }
   }
 }
@@ -73,14 +71,14 @@
   position: relative;
 
   &:hover {
-    background: rgba(255, 193, 7, 0.15);
-    color: #f9a825;
+    background: var(--color-compare-accent-bg-hover);
+    color: var(--color-compare-accent);
   }
 
   &.active {
-    background: rgba(255, 193, 7, 0.2);
-    border-color: #f9a825;
-    color: #f9a825;
+    background: var(--color-compare-accent-bg-hover);
+    border-color: var(--color-compare-accent);
+    color: var(--color-compare-accent);
   }
 
   @include mobile {
@@ -90,17 +88,9 @@
 
   html.dark & {
     background: rgba(255, 255, 255, 0.08);
-    color: var(--color-text-secondary);
-
-    &:hover {
-      background: rgba(255, 193, 7, 0.2);
-      color: #ffc107;
-    }
 
     &.active {
-      background: rgba(255, 193, 7, 0.25);
-      border-color: #f9a825;
-      color: #ffc107;
+      background: var(--color-compare-accent-bg-hover);
     }
   }
 }
@@ -170,26 +160,20 @@
     width: 100%;
     padding: 0.75rem 1rem;
     margin-top: 0.5rem;
-    background: rgba(255, 193, 7, 0.1);
+    background: var(--color-compare-accent-bg);
     border: 1px solid rgba(255, 193, 7, 0.3);
     border-radius: 8px;
-    color: #f9a825;
+    color: var(--color-compare-accent);
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
 
     &:hover {
-      background: rgba(255, 193, 7, 0.15);
+      background: var(--color-compare-accent-bg-hover);
     }
 
     html.dark & {
-      background: rgba(255, 193, 7, 0.15);
       border-color: rgba(255, 193, 7, 0.4);
-      color: #ffc107;
-
-      &:hover {
-        background: rgba(255, 193, 7, 0.25);
-      }
     }
   }
 }
@@ -200,15 +184,11 @@
   gap: 1rem;
   flex-wrap: wrap;
   padding: 0.75rem;
-  background: rgba(255, 193, 7, 0.08);
+  background: var(--color-compare-accent-bg);
   border-radius: 8px;
 
   @media (min-width: 769px) {
     display: flex;
-  }
-
-  html.dark & {
-    background: rgba(255, 193, 7, 0.12);
   }
 }
 
@@ -249,27 +229,20 @@
   transition: all 0.15s;
 
   &:hover {
-    background: rgba(255, 193, 7, 0.15);
-    color: #f9a825;
+    background: var(--color-compare-accent-bg-hover);
+    color: var(--color-compare-accent);
   }
 
   &.active {
-    background: #f9a825;
-    color: var(--color-text-primary);
+    background: var(--color-compare-accent);
+    color: var(--color-bg-primary);
   }
 
   html.dark & {
     background: rgba(255, 255, 255, 0.08);
-    color: var(--color-text-secondary);
-
-    &:hover {
-      background: rgba(255, 193, 7, 0.2);
-      color: #ffc107;
-    }
 
     &.active {
-      background: #f9a825;
-      color: var(--color-text-primary);
+      color: #1a1a1a;
     }
   }
 }
@@ -300,15 +273,11 @@
   gap: 1rem;
   flex-wrap: wrap;
   padding: 0.75rem;
-  background: rgba(255, 193, 7, 0.08);
+  background: var(--color-compare-accent-bg);
   border-radius: 8px;
 
   @media (min-width: 769px) {
     display: flex;
-  }
-
-  html.dark & {
-    background: rgba(255, 193, 7, 0.12);
   }
 }
 
@@ -345,27 +314,20 @@
   transition: all 0.15s;
 
   &:hover {
-    background: rgba(255, 193, 7, 0.15);
-    color: #f9a825;
+    background: var(--color-compare-accent-bg-hover);
+    color: var(--color-compare-accent);
   }
 
   &.active {
-    background: #f9a825;
-    color: var(--color-text-primary);
+    background: var(--color-compare-accent);
+    color: var(--color-bg-primary);
   }
 
   html.dark & {
     background: rgba(255, 255, 255, 0.08);
-    color: var(--color-text-secondary);
-
-    &:hover {
-      background: rgba(255, 193, 7, 0.2);
-      color: #ffc107;
-    }
 
     &.active {
-      background: #f9a825;
-      color: var(--color-text-primary);
+      color: #1a1a1a;
     }
   }
 }
@@ -439,15 +401,10 @@
 
 .compareNameTag {
   padding: 0.2rem 0.5rem;
-  background: rgba(255, 193, 7, 0.2);
-  color: #f9a825;
+  background: var(--color-compare-accent-bg-hover);
+  color: var(--color-compare-accent);
   font-weight: 600;
   border-radius: 4px;
-
-  html.dark & {
-    background: rgba(255, 193, 7, 0.25);
-    color: #ffc107;
-  }
 }
 
 .compareVs {
@@ -494,28 +451,22 @@
   transition: all 0.15s;
 
   &:hover {
-    background: rgba(255, 193, 7, 0.15);
-    color: #f9a825;
+    background: var(--color-compare-accent-bg-hover);
+    color: var(--color-compare-accent);
   }
 
   &.active {
-    background: #f9a825;
-    color: var(--color-text-primary);
-    border-color: #f9a825;
+    background: var(--color-compare-accent);
+    color: var(--color-bg-primary);
+    border-color: var(--color-compare-accent);
   }
 
   html.dark & {
     background: rgba(255, 255, 255, 0.08);
     color: var(--color-text-muted);
 
-    &:hover {
-      background: rgba(255, 193, 7, 0.2);
-      color: #ffc107;
-    }
-
     &.active {
-      background: #f9a825;
-      color: var(--color-text-primary);
+      color: #1a1a1a;
     }
   }
 }
