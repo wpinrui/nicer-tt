@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import type { ExportOptions, ImportOptions } from '../components';
 import {
   AddEventModal,
   CompareFilters,
@@ -31,7 +32,6 @@ import {
   ShareWelcomeModal,
   UploadSection,
 } from '../components';
-import type { ExportOptions, ImportOptions } from '../components';
 import type { UploadSectionHandle } from '../components/UploadSection';
 import {
   toCustomEventInput,
@@ -174,6 +174,11 @@ function MainPage() {
       showPastDates,
       selectedDate
     );
+
+  const handleToggleCourse = useCallback(
+    (course: string) => toggleCourse(course, uniqueCourses),
+    [toggleCourse, uniqueCourses]
+  );
 
   const handleDeselectCourse = useCallback(
     (course: string) => deselectCourse(course, uniqueCourses),
@@ -682,7 +687,7 @@ function MainPage() {
                 uniqueCourses={uniqueCourses}
                 selectedCourses={selectedCourses}
                 courseColorMap={courseColorMap}
-                onToggleCourse={toggleCourse}
+                onToggleCourse={handleToggleCourse}
                 onDeselectCourse={handleDeselectCourse}
                 onClearFilters={clearFilters}
                 hasActiveFilters={hasActiveFilters}
