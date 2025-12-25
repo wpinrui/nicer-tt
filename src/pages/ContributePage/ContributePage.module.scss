@@ -65,12 +65,25 @@
 
 .existingList {
   margin: 0.5rem 0 0;
-  padding: 0.75rem;
+  padding: 0.75rem 0.75rem 0.75rem 1.5rem;
   font-size: 0.8125rem;
   color: var(--color-text-secondary);
   background-color: var(--color-bg-secondary);
   border-radius: 6px;
-  line-height: 1.5;
+  line-height: 1.6;
+  list-style: disc;
+
+  li {
+    margin-bottom: 0.25rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  strong {
+    color: var(--color-text-primary);
+  }
 }
 
 .form {

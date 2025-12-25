@@ -1,5 +1,9 @@
 # Changelog
 
+**v1.5.13 (25 Dec 2025)**
+- Fix existing contributions display to show full course codes (e.g., QUT001A not just QUT001)
+- Improve display: show abbreviated codes in collapsed state, full names when expanded
+
 **v1.5.12 (25 Dec 2025)**
 - Show existing contributions on Contribute page to prevent duplicate submissions
 - Remove telegram handle field from contribution form (privacy)
