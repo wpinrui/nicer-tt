@@ -1,7 +1,50 @@
 import pako from 'pako';
 
 import type { CustomEvent, ShareData, ShareDataV2, TimetableEvent } from '../types';
+import { migrateDateFormat } from './dateMigration';
 import { logError } from './errors';
+
+/**
+ * Migrate event dates from legacy DD/MM format to YYYY-MM-DD.
+ * Applied when decoding share links to handle old format compatibility.
+ */
+function migrateEventDates(events: TimetableEvent[]): TimetableEvent[] {
+  return events.map((event) => ({
+    ...event,
+    dates: event.dates.map(migrateDateFormat),
+  }));
+}
+
+/**
+ * Migrate custom event dates from legacy DD/MM format to YYYY-MM-DD.
+ */
+function migrateCustomEventDates(events: CustomEvent[]): CustomEvent[] {
+  return events.map((event) => ({
+    ...event,
+    dates: event.dates.map(migrateDateFormat),
+  }));
+}
+
+/**
+ * Apply date migration to decoded share data.
+ * Handles both V1 and V2 formats.
+ */
+function migrateShareData(data: ShareData): ShareData {
+  const migratedEvents = migrateEventDates(data.events);
+
+  if ('version' in data && data.version === 2) {
+    return {
+      ...data,
+      events: migratedEvents,
+      customEvents: migrateCustomEventDates(data.customEvents),
+    };
+  }
+
+  return {
+    ...data,
+    events: migratedEvents,
+  };
+}
 
 // URL-safe base64 encoding
 export function toUrlSafeBase64(bytes: Uint8Array): string {
@@ -42,18 +85,21 @@ export function encodeShareData(
 /**
  * Decodes share data from a URL-safe base64 string.
  * Handles both V1 (legacy) and V2 formats.
+ * Migrates dates from old DD/MM format to YYYY-MM-DD for compatibility.
  */
 export function decodeShareData(encoded: string): ShareData | null {
   // Try compressed format first (new)
   try {
     const bytes = fromUrlSafeBase64(encoded);
     const decompressed = pako.inflate(bytes, { to: 'string' });
-    return JSON.parse(decompressed);
+    const data = JSON.parse(decompressed) as ShareData;
+    return migrateShareData(data);
   } catch {
     // Fall back to legacy uncompressed format
     try {
-      const data = decodeURIComponent(atob(encoded));
-      return JSON.parse(data);
+      const raw = decodeURIComponent(atob(encoded));
+      const data = JSON.parse(raw) as ShareData;
+      return migrateShareData(data);
     } catch (e) {
       // Log only if both formats fail (user provided invalid share data)
       logError('decodeShareData', e, { encoded: encoded.substring(0, 50) + '...' });
