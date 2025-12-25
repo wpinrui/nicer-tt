@@ -26,9 +26,15 @@ interface AddEventModalProps {
   onClose: () => void;
   onSave: (events: CustomEventInput | CustomEventInput[]) => void;
   editingEvent?: CustomEvent | null;
+  addedUpgradingCourseNames?: Set<string>;
 }
 
-export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalProps) {
+export function AddEventModal({
+  onClose,
+  onSave,
+  editingEvent,
+  addedUpgradingCourseNames,
+}: AddEventModalProps) {
   const isEditing = !!editingEvent;
 
   // Determine initial step based on whether editing
@@ -243,6 +249,7 @@ export function AddEventModal({ onClose, onSave, editingEvent }: AddEventModalPr
             onClose={onClose}
             onBack={handleBack}
             onCourseSelect={handleCourseSelect}
+            addedCourseNames={addedUpgradingCourseNames}
           />
         )}
 

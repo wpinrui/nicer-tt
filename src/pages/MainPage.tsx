@@ -467,6 +467,17 @@ function MainPage() {
     [compareTimetables, getTimetable]
   );
 
+  // Get already-added upgrading course names to prevent duplicates
+  const addedUpgradingCourseNames = useMemo(() => {
+    const names = new Set<string>();
+    for (const event of customEvents) {
+      if (event.eventType === 'upgrading') {
+        names.add(event.description);
+      }
+    }
+    return names;
+  }, [customEvents]);
+
   return (
     <div className={`main-page ${isMobileMenuOpen ? 'menu-open' : ''}`}>
       {events ? (
@@ -835,6 +846,7 @@ function MainPage() {
           onClose={handleCloseAddEventModal}
           onSave={handleSaveCustomEvent}
           editingEvent={editingCustomEvent}
+          addedUpgradingCourseNames={addedUpgradingCourseNames}
         />
       )}
 

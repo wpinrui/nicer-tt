@@ -11,9 +11,15 @@ interface UpgradingSelectStepProps {
   onClose: () => void;
   onBack: () => void;
   onCourseSelect: (course: UpgradingCourse) => void;
+  addedCourseNames?: Set<string>;
 }
 
-export function UpgradingSelectStep({ onClose, onBack, onCourseSelect }: UpgradingSelectStepProps) {
+export function UpgradingSelectStep({
+  onClose,
+  onBack,
+  onCourseSelect,
+  addedCourseNames,
+}: UpgradingSelectStepProps) {
   const [search, setSearch] = useState('');
 
   const filteredCourses = useMemo(() => {
@@ -51,16 +57,22 @@ export function UpgradingSelectStep({ onClose, onBack, onCourseSelect }: Upgradi
               {filteredCourses.length === 0 ? (
                 <div className={styles.noResults}>No courses match "{search}"</div>
               ) : (
-                filteredCourses.map((course) => (
-                  <button
-                    key={course.courseName}
-                    className={styles.courseListItem}
-                    onClick={() => onCourseSelect(course)}
-                  >
-                    <span className={styles.courseName}>{course.courseName}</span>
-                    <span className={styles.sessionCount}>{course.sessions.length} sessions</span>
-                  </button>
-                ))
+                filteredCourses.map((course) => {
+                  const isAdded = addedCourseNames?.has(course.courseName) ?? false;
+                  return (
+                    <button
+                      key={course.courseName}
+                      className={`${styles.courseListItem} ${isAdded ? styles.courseListItemDisabled : ''}`}
+                      onClick={() => !isAdded && onCourseSelect(course)}
+                      disabled={isAdded}
+                    >
+                      <span className={styles.courseName}>{course.courseName}</span>
+                      <span className={styles.sessionCount}>
+                        {isAdded ? 'Already added' : `${course.sessions.length} sessions`}
+                      </span>
+                    </button>
+                  );
+                })
               )}
             </div>
           </>
