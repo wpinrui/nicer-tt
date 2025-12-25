@@ -66,7 +66,9 @@ export function UpgradingSelectStep({
             </div>
             <div className={styles.courseList}>
               {filteredCourses.length === 0 ? (
-                <div className={styles.noResults}>No courses match "{search}"</div>
+                <div className={styles.noResults}>
+                  {search.trim() ? `No courses match "${search}"` : 'All courses have been added'}
+                </div>
               ) : (
                 filteredCourses.map((course) => (
                   <button
