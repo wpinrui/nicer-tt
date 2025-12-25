@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.5.9 (25 Dec 2025)**
+- Fix old share links showing "Invalid Date" by migrating DD/MM dates to YYYY-MM-DD format
+
 **v1.5.8 (25 Dec 2025)**
 - Add QUE512 (Language Studies for Teachers) upgrading course with 5 tutorial groups
 - Add QUE513 (Pedagogical Grammar of English) upgrading course with 5 tutorial groups
