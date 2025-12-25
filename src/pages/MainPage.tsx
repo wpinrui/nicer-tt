@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import type { ExportOptions, ImportOptions } from '../components';
 import {
   AddEventModal,
   CompareFilters,
@@ -31,7 +32,6 @@ import {
   ShareWelcomeModal,
   UploadSection,
 } from '../components';
-import type { ExportOptions, ImportOptions } from '../components';
 import type { UploadSectionHandle } from '../components/UploadSection';
 import {
   toCustomEventInput,
