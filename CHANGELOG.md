@@ -1,5 +1,9 @@
 # Changelog
 
+**v1.5.8 (25 Dec 2025)**
+- Add QUE512 (Language Studies for Teachers) upgrading course with 5 tutorial groups
+- Add QUE513 (Pedagogical Grammar of English) upgrading course with 5 tutorial groups
+
 **v1.5.7 (21 Dec 2025)**
 - Improve light mode contrast for better readability
 - Fix placeholder/disabled text colors (#888/#999 → #757575/#6b6b6b)

@@ -1,0 +1,10 @@
+{
+  "courseName": "QUE512 - Language Studies for Teachers (Group 4)",
+  "sessions": [
+    { "date": "09/01", "startTime": "12:30", "endTime": "14:30", "venue": "NIE3-01-TR303", "tutor": "Dr Teo Shi Ling" },
+    { "date": "15/01", "startTime": "17:30", "endTime": "19:30", "venue": "NIE3-01-TR318", "tutor": "Dr Teo Shi Ling" },
+    { "date": "16/01", "startTime": "12:30", "endTime": "14:30", "venue": "NIE3-01-TR303", "tutor": "Dr Teo Shi Ling" },
+    { "date": "23/01", "startTime": "12:30", "endTime": "14:30", "venue": "NIE3-01-TR303", "tutor": "Dr Teo Shi Ling" },
+    { "date": "30/01", "startTime": "12:30", "endTime": "14:30", "venue": "NIE3-01-TR303", "tutor": "Dr Teo Shi Ling" }
+  ]
+}
