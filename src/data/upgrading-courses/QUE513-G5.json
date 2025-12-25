@@ -1,0 +1,11 @@
+{
+  "courseName": "QUE513 - Pedagogical Grammar of English (Group 5)",
+  "sessions": [
+    { "date": "06/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE3-01-TR303", "tutor": "Dr Linda Hanington" },
+    { "date": "07/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE3-01-TR303", "tutor": "Dr Linda Hanington" },
+    { "date": "13/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE3-01-TR303", "tutor": "Dr Linda Hanington" },
+    { "date": "14/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE3-01-TR303", "tutor": "Dr Linda Hanington" },
+    { "date": "20/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE3-01-TR303", "tutor": "Dr Linda Hanington" },
+    { "date": "22/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE5-01-TR501", "tutor": "Dr Linda Hanington" }
+  ]
+}

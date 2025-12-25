@@ -63,6 +63,18 @@ import QUT503 from './QUT503.json';
 import QUC501 from './QUC501.json';
 import QUC509 from './QUC509.json';
 
+// English Language
+import QUE512_G1 from './QUE512-G1.json';
+import QUE512_G2 from './QUE512-G2.json';
+import QUE512_G3 from './QUE512-G3.json';
+import QUE512_G4 from './QUE512-G4.json';
+import QUE512_G5 from './QUE512-G5.json';
+import QUE513_G1 from './QUE513-G1.json';
+import QUE513_G2 from './QUE513-G2.json';
+import QUE513_G3 from './QUE513-G3.json';
+import QUE513_G4 from './QUE513-G4.json';
+import QUE513_G5 from './QUE513-G5.json';
+
 /**
  * All available upgrading courses.
  * Add new courses here after importing their JSON files.
@@ -97,4 +109,15 @@ export const UPGRADING_COURSES: UpgradingCourse[] = [
   // Chinese Language
   QUC501,
   QUC509,
+  // English Language
+  QUE512_G1,
+  QUE512_G2,
+  QUE512_G3,
+  QUE512_G4,
+  QUE512_G5,
+  QUE513_G1,
+  QUE513_G2,
+  QUE513_G3,
+  QUE513_G4,
+  QUE513_G5,
 ];

@@ -1,0 +1,11 @@
+{
+  "courseName": "QUE513 - Pedagogical Grammar of English (Group 1)",
+  "sessions": [
+    { "date": "07/01", "startTime": "14:30", "endTime": "16:30", "venue": "NIE3-01-TR310", "tutor": "Dr Christine Xavier" },
+    { "date": "12/01", "startTime": "13:30", "endTime": "15:30", "venue": "NIE3-01-TR303", "tutor": "Dr Christine Xavier" },
+    { "date": "14/01", "startTime": "14:30", "endTime": "16:30", "venue": "NIE3-01-TR318", "tutor": "Dr Christine Xavier" },
+    { "date": "19/01", "startTime": "13:30", "endTime": "15:30", "venue": "NIE3-01-TR303", "tutor": "Dr Christine Xavier" },
+    { "date": "21/01", "startTime": "14:30", "endTime": "16:30", "venue": "NIE3-01-TR310", "tutor": "Dr Christine Xavier" },
+    { "date": "28/01", "startTime": "14:30", "endTime": "16:30", "venue": "NIE3-01-TR312", "tutor": "Dr Christine Xavier" }
+  ]
+}

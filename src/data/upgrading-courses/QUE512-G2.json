@@ -1,0 +1,10 @@
+{
+  "courseName": "QUE512 - Language Studies for Teachers (Group 2)",
+  "sessions": [
+    { "date": "06/01", "startTime": "12:30", "endTime": "14:30", "venue": "NIE3-01-TR315", "tutor": "Dr Vahid Aryadoust" },
+    { "date": "07/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR312", "tutor": "Dr Vahid Aryadoust" },
+    { "date": "14/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR312", "tutor": "Dr Vahid Aryadoust" },
+    { "date": "21/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR312", "tutor": "Dr Vahid Aryadoust" },
+    { "date": "28/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR312", "tutor": "Dr Vahid Aryadoust" }
+  ]
+}
