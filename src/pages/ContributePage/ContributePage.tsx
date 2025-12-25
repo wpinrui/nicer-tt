@@ -1,19 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Send, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Send, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
 
 import { submitSchedule } from '../../firebase';
 import { FileUploadZone } from './FileUploadZone';
 import styles from './ContributePage.module.scss';
 
 export function ContributePage() {
-  const [telegram, setTelegram] = useState('');
   const [courseName, setCourseName] = useState('');
   const [notes, setNotes] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [existingCourses, setExistingCourses] = useState<string[]>([]);
+  const [showExisting, setShowExisting] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/contributions')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.courseCodes) {
+          setExistingCourses(data.courseCodes);
+        }
+      })
+      .catch(() => {
+        // Silently fail - not critical
+      });
+  }, []);
 
   const isValid = courseName.trim() && (files.length > 0 || notes.trim());
 
@@ -26,7 +40,6 @@ export function ContributePage() {
 
     try {
       const id = await submitSchedule({
-        telegram: telegram.trim() || undefined,
         courseName: courseName.trim(),
         notes: notes.trim() || undefined,
         files,
@@ -71,6 +84,24 @@ export function ContributePage() {
         screenshot.
       </p>
 
+      {existingCourses.length > 0 && (
+        <div className={styles.existingSection}>
+          <button
+            type="button"
+            className={styles.existingToggle}
+            onClick={() => setShowExisting(!showExisting)}
+          >
+            See existing contributions
+            {showExisting ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+          {showExisting && (
+            <p className={styles.existingList}>
+              Contributions already exist for: {existingCourses.join(', ')}
+            </p>
+          )}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.field}>
           <label htmlFor="courseName">
@@ -81,7 +112,7 @@ export function ContributePage() {
             type="text"
             value={courseName}
             onChange={(e) => setCourseName(e.target.value)}
-            placeholder="e.g., COM1234 - Computing for Educators"
+            placeholder="e.g., QUB511 - Biodiversity and Environmental Biology"
             required
           />
         </div>
@@ -100,18 +131,6 @@ export function ContributePage() {
             placeholder="Any additional information..."
             rows={3}
           />
-        </div>
-
-        <div className={styles.field}>
-          <label htmlFor="telegram">Telegram Handle (Optional)</label>
-          <input
-            id="telegram"
-            type="text"
-            value={telegram}
-            onChange={(e) => setTelegram(e.target.value)}
-            placeholder="@username"
-          />
-          <span className={styles.hint}>For follow-up questions only</span>
         </div>
 
         {error && <div className={styles.error}>{error}</div>}
