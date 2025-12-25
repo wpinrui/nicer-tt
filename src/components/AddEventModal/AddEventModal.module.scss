@@ -789,19 +789,9 @@
   text-align: left;
   transition: all 0.15s;
 
-  &:hover:not(:disabled) {
+  &:hover {
     background: var(--color-bg-hover);
     border-color: var(--color-border-focus);
-  }
-}
-
-.courseListItemDisabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-
-  .sessionCount {
-    color: var(--color-text-muted);
-    font-style: italic;
   }
 }
 

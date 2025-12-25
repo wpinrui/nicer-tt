@@ -23,10 +23,21 @@ export function UpgradingSelectStep({
   const [search, setSearch] = useState('');
 
   const filteredCourses = useMemo(() => {
-    if (!search.trim()) return UPGRADING_COURSES;
-    const query = search.toLowerCase();
-    return UPGRADING_COURSES.filter((course) => course.courseName.toLowerCase().includes(query));
-  }, [search]);
+    let courses = UPGRADING_COURSES;
+
+    // Filter out already-added courses
+    if (addedCourseNames?.size) {
+      courses = courses.filter((course) => !addedCourseNames.has(course.courseName));
+    }
+
+    // Filter by search query
+    if (search.trim()) {
+      const query = search.toLowerCase();
+      courses = courses.filter((course) => course.courseName.toLowerCase().includes(query));
+    }
+
+    return courses;
+  }, [search, addedCourseNames]);
 
   return (
     <>
@@ -57,22 +68,16 @@ export function UpgradingSelectStep({
               {filteredCourses.length === 0 ? (
                 <div className={styles.noResults}>No courses match "{search}"</div>
               ) : (
-                filteredCourses.map((course) => {
-                  const isAdded = addedCourseNames?.has(course.courseName) ?? false;
-                  return (
-                    <button
-                      key={course.courseName}
-                      className={`${styles.courseListItem} ${isAdded ? styles.courseListItemDisabled : ''}`}
-                      onClick={() => !isAdded && onCourseSelect(course)}
-                      disabled={isAdded}
-                    >
-                      <span className={styles.courseName}>{course.courseName}</span>
-                      <span className={styles.sessionCount}>
-                        {isAdded ? 'Already added' : `${course.sessions.length} sessions`}
-                      </span>
-                    </button>
-                  );
-                })
+                filteredCourses.map((course) => (
+                  <button
+                    key={course.courseName}
+                    className={styles.courseListItem}
+                    onClick={() => onCourseSelect(course)}
+                  >
+                    <span className={styles.courseName}>{course.courseName}</span>
+                    <span className={styles.sessionCount}>{course.sessions.length} sessions</span>
+                  </button>
+                ))
               )}
             </div>
           </>
