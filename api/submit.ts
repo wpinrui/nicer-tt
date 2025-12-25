@@ -2,7 +2,6 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 interface SubmitRequestBody {
   courseName: string;
-  telegram?: string;
   notes?: string;
   fileUrls: string[];
   fileNames: string[];
@@ -23,7 +22,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: 'Server configuration error' });
   }
 
-  const { courseName, telegram, notes, fileUrls, fileNames } = req.body as SubmitRequestBody;
+  const { courseName, notes, fileUrls, fileNames } = req.body as SubmitRequestBody;
 
   const hasFiles = fileUrls && fileUrls.length > 0;
   const hasNotes = notes && notes.trim().length > 0;
@@ -45,8 +44,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 ${filesList}
 
 ${notes ? `**Notes:**\n${notes}\n` : ''}
-${telegram ? `**Contact:** ${telegram}` : '*No contact provided*'}
-
 ---
 *Submitted via contribution form*`;
 

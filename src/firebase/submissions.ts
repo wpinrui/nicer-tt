@@ -27,7 +27,6 @@ export async function submitSchedule(input: NewSubmissionInput): Promise<string>
     },
     body: JSON.stringify({
       courseName: input.courseName,
-      telegram: input.telegram,
       notes: input.notes,
       fileUrls,
       fileNames,

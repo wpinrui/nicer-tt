@@ -1,5 +1,9 @@
 # Changelog
 
+**v1.5.12 (25 Dec 2025)**
+- Show existing contributions on Contribute page to prevent duplicate submissions
+- Remove telegram handle field from contribution form (privacy)
+
 **v1.5.11 (25 Dec 2025)**
 - Fix right-click then left-click on filter not clearing to "no filter" state
 
