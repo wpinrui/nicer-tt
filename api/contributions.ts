@@ -2,7 +2,6 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 interface GitHubIssue {
   title: string;
-  state: string;
 }
 
 /**
