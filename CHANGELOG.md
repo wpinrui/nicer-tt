@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.5.14 (25 Dec 2025)**
+- Simplify existing contributions: show full course titles as a plain list
+
 **v1.5.13 (25 Dec 2025)**
 - Fix existing contributions display to show full course codes (e.g., QUT001A not just QUT001)
 - Improve display: show abbreviated codes in collapsed state, full names when expanded

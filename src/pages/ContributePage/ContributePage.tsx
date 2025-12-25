@@ -1,15 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Send, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, Send, CheckCircle } from 'lucide-react';
 
 import { submitSchedule } from '../../firebase';
 import { FileUploadZone } from './FileUploadZone';
 import styles from './ContributePage.module.scss';
-
-interface CourseInfo {
-  code: string;
-  name: string;
-}
 
 export function ContributePage() {
   const [courseName, setCourseName] = useState('');
@@ -18,8 +13,7 @@ export function ContributePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [existingCourses, setExistingCourses] = useState<CourseInfo[]>([]);
-  const [showExisting, setShowExisting] = useState(false);
+  const [existingCourses, setExistingCourses] = useState<string[]>([]);
 
   useEffect(() => {
     fetch('/api/contributions')
@@ -91,33 +85,15 @@ export function ContributePage() {
 
       {existingCourses.length > 0 && (
         <div className={styles.existingSection}>
-          <button
-            type="button"
-            className={styles.existingToggle}
-            onClick={() => setShowExisting(!showExisting)}
-          >
-            {showExisting ? (
-              <>
-                Hide existing contributions
-                <ChevronUp size={16} />
-              </>
-            ) : (
-              <>
-                Existing contributions: {existingCourses.map((c) => c.code).join(', ')}...
-                <ChevronDown size={16} />
-              </>
-            )}
-          </button>
-          {showExisting && (
-            <ul className={styles.existingList}>
-              {existingCourses.map((course) => (
-                <li key={course.code}>
-                  <strong>{course.code}</strong>
-                  {course.name && ` - ${course.name}`}
-                </li>
-              ))}
-            </ul>
-          )}
+          <p className={styles.existingLabel}>Existing contributions:</p>
+          <p className={styles.existingHint}>
+            These courses have been submitted and will be added to Content Upgrading soon.
+          </p>
+          <ul className={styles.existingList}>
+            {existingCourses.map((course) => (
+              <li key={course}>{course}</li>
+            ))}
+          </ul>
         </div>
       )}
 
