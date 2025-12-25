@@ -1,6 +1,12 @@
 import pako from 'pako';
 
-import type { CustomEvent, ShareData, ShareDataV2, TimetableEvent } from '../types';
+import {
+  isShareDataV2,
+  type CustomEvent,
+  type ShareData,
+  type ShareDataV2,
+  type TimetableEvent,
+} from '../types';
 import { migrateDateFormat } from './dateMigration';
 import { logError } from './errors';
 
@@ -32,7 +38,7 @@ function migrateCustomEventDates(events: CustomEvent[]): CustomEvent[] {
 function migrateShareData(data: ShareData): ShareData {
   const migratedEvents = migrateEventDates(data.events);
 
-  if ('version' in data && data.version === 2) {
+  if (isShareDataV2(data)) {
     return {
       ...data,
       events: migratedEvents,
