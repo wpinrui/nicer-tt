@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.5.10 (25 Dec 2025)**
+- Prevent adding the same upgrading course twice to a timetable
+
 **v1.5.9 (25 Dec 2025)**
 - Fix old share links showing "Invalid Date" by migrating DD/MM dates to YYYY-MM-DD format
 

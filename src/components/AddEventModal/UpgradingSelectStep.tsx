@@ -11,16 +11,33 @@ interface UpgradingSelectStepProps {
   onClose: () => void;
   onBack: () => void;
   onCourseSelect: (course: UpgradingCourse) => void;
+  addedCourseNames?: Set<string>;
 }
 
-export function UpgradingSelectStep({ onClose, onBack, onCourseSelect }: UpgradingSelectStepProps) {
+export function UpgradingSelectStep({
+  onClose,
+  onBack,
+  onCourseSelect,
+  addedCourseNames,
+}: UpgradingSelectStepProps) {
   const [search, setSearch] = useState('');
 
   const filteredCourses = useMemo(() => {
-    if (!search.trim()) return UPGRADING_COURSES;
-    const query = search.toLowerCase();
-    return UPGRADING_COURSES.filter((course) => course.courseName.toLowerCase().includes(query));
-  }, [search]);
+    let courses = UPGRADING_COURSES;
+
+    // Filter out already-added courses
+    if (addedCourseNames?.size) {
+      courses = courses.filter((course) => !addedCourseNames.has(course.courseName));
+    }
+
+    // Filter by search query
+    if (search.trim()) {
+      const query = search.toLowerCase();
+      courses = courses.filter((course) => course.courseName.toLowerCase().includes(query));
+    }
+
+    return courses;
+  }, [search, addedCourseNames]);
 
   return (
     <>
@@ -49,7 +66,9 @@ export function UpgradingSelectStep({ onClose, onBack, onCourseSelect }: Upgradi
             </div>
             <div className={styles.courseList}>
               {filteredCourses.length === 0 ? (
-                <div className={styles.noResults}>No courses match "{search}"</div>
+                <div className={styles.noResults}>
+                  {search.trim() ? `No courses match "${search}"` : 'All courses have been added'}
+                </div>
               ) : (
                 filteredCourses.map((course) => (
                   <button
