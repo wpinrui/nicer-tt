@@ -6,6 +6,11 @@ import { submitSchedule } from '../../firebase';
 import { FileUploadZone } from './FileUploadZone';
 import styles from './ContributePage.module.scss';
 
+interface CourseInfo {
+  code: string;
+  name: string;
+}
+
 export function ContributePage() {
   const [courseName, setCourseName] = useState('');
   const [notes, setNotes] = useState('');
@@ -13,15 +18,15 @@ export function ContributePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [existingCourses, setExistingCourses] = useState<string[]>([]);
+  const [existingCourses, setExistingCourses] = useState<CourseInfo[]>([]);
   const [showExisting, setShowExisting] = useState(false);
 
   useEffect(() => {
     fetch('/api/contributions')
       .then((res) => res.json())
       .then((data) => {
-        if (data.success && data.courseCodes) {
-          setExistingCourses(data.courseCodes);
+        if (data.success && data.courses) {
+          setExistingCourses(data.courses);
         }
       })
       .catch(() => {
@@ -91,13 +96,27 @@ export function ContributePage() {
             className={styles.existingToggle}
             onClick={() => setShowExisting(!showExisting)}
           >
-            See existing contributions
-            {showExisting ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+            {showExisting ? (
+              <>
+                Hide existing contributions
+                <ChevronUp size={16} />
+              </>
+            ) : (
+              <>
+                Existing contributions: {existingCourses.map((c) => c.code).join(', ')}...
+                <ChevronDown size={16} />
+              </>
+            )}
           </button>
           {showExisting && (
-            <p className={styles.existingList}>
-              Contributions already exist for: {existingCourses.join(', ')}
-            </p>
+            <ul className={styles.existingList}>
+              {existingCourses.map((course) => (
+                <li key={course.code}>
+                  <strong>{course.code}</strong>
+                  {course.name && ` - ${course.name}`}
+                </li>
+              ))}
+            </ul>
           )}
         </div>
       )}

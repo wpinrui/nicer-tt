@@ -4,12 +4,17 @@ interface GitHubIssue {
   title: string;
 }
 
+interface CourseInfo {
+  code: string;
+  name: string;
+}
+
 /**
- * Extract course code from issue title.
+ * Extract course info from issue title.
  * Titles are formatted: "[Upgrading Course] QUB511 - Biodiversity and Environmental Biology"
- * Returns just the course code (e.g., "QUB511", "QUE512-G1")
+ * Returns { code: "QUB511", name: "Biodiversity and Environmental Biology" }
  */
-function extractCourseCode(title: string): string | null {
+function extractCourseInfo(title: string): CourseInfo | null {
   // Remove the "[Upgrading Course] " prefix
   const prefix = '[Upgrading Course] ';
   if (!title.startsWith(prefix)) {
@@ -18,15 +23,20 @@ function extractCourseCode(title: string): string | null {
 
   const remainder = title.slice(prefix.length).trim();
 
-  // Match course code patterns like QUB511, QUE512-G1
-  const match = remainder.match(/^[A-Z]{2,4}\d{3}(-G\d+)?/);
-  if (match) {
-    return match[0];
+  // Split by " - " to get code and name
+  const dashIndex = remainder.indexOf(' - ');
+  if (dashIndex > 0) {
+    return {
+      code: remainder.slice(0, dashIndex).trim(),
+      name: remainder.slice(dashIndex + 3).trim(),
+    };
   }
 
-  // Fallback: return first word if no pattern match
-  const firstWord = remainder.split(/[\s-]/)[0];
-  return firstWord || null;
+  // No dash separator - use entire remainder as code
+  return {
+    code: remainder,
+    name: '',
+  };
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -64,17 +74,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const issues: GitHubIssue[] = await response.json();
 
-    // Extract unique course codes
-    const courseCodes = issues
-      .map((issue) => extractCourseCode(issue.title))
-      .filter((code): code is string => code !== null);
+    // Extract course info and dedupe by code
+    const courseMap = new Map<string, CourseInfo>();
+    for (const issue of issues) {
+      const info = extractCourseInfo(issue.title);
+      if (info && !courseMap.has(info.code)) {
+        courseMap.set(info.code, info);
+      }
+    }
 
-    // Remove duplicates and sort
-    const uniqueCodes = [...new Set(courseCodes)].sort();
+    // Sort by code and return as array
+    const courses = [...courseMap.values()].sort((a, b) => a.code.localeCompare(b.code));
 
     return res.status(200).json({
       success: true,
-      courseCodes: uniqueCodes,
+      courses,
     });
   } catch (error) {
     console.error('Error fetching GitHub issues:', error);
