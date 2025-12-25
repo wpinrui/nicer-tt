@@ -175,6 +175,11 @@ function MainPage() {
       selectedDate
     );
 
+  const handleToggleCourse = useCallback(
+    (course: string) => toggleCourse(course, uniqueCourses),
+    [toggleCourse, uniqueCourses]
+  );
+
   const handleDeselectCourse = useCallback(
     (course: string) => deselectCourse(course, uniqueCourses),
     [deselectCourse, uniqueCourses]
@@ -682,7 +687,7 @@ function MainPage() {
                 uniqueCourses={uniqueCourses}
                 selectedCourses={selectedCourses}
                 courseColorMap={courseColorMap}
-                onToggleCourse={toggleCourse}
+                onToggleCourse={handleToggleCourse}
                 onDeselectCourse={handleDeselectCourse}
                 onClearFilters={clearFilters}
                 hasActiveFilters={hasActiveFilters}

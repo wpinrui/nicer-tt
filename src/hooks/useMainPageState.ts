@@ -73,7 +73,7 @@ export function useMainPageState() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Filter handlers
-  const toggleCourse = useCallback((course: string) => {
+  const toggleCourse = useCallback((course: string, allCourses?: string[]) => {
     setSelectedCourses((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(course)) {
@@ -81,6 +81,16 @@ export function useMainPageState() {
       } else {
         newSet.add(course);
       }
+
+      // Normalize: if all courses are selected, reset to empty set (no filter)
+      if (
+        allCourses &&
+        newSet.size === allCourses.length &&
+        allCourses.every((c) => newSet.has(c))
+      ) {
+        return new Set();
+      }
+
       return newSet;
     });
   }, []);

@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.5.11 (25 Dec 2025)**
+- Fix right-click then left-click on filter not clearing to "no filter" state
+
 **v1.5.10 (25 Dec 2025)**
 - Prevent adding the same upgrading course twice to a timetable
 
