@@ -1,8 +1,9 @@
 import './App.scss';
 
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { useLocalStorage } from './hooks';
 import ContributePage from './pages/ContributePage';
@@ -127,6 +128,7 @@ function App() {
         </span>
       </footer>
       <Analytics />
+      <SpeedInsights />
     </div>
   );
 }
