@@ -1,0 +1,10 @@
+{
+  "courseName": "QUE502 - Tutorial (Group 4)",
+  "sessions": [
+    { "date": "06/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE3-01-TR307", "tutor": "Dr Peter Teo" },
+    { "date": "13/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE3-01-TR307", "tutor": "Dr Peter Teo" },
+    { "date": "20/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE3-01-TR307", "tutor": "Dr Peter Teo" },
+    { "date": "27/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE3-01-TR307", "tutor": "Dr Peter Teo" },
+    { "date": "30/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE3-01-TR309", "tutor": "Dr Peter Teo" }
+  ]
+}

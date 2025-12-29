@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.5.15 (29 Dec 2025)**
+- Add QUE502 (Tutorial) upgrading course with 6 tutorial groups
+
 **v1.5.14 (25 Dec 2025)**
 - Simplify existing contributions: show full course titles as a plain list
 
