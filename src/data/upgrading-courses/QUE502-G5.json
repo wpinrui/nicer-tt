@@ -1,0 +1,10 @@
+{
+  "courseName": "QUE502 - Tutorial (Group 5)",
+  "sessions": [
+    { "date": "05/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE2-01-TR207", "tutor": "Dr Cheryl Lim" },
+    { "date": "12/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE2-01-TR207", "tutor": "Dr Cheryl Lim" },
+    { "date": "19/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE2-01-TR207", "tutor": "Dr Cheryl Lim" },
+    { "date": "26/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE2-01-TR207", "tutor": "Dr Cheryl Lim" },
+    { "date": "28/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE2-01-TR207", "tutor": "Dr Cheryl Lim" }
+  ]
+}

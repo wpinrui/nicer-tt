@@ -1,0 +1,10 @@
+{
+  "courseName": "QUE502 - Tutorial (Group 1)",
+  "sessions": [
+    { "date": "05/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR310", "tutor": "Dr Robbie Lee Sabnani" },
+    { "date": "12/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR310", "tutor": "Dr Robbie Lee Sabnani" },
+    { "date": "21/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR305", "tutor": "Dr Robbie Lee Sabnani" },
+    { "date": "26/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR310", "tutor": "Dr Robbie Lee Sabnani" },
+    { "date": "28/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR310", "tutor": "Dr Robbie Lee Sabnani" }
+  ]
+}
