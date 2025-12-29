@@ -34,6 +34,12 @@ import QUC501 from './QUC501.json';
 import QUC509 from './QUC509.json';
 
 // QUE - English Language
+import QUE502_G1 from './QUE502-G1.json';
+import QUE502_G2 from './QUE502-G2.json';
+import QUE502_G3 from './QUE502-G3.json';
+import QUE502_G4 from './QUE502-G4.json';
+import QUE502_G5 from './QUE502-G5.json';
+import QUE502_G6 from './QUE502-G6.json';
 import QUE512_G1 from './QUE512-G1.json';
 import QUE512_G2 from './QUE512-G2.json';
 import QUE512_G3 from './QUE512-G3.json';
@@ -87,6 +93,12 @@ export const UPGRADING_COURSES: UpgradingCourse[] = [
   QUC501,
   QUC509,
   // QUE - English Language
+  QUE502_G1,
+  QUE502_G2,
+  QUE502_G3,
+  QUE502_G4,
+  QUE502_G5,
+  QUE502_G6,
   QUE512_G1,
   QUE512_G2,
   QUE512_G3,
