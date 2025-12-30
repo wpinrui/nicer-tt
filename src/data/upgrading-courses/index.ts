@@ -40,6 +40,12 @@ import QUE502_G3 from './QUE502-G3.json';
 import QUE502_G4 from './QUE502-G4.json';
 import QUE502_G5 from './QUE502-G5.json';
 import QUE502_G6 from './QUE502-G6.json';
+import QUE503_G1 from './QUE503-G1.json';
+import QUE503_G2 from './QUE503-G2.json';
+import QUE503_G3 from './QUE503-G3.json';
+import QUE503_G4 from './QUE503-G4.json';
+import QUE503_G5 from './QUE503-G5.json';
+import QUE503_G6 from './QUE503-G6.json';
 import QUE512_G1 from './QUE512-G1.json';
 import QUE512_G2 from './QUE512-G2.json';
 import QUE512_G3 from './QUE512-G3.json';
@@ -99,6 +105,12 @@ export const UPGRADING_COURSES: UpgradingCourse[] = [
   QUE502_G4,
   QUE502_G5,
   QUE502_G6,
+  QUE503_G1,
+  QUE503_G2,
+  QUE503_G3,
+  QUE503_G4,
+  QUE503_G5,
+  QUE503_G6,
   QUE512_G1,
   QUE512_G2,
   QUE512_G3,

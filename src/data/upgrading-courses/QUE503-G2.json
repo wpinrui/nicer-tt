@@ -1,0 +1,11 @@
+{
+  "courseName": "QUE503 - Tutorial (Group 2)",
+  "sessions": [
+    { "date": "07/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR302", "tutor": "Dr Guo Libo" },
+    { "date": "14/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR304", "tutor": "Dr Guo Libo" },
+    { "date": "21/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR310", "tutor": "Dr Guo Libo" },
+    { "date": "23/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE3-01-TR318", "tutor": "Dr Guo Libo" },
+    { "date": "28/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR303", "tutor": "Dr Guo Libo" },
+    { "date": "30/01", "startTime": "10:30", "endTime": "12:30", "venue": "NIE3-01-TR318", "tutor": "Dr Guo Libo" }
+  ]
+}
