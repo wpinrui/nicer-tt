@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.5.17 (30 Dec 2025)**
+- Add QUE503 (Tutorial) upgrading course with 6 tutorial groups
+
 **v1.5.16 (29 Dec 2025)**
 - Fix QUE502 not appearing in upgrading courses list (missing index export)
 

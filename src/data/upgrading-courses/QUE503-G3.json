@@ -1,0 +1,11 @@
+{
+  "courseName": "QUE503 - Tutorial (Group 3)",
+  "sessions": [
+    { "date": "07/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE7-01-TR703", "tutor": "Dr Chang Qizhong" },
+    { "date": "14/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE7-01-TR708", "tutor": "Dr Chang Qizhong" },
+    { "date": "21/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE7-01-TR708", "tutor": "Dr Chang Qizhong" },
+    { "date": "23/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE7-01-TR703", "tutor": "Dr Chang Qizhong" },
+    { "date": "28/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE7-01-TR708", "tutor": "Dr Chang Qizhong" },
+    { "date": "30/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE7-01-TR703", "tutor": "Dr Chang Qizhong" }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "courseName": "QUE503 - Tutorial (Group 4)",
+  "sessions": [
+    { "date": "05/01", "startTime": "09:30", "endTime": "11:30", "venue": "NIE2-01-TR214", "tutor": "Dr Linda Hanington" },
+    { "date": "12/01", "startTime": "09:30", "endTime": "11:30", "venue": "NIE2-01-TR214", "tutor": "Dr Linda Hanington" },
+    { "date": "19/01", "startTime": "09:30", "endTime": "11:30", "venue": "NIE2-01-TR208", "tutor": "Dr Linda Hanington" },
+    { "date": "21/01", "startTime": "15:30", "endTime": "17:30", "venue": "NIE2-01-TR214", "tutor": "Dr Linda Hanington" },
+    { "date": "26/01", "startTime": "09:30", "endTime": "11:30", "venue": "NIE2-01-TR214", "tutor": "Dr Linda Hanington" },
+    { "date": "29/01", "startTime": "15:30", "endTime": "17:30", "venue": "NIE2-01-TR214", "tutor": "Dr Linda Hanington" }
+  ]
+}

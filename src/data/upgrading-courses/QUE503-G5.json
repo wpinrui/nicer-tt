@@ -1,0 +1,11 @@
+{
+  "courseName": "QUE503 - Tutorial (Group 5)",
+  "sessions": [
+    { "date": "06/01", "startTime": "15:30", "endTime": "17:30", "venue": "NIE2-01-TR207", "tutor": "Dr Phyllis Chew" },
+    { "date": "13/01", "startTime": "15:30", "endTime": "17:30", "venue": "NIE2-01-TR207", "tutor": "Dr Phyllis Chew" },
+    { "date": "20/01", "startTime": "15:30", "endTime": "17:30", "venue": "NIE2-01-TR207", "tutor": "Dr Phyllis Chew" },
+    { "date": "23/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR311", "tutor": "Dr Phyllis Chew" },
+    { "date": "27/01", "startTime": "15:30", "endTime": "17:30", "venue": "NIE3-01-TR311", "tutor": "Dr Phyllis Chew" },
+    { "date": "30/01", "startTime": "08:30", "endTime": "10:30", "venue": "NIE3-01-TR311", "tutor": "Dr Phyllis Chew" }
+  ]
+}
