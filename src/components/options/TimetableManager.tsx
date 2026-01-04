@@ -1,7 +1,13 @@
 import { Check, Eye, Link, Pencil, RefreshCw, Trash2, Upload } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-import type { CustomEvent, Timetable, TimetableEvent } from '../../types';
+import type {
+  CustomEvent,
+  EventInstanceKey,
+  EventOverride,
+  Timetable,
+  TimetableEvent,
+} from '../../types';
 import type { CustomEventInput } from '../../hooks/useCustomEvents';
 import { TOAST_DURATION_MS } from '../../utils/constants';
 import { downloadIcs, generateIcs } from '../../utils/generateIcs';
@@ -44,6 +50,10 @@ interface TimetableManagerProps {
   onRegenerateTimetable?: (events: TimetableEvent[], fileName: string) => void;
   /** Current timetable events for backup download before regenerating */
   currentEvents?: TimetableEvent[];
+  /** Event overrides for ICS export */
+  overrides?: Record<EventInstanceKey, EventOverride>;
+  /** Deleted event keys for ICS export */
+  deletions?: EventInstanceKey[];
 }
 
 export function TimetableManager({
@@ -58,6 +68,8 @@ export function TimetableManager({
   onClose,
   onRegenerateTimetable,
   currentEvents,
+  overrides = {},
+  deletions = [],
 }: TimetableManagerProps) {
   const addFileInputRef = useRef<HTMLInputElement>(null);
   const regenerateFileInputRef = useRef<HTMLInputElement>(null);
@@ -185,9 +197,9 @@ export function TimetableManager({
   const confirmRegenerate = (downloadBackup: boolean) => {
     if (!pendingRegenerate || !onRegenerateTimetable) return;
 
-    // Download backup if requested
+    // Download backup if requested (with user's edits applied)
     if (downloadBackup && currentEvents && currentEvents.length > 0) {
-      downloadIcs(generateIcs(currentEvents));
+      downloadIcs(generateIcs(currentEvents, { overrides, deletions }));
     }
 
     // Regenerate the timetable

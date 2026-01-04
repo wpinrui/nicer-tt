@@ -47,7 +47,7 @@ import {
 } from '../hooks';
 import type { CustomEventInput } from '../hooks/useCustomEvents';
 import type { CustomEvent, EventInstanceKey, ShareData, Timetable } from '../types';
-import { isShareDataV2 } from '../types';
+import { applyOverridesToEvents, isShareDataV2 } from '../types';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
 import { downloadIcs, generateIcs } from '../utils/generateIcs';
 import HelpPage from './HelpPage';
@@ -284,7 +284,13 @@ function MainPage() {
         setPendingShareTimetable(activeTimetable);
         setPendingExportAction('share');
       } else {
-        createShareLink(activeTimetable.events, activeTimetable.fileName || activeTimetable.name);
+        // Apply overrides before sharing
+        const eventsWithOverrides = applyOverridesToEvents(
+          activeTimetable.events,
+          overrides,
+          deletions
+        );
+        createShareLink(eventsWithOverrides, activeTimetable.fileName || activeTimetable.name);
       }
     }
   };
@@ -304,8 +310,13 @@ function MainPage() {
     } else if (action === 'share' && pendingShareTimetable) {
       const timetableCustomEvents = getCustomEventsForTimetable(pendingShareTimetable.id);
       const filteredCustomEvents = filterCustomEventsByType(timetableCustomEvents, options);
+      // Apply overrides if sharing the active timetable
+      const isActiveTimetable = pendingShareTimetable.id === activeTimetable?.id;
+      const eventsToShare = isActiveTimetable
+        ? applyOverridesToEvents(pendingShareTimetable.events, overrides, deletions)
+        : pendingShareTimetable.events;
       createShareLink(
-        pendingShareTimetable.events,
+        eventsToShare,
         pendingShareTimetable.fileName || pendingShareTimetable.name,
         filteredCustomEvents.length > 0 ? filteredCustomEvents : undefined
       );
@@ -329,7 +340,12 @@ function MainPage() {
       setPendingExportAction('share');
     } else {
       // No custom events, share directly
-      createShareLink(timetable.events, timetable.fileName || timetable.name);
+      // Apply overrides if sharing the active timetable
+      const isActiveTimetable = timetable.id === activeTimetable?.id;
+      const eventsToShare = isActiveTimetable
+        ? applyOverridesToEvents(timetable.events, overrides, deletions)
+        : timetable.events;
+      createShareLink(eventsToShare, timetable.fileName || timetable.name);
     }
   };
 
@@ -883,6 +899,8 @@ function MainPage() {
           onViewingToast={handleViewingToast}
           onRegenerateTimetable={handleRegenerateTimetable}
           currentEvents={events ?? undefined}
+          overrides={overrides}
+          deletions={deletions}
         />
       )}
       {isShareWelcomeModalOpen && (

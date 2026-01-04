@@ -341,3 +341,42 @@ export function createEventInstanceKey(
 ): EventInstanceKey {
   return `${course}|${group}|${date}|${startTime}`;
 }
+
+/**
+ * Applies overrides and deletions to events, returning expanded single-date events.
+ * Each returned event has exactly one date with any overrides baked in.
+ * Deleted event instances are excluded.
+ */
+export function applyOverridesToEvents(
+  events: TimetableEvent[],
+  overrides: Record<EventInstanceKey, EventOverride>,
+  deletions: EventInstanceKey[]
+): TimetableEvent[] {
+  const result: TimetableEvent[] = [];
+
+  for (const event of events) {
+    for (const dateStr of event.dates) {
+      const eventKey = createEventInstanceKey(event.course, event.group, dateStr, event.startTime);
+
+      // Skip deleted events
+      if (deletions.includes(eventKey)) {
+        continue;
+      }
+
+      // Apply overrides
+      const override = overrides[eventKey];
+      const expandedEvent: TimetableEvent = {
+        ...event,
+        dates: [dateStr],
+        startTime: override?.startTime ?? event.startTime,
+        endTime: override?.endTime ?? event.endTime,
+        venue: override?.venue ?? event.venue,
+        tutor: override?.tutor ?? event.tutor,
+      };
+
+      result.push(expandedEvent);
+    }
+  }
+
+  return result;
+}

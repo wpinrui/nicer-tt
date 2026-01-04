@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import type { CustomEventInput } from '../hooks/useCustomEvents';
-import type { Timetable, TimetableEvent } from '../types';
+import type { EventInstanceKey, EventOverride, Timetable, TimetableEvent } from '../types';
 import { Modal } from './Modal';
 import { AppSettings, BackgroundSettings, PrivacySection, TimetableManager } from './options';
 import styles from './OptionsPanel.module.scss';
@@ -31,6 +31,10 @@ interface OptionsPanelProps {
   onRegenerateTimetable?: (events: TimetableEvent[], fileName: string) => void;
   /** Current events for backup download before regenerating */
   currentEvents?: TimetableEvent[];
+  /** Event overrides for ICS export */
+  overrides?: Record<EventInstanceKey, EventOverride>;
+  /** Deleted event keys for ICS export */
+  deletions?: EventInstanceKey[];
 }
 
 export function OptionsPanel({
@@ -50,6 +54,8 @@ export function OptionsPanel({
   onViewingToast,
   onRegenerateTimetable,
   currentEvents,
+  overrides,
+  deletions,
 }: OptionsPanelProps) {
   const [showFactoryReset, setShowFactoryReset] = useState(false);
 
@@ -88,6 +94,8 @@ export function OptionsPanel({
             onClose={onClose}
             onRegenerateTimetable={onRegenerateTimetable}
             currentEvents={currentEvents}
+            overrides={overrides}
+            deletions={deletions}
           />
 
           <BackgroundSettings />
