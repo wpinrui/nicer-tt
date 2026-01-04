@@ -615,6 +615,24 @@
   }
 }
 
+.timetableActionBtnPrimary {
+  color: #d4a017;
+
+  &:hover {
+    background: rgba(212, 160, 23, 0.1);
+    color: #b8860b;
+  }
+
+  html.dark & {
+    color: #f4c430;
+
+    &:hover {
+      background: rgba(244, 196, 48, 0.15);
+      color: #ffd700;
+    }
+  }
+}
+
 .timetableEditRow {
   display: flex;
   align-items: center;

@@ -19,6 +19,7 @@ interface OptionsPanelProps {
   timetables: Timetable[];
   activeTimetableId: string | null;
   onSetActiveTimetable: (id: string) => void;
+  onSetPrimaryTimetable: (id: string) => void;
   onAddTimetable: (
     events: TimetableEvent[],
     fileName: string | null,
@@ -47,6 +48,7 @@ export function OptionsPanel({
   timetables,
   activeTimetableId,
   onSetActiveTimetable,
+  onSetPrimaryTimetable,
   onAddTimetable,
   onAddCustomEventsToTimetable,
   onRenameTimetable,
@@ -86,6 +88,7 @@ export function OptionsPanel({
             timetables={timetables}
             activeTimetableId={activeTimetableId}
             onSetActiveTimetable={onSetActiveTimetable}
+            onSetPrimaryTimetable={onSetPrimaryTimetable}
             onAddTimetable={onAddTimetable}
             onAddCustomEventsToTimetable={onAddCustomEventsToTimetable}
             onRenameTimetable={onRenameTimetable}
