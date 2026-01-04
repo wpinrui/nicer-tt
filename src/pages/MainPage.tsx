@@ -270,7 +270,7 @@ function MainPage() {
     if (customEvents.length > 0) {
       setPendingExportAction('download');
     } else {
-      downloadIcs(generateIcs(displayEvents));
+      downloadIcs(generateIcs(displayEvents, { overrides, deletions }));
     }
   };
 
@@ -300,7 +300,7 @@ function MainPage() {
         filteredCustomEvents.length > 0
           ? [...displayEvents, ...filteredCustomEvents]
           : displayEvents;
-      downloadIcs(generateIcs(eventsToExport));
+      downloadIcs(generateIcs(eventsToExport, { overrides, deletions }));
     } else if (action === 'share' && pendingShareTimetable) {
       const timetableCustomEvents = getCustomEventsForTimetable(pendingShareTimetable.id);
       const filteredCustomEvents = filterCustomEventsByType(timetableCustomEvents, options);
