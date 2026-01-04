@@ -3,7 +3,7 @@
 **v1.6.1 (5 Jan 2026)**
 - Add ability to set any timetable as your main timetable (star icon in Options → Timetables)
 
-###v1.6.0 (4 Jan 2026)
+### v1.6.0 (4 Jan 2026)
 - Add timetable modification support:
   - Edit venue for any event (imported or custom)
   - Delete any event (imported or custom)
