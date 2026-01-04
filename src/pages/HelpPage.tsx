@@ -4,7 +4,7 @@ import { ArrowLeft, ImageIcon, Search, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-type Category = 'getting-started' | 'events' | 'export-share' | 'settings';
+type Category = 'events' | 'export-share' | 'settings';
 
 interface FeatureCard {
   id: string;
@@ -16,40 +16,6 @@ interface FeatureCard {
 }
 
 const FEATURE_CARDS: FeatureCard[] = [
-  // Getting Started
-  {
-    id: 'upload-html',
-    title: 'Upload Your Timetable',
-    description:
-      'Save your NIE Portal timetable as an HTML file (Ctrl+S) and upload it here to view and manage your schedule.',
-    category: 'getting-started',
-    keywords: ['upload', 'html', 'import', 'start', 'begin', 'portal', 'save'],
-  },
-  {
-    id: 'view-events',
-    title: 'View Your Events',
-    description:
-      'See all your classes organized by date with color-coded courses. Search, filter by course, or pick a specific date.',
-    category: 'getting-started',
-    keywords: ['view', 'events', 'list', 'classes', 'schedule', 'filter', 'search'],
-  },
-  {
-    id: 'export-calendar',
-    title: 'Export to Calendar',
-    description:
-      'Download an ICS file and import it into Google Calendar, Outlook, or Apple Calendar to sync your schedule.',
-    category: 'getting-started',
-    keywords: ['export', 'calendar', 'ics', 'google', 'outlook', 'apple', 'download'],
-  },
-  {
-    id: 'multiple-timetables',
-    title: 'Manage Multiple Timetables',
-    description:
-      "Store and switch between multiple timetables. Great for keeping your friends' schedules handy for comparison.",
-    category: 'getting-started',
-    keywords: ['multiple', 'timetables', 'switch', 'manage', 'friends'],
-  },
-
   // Events
   {
     id: 'add-custom-event',
@@ -160,16 +126,15 @@ const FEATURE_CARDS: FeatureCard[] = [
 ];
 
 const CATEGORY_LABELS: Record<Category, string> = {
-  'getting-started': 'Getting Started',
   events: 'Events',
   'export-share': 'Export & Share',
   settings: 'Settings',
 };
 
-const CATEGORIES: Category[] = ['getting-started', 'events', 'export-share', 'settings'];
+const CATEGORIES: Category[] = ['events', 'export-share', 'settings'];
 
 function HelpPage() {
-  const [activeCategory, setActiveCategory] = useState<Category>('getting-started');
+  const [activeCategory, setActiveCategory] = useState<Category>('events');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedImage, setExpandedImage] = useState<{ src: string; title: string } | null>(null);
 
