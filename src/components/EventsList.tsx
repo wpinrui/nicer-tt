@@ -1,4 +1,4 @@
-import type { DisplayGroupedEvent } from '../types';
+import type { DisplayGroupedEvent, EventInstanceKey } from '../types';
 import { useRenderTimer } from '../utils/perf';
 import { EventGroup } from './EventGroup';
 import styles from './EventsList.module.scss';
@@ -10,6 +10,14 @@ interface EventsListProps {
   onCourseClick: (course: string) => void;
   onEditCustomEvent?: (eventId: string) => void;
   onDeleteCustomEvent?: (eventId: string, date: string) => void;
+  onEditImportedEvent?: (
+    eventKey: EventInstanceKey,
+    currentVenue: string,
+    currentTutor: string,
+    currentStartTime: string,
+    currentEndTime: string
+  ) => void;
+  onDeleteImportedEvent?: (eventKey: EventInstanceKey) => void;
 }
 
 export function EventsList({
@@ -19,6 +27,8 @@ export function EventsList({
   onCourseClick,
   onEditCustomEvent,
   onDeleteCustomEvent,
+  onEditImportedEvent,
+  onDeleteImportedEvent,
 }: EventsListProps) {
   useRenderTimer('EventsList');
 
@@ -37,6 +47,8 @@ export function EventsList({
           onCourseClick={onCourseClick}
           onEditCustomEvent={onEditCustomEvent}
           onDeleteCustomEvent={onDeleteCustomEvent}
+          onEditImportedEvent={onEditImportedEvent}
+          onDeleteImportedEvent={onDeleteImportedEvent}
         />
       ))}
     </>

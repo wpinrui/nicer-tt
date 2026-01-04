@@ -19,6 +19,7 @@ import {
   AddEventModal,
   CompareFilters,
   CompareModal,
+  EditEventModal,
   EventsCompareView,
   EventsList,
   ExportMenu,
@@ -37,6 +38,7 @@ import {
   toCustomEventInput,
   useCustomEvents,
   useDebouncedValue,
+  useEventOverrides,
   useFilteredEvents,
   useLocalStorage,
   useMainPageState,
@@ -44,8 +46,8 @@ import {
   useTimetableStorage,
 } from '../hooks';
 import type { CustomEventInput } from '../hooks/useCustomEvents';
-import type { CustomEvent, ShareData, Timetable } from '../types';
-import { isShareDataV2 } from '../types';
+import type { CustomEvent, EventInstanceKey, ShareData, Timetable } from '../types';
+import { applyOverridesToEvents, isShareDataV2 } from '../types';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
 import { downloadIcs, generateIcs } from '../utils/generateIcs';
 import HelpPage from './HelpPage';
@@ -90,12 +92,32 @@ function MainPage() {
     getCustomEvent,
     getCustomEventsForTimetable,
   } = useCustomEvents(activeTimetable?.id || null);
+
+  // Event overrides for imported events
+  const {
+    overrides,
+    deletions,
+    setOverride,
+    clearOverride,
+    deleteEvent: deleteImportedEvent,
+    getOverride,
+    clearAllForTimetable,
+  } = useEventOverrides(activeTimetable?.id || null);
+
   const [isAddEventModalOpen, setAddEventModalOpen] = useState(false);
   const [editingCustomEvent, setEditingCustomEvent] = useState<CustomEvent | null>(null);
   const [deletingEvent, setDeletingEvent] = useState<{
     id: string;
     sortKey: string;
   } | null>(null);
+  const [editingImportedEvent, setEditingImportedEvent] = useState<{
+    eventKey: EventInstanceKey;
+    currentVenue: string;
+    currentTutor: string;
+    currentStartTime: string;
+    currentEndTime: string;
+  } | null>(null);
+  const [deletingImportedEvent, setDeletingImportedEvent] = useState<EventInstanceKey | null>(null);
   const [pendingExportAction, setPendingExportAction] = useState<'download' | 'share' | null>(null);
   const [pendingShareTimetable, setPendingShareTimetable] = useState<Timetable | null>(null);
   const [pendingImportData, setPendingImportData] = useState<ShareData | null>(null);
@@ -165,6 +187,11 @@ function MainPage() {
   // Only show custom events when viewing the active timetable (not preview)
   const displayCustomEvents = isViewingPreview ? [] : customEvents;
 
+  // Only apply overrides when viewing the active timetable (not preview)
+  const displayOverrides = isViewingPreview
+    ? { overrides: {}, deletions: [] }
+    : { overrides, deletions };
+
   const { groupedByDate, totalEvents, courseColorMap, uniqueCourses, filteredCount } =
     useFilteredEvents(
       displayEvents,
@@ -172,7 +199,8 @@ function MainPage() {
       debouncedSearchQuery,
       selectedCourses,
       showPastDates,
-      selectedDate
+      selectedDate,
+      displayOverrides
     );
 
   const handleToggleCourse = useCallback(
@@ -242,7 +270,7 @@ function MainPage() {
     if (customEvents.length > 0) {
       setPendingExportAction('download');
     } else {
-      downloadIcs(generateIcs(displayEvents));
+      downloadIcs(generateIcs(displayEvents, { overrides, deletions }));
     }
   };
 
@@ -256,7 +284,13 @@ function MainPage() {
         setPendingShareTimetable(activeTimetable);
         setPendingExportAction('share');
       } else {
-        createShareLink(activeTimetable.events, activeTimetable.fileName || activeTimetable.name);
+        // Apply overrides before sharing
+        const eventsWithOverrides = applyOverridesToEvents(
+          activeTimetable.events,
+          overrides,
+          deletions
+        );
+        createShareLink(eventsWithOverrides, activeTimetable.fileName || activeTimetable.name);
       }
     }
   };
@@ -272,12 +306,17 @@ function MainPage() {
         filteredCustomEvents.length > 0
           ? [...displayEvents, ...filteredCustomEvents]
           : displayEvents;
-      downloadIcs(generateIcs(eventsToExport));
+      downloadIcs(generateIcs(eventsToExport, { overrides, deletions }));
     } else if (action === 'share' && pendingShareTimetable) {
       const timetableCustomEvents = getCustomEventsForTimetable(pendingShareTimetable.id);
       const filteredCustomEvents = filterCustomEventsByType(timetableCustomEvents, options);
+      // Apply overrides if sharing the active timetable
+      const isActiveTimetable = pendingShareTimetable.id === activeTimetable?.id;
+      const eventsToShare = isActiveTimetable
+        ? applyOverridesToEvents(pendingShareTimetable.events, overrides, deletions)
+        : pendingShareTimetable.events;
       createShareLink(
-        pendingShareTimetable.events,
+        eventsToShare,
         pendingShareTimetable.fileName || pendingShareTimetable.name,
         filteredCustomEvents.length > 0 ? filteredCustomEvents : undefined
       );
@@ -301,7 +340,12 @@ function MainPage() {
       setPendingExportAction('share');
     } else {
       // No custom events, share directly
-      createShareLink(timetable.events, timetable.fileName || timetable.name);
+      // Apply overrides if sharing the active timetable
+      const isActiveTimetable = timetable.id === activeTimetable?.id;
+      const eventsToShare = isActiveTimetable
+        ? applyOverridesToEvents(timetable.events, overrides, deletions)
+        : timetable.events;
+      createShareLink(eventsToShare, timetable.fileName || timetable.name);
     }
   };
 
@@ -437,6 +481,62 @@ function MainPage() {
       deleteCustomEventsByGroupId,
       updateCustomEvent,
     ]
+  );
+
+  // Imported event handlers
+  const handleEditImportedEvent = useCallback(
+    (
+      eventKey: EventInstanceKey,
+      currentVenue: string,
+      currentTutor: string,
+      currentStartTime: string,
+      currentEndTime: string
+    ) => {
+      setEditingImportedEvent({
+        eventKey,
+        currentVenue,
+        currentTutor,
+        currentStartTime,
+        currentEndTime,
+      });
+    },
+    []
+  );
+
+  const handleDeleteImportedEvent = useCallback((eventKey: EventInstanceKey) => {
+    setDeletingImportedEvent(eventKey);
+  }, []);
+
+  const confirmEditImportedEvent = useCallback(
+    (override: { venue?: string; tutor?: string; startTime?: string; endTime?: string }) => {
+      if (!editingImportedEvent) return;
+      setOverride(editingImportedEvent.eventKey, override);
+      setEditingImportedEvent(null);
+    },
+    [editingImportedEvent, setOverride]
+  );
+
+  const revertImportedEvent = useCallback(() => {
+    if (!editingImportedEvent) return;
+    clearOverride(editingImportedEvent.eventKey);
+    setEditingImportedEvent(null);
+  }, [editingImportedEvent, clearOverride]);
+
+  const confirmDeleteImportedEvent = useCallback(() => {
+    if (!deletingImportedEvent) return;
+    deleteImportedEvent(deletingImportedEvent);
+    setDeletingImportedEvent(null);
+  }, [deletingImportedEvent, deleteImportedEvent]);
+
+  const handleRegenerateTimetable = useCallback(
+    (newEvents: typeof events, fileName: string) => {
+      if (!activeTimetable) return;
+      // Update the timetable with new events (keeps the same ID, so custom events are preserved)
+      setTimetable(newEvents, fileName);
+      // Clear any overrides/deletions since the base data is being replaced
+      clearAllForTimetable(activeTimetable.id);
+    },
+    [activeTimetable, setTimetable, clearAllForTimetable]
   );
 
   const handleSaveCustomEvent = useCallback(
@@ -709,6 +809,8 @@ function MainPage() {
                   onCourseClick={handleCourseClick}
                   onEditCustomEvent={handleEditCustomEvent}
                   onDeleteCustomEvent={handleDeleteCustomEvent}
+                  onEditImportedEvent={handleEditImportedEvent}
+                  onDeleteImportedEvent={handleDeleteImportedEvent}
                 />
               </div>
             </>
@@ -795,6 +897,10 @@ function MainPage() {
           onRenameTimetable={renameTimetable}
           onDeleteTimetable={deleteTimetable}
           onViewingToast={handleViewingToast}
+          onRegenerateTimetable={handleRegenerateTimetable}
+          currentEvents={events ?? undefined}
+          overrides={overrides}
+          deletions={deletions}
         />
       )}
       {isShareWelcomeModalOpen && (
@@ -887,6 +993,37 @@ function MainPage() {
           onConfirm={handleImportConfirm}
           onCancel={handleImportCancel}
         />
+      )}
+
+      {editingImportedEvent && (
+        <EditEventModal
+          currentVenue={editingImportedEvent.currentVenue}
+          currentTutor={editingImportedEvent.currentTutor}
+          currentStartTime={editingImportedEvent.currentStartTime}
+          currentEndTime={editingImportedEvent.currentEndTime}
+          onConfirm={confirmEditImportedEvent}
+          onCancel={() => setEditingImportedEvent(null)}
+          onRevert={revertImportedEvent}
+          isEdited={!!getOverride(editingImportedEvent.eventKey)}
+        />
+      )}
+
+      {deletingImportedEvent && (
+        <Modal
+          title="Delete Event?"
+          onClose={() => setDeletingImportedEvent(null)}
+          onConfirm={confirmDeleteImportedEvent}
+          confirmText="Delete"
+          confirmVariant="danger"
+        >
+          <p>
+            This will hide this event from your timetable. This change is local only and won't
+            affect the original NIE timetable.
+          </p>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.5rem' }}>
+            To restore deleted events, regenerate your timetable from the original HTML file.
+          </p>
+        </Modal>
       )}
     </div>
   );

@@ -45,6 +45,8 @@ export interface Timetable {
   fileName: string | null;
   /** Whether this is the user's primary timetable */
   isPrimary: boolean;
+  /** Timestamp when timetable was last updated (ms since epoch) */
+  updatedAt?: number;
 }
 
 // =============================================================================
@@ -195,6 +197,18 @@ export interface DisplayEventItem extends EventItem {
   eventType?: CustomEventType;
   /** User-provided description (only for custom events) */
   description?: string;
+  /** Event instance key for imported events (used for overrides/deletions) */
+  eventInstanceKey?: EventInstanceKey;
+  /** Whether this event has been edited (any field changed) */
+  isEdited?: boolean;
+  /** Original venue before override (for tooltip) */
+  originalVenue?: string;
+  /** Original tutor before override (for tooltip) */
+  originalTutor?: string;
+  /** Original start time before override (for tooltip) */
+  originalStartTime?: string;
+  /** Original end time before override (for tooltip) */
+  originalEndTime?: string;
 }
 
 /**
@@ -274,4 +288,95 @@ export type ShareData = ShareDataV1 | ShareDataV2;
  */
 export function isShareDataV2(data: ShareData): data is ShareDataV2 {
   return 'version' in data && data.version === 2;
+}
+
+// =============================================================================
+// Event Override Types (for editing imported events)
+// =============================================================================
+
+/**
+ * Key to uniquely identify an imported event instance.
+ * Format: "{course}|{group}|{date}|{startTime}" - enough to uniquely identify an event on a specific date.
+ */
+export type EventInstanceKey = string;
+
+/**
+ * Override fields for an imported event.
+ * Supports editing venue, tutor, and time fields.
+ */
+export interface EventOverride {
+  /** Overridden venue (if changed from original) */
+  venue?: string;
+  /** Overridden tutor (if changed from original) */
+  tutor?: string;
+  /** Overridden start time (if changed from original) */
+  startTime?: string;
+  /** Overridden end time (if changed from original) */
+  endTime?: string;
+  /** Timestamp when this override was created/updated */
+  updatedAt: number;
+}
+
+/**
+ * Storage format for event overrides.
+ * Overrides are stored per-timetable for isolation.
+ */
+export interface EventOverridesStore {
+  [timetableId: string]: {
+    /** Overrides keyed by EventInstanceKey */
+    overrides: Record<EventInstanceKey, EventOverride>;
+    /** Set of deleted event instance keys */
+    deletions: EventInstanceKey[];
+  };
+}
+
+/**
+ * Creates a unique key for an event instance on a specific date.
+ */
+export function createEventInstanceKey(
+  course: string,
+  group: string,
+  date: string,
+  startTime: string
+): EventInstanceKey {
+  return `${course}|${group}|${date}|${startTime}`;
+}
+
+/**
+ * Applies overrides and deletions to events, returning expanded single-date events.
+ * Each returned event has exactly one date with any overrides baked in.
+ * Deleted event instances are excluded.
+ */
+export function applyOverridesToEvents(
+  events: TimetableEvent[],
+  overrides: Record<EventInstanceKey, EventOverride>,
+  deletions: EventInstanceKey[]
+): TimetableEvent[] {
+  const result: TimetableEvent[] = [];
+
+  for (const event of events) {
+    for (const dateStr of event.dates) {
+      const eventKey = createEventInstanceKey(event.course, event.group, dateStr, event.startTime);
+
+      // Skip deleted events
+      if (deletions.includes(eventKey)) {
+        continue;
+      }
+
+      // Apply overrides
+      const override = overrides[eventKey];
+      const expandedEvent: TimetableEvent = {
+        ...event,
+        dates: [dateStr],
+        startTime: override?.startTime ?? event.startTime,
+        endTime: override?.endTime ?? event.endTime,
+        venue: override?.venue ?? event.venue,
+        tutor: override?.tutor ?? event.tutor,
+      };
+
+      result.push(expandedEvent);
+    }
+  }
+
+  return result;
 }

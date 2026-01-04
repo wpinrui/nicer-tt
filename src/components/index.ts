@@ -1,6 +1,7 @@
 export { AddEventModal } from './AddEventModal';
 export { CompareFilters } from './CompareFilters';
 export { CompareModal } from './CompareModal';
+export { EditEventModal } from './EditEventModal';
 export { EventsCompareView } from './EventsCompareView';
 export { EventsList } from './EventsList';
 export { ExportMenu } from './ExportMenu';
@@ -14,4 +15,5 @@ export { OptionsPanel } from './OptionsPanel';
 export { PrivacyNoticeModal } from './PrivacyNoticeModal';
 export { ShareSelectModal } from './ShareSelectModal';
 export { ShareWelcomeModal } from './ShareWelcomeModal';
+export { Toast } from './Toast';
 export { UploadSection } from './UploadSection';

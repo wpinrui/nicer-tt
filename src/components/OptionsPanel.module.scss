@@ -481,6 +481,12 @@
 
 .timetableInfo {
   display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.timetableNameRow {
+  display: flex;
   align-items: center;
   gap: 0.5rem;
 }
@@ -492,6 +498,15 @@
 
   html.dark & {
     color: var(--color-text-primary);
+  }
+}
+
+.timetableTimestamp {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+
+  html.dark & {
+    color: var(--color-text-disabled);
   }
 }
 
@@ -577,6 +592,25 @@
     &:hover {
       background: rgba(100, 181, 246, 0.15);
       color: #90caf9;
+    }
+  }
+}
+
+.timetableActionBtnRegenerate {
+  color: var(--color-upgrading-border, #16a085);
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(22, 160, 133, 0.1);
+    color: #138d75;
+  }
+
+  html.dark & {
+    color: var(--color-upgrading-border, #1abc9c);
+
+    &:hover {
+      background: rgba(26, 188, 156, 0.15);
+      color: #48c9b0;
     }
   }
 }

@@ -30,20 +30,38 @@ export const EventCard = memo(function EventCard({
   const isClickable = !!onCourseClick;
   const isCustom = 'isCustom' in event && event.isCustom;
   const isUpgrading = isCustom && 'eventType' in event && event.eventType === 'upgrading';
+  const isEdited = 'isEdited' in event && event.isEdited;
+  const originalVenue = 'originalVenue' in event ? event.originalVenue : undefined;
+  const originalTutor = 'originalTutor' in event ? event.originalTutor : undefined;
+  const originalStartTime = 'originalStartTime' in event ? event.originalStartTime : undefined;
+  const originalEndTime = 'originalEndTime' in event ? event.originalEndTime : undefined;
   const courseLabel = isUpgrading ? 'Upgrading' : isCustom ? 'Custom' : event.course;
+  const hasTimeEdit = originalStartTime || originalEndTime;
 
   const classNames = [
     styles.eventItem,
     isHighlighted ? styles.eventHighlighted : '',
     !disableCustomStyling &&
       (isUpgrading ? styles.eventUpgrading : isCustom ? styles.eventCustom : ''),
+    isEdited ? styles.eventEdited : '',
   ]
     .filter(Boolean)
     .join(' ');
 
+  const venueTitle = originalVenue ? `Edited (was: ${formatVenue(originalVenue)})` : undefined;
+  const tutorTitle = originalTutor
+    ? `Edited (was: ${formatTutor(originalTutor)})`
+    : formatTutor(event.tutor);
+  const timeTitle = hasTimeEdit
+    ? `Edited (was: ${formatTime12Hour(originalStartTime || event.startTime)} – ${formatTime12Hour(originalEndTime || event.endTime)})`
+    : undefined;
+
   return (
     <li className={classNames}>
-      <span className={styles.eventTime}>
+      <span
+        className={`${styles.eventTime} ${hasTimeEdit ? styles.timeEdited : ''}`}
+        title={timeTitle}
+      >
         <span className={styles.timeStart}>{formatTime12Hour(event.startTime)}</span>
         <span className={styles.timeSeparator}>–</span>
         <span className={styles.timeEnd}>{formatTime12Hour(event.endTime)}</span>
@@ -66,38 +84,62 @@ export const EventCard = memo(function EventCard({
       ) : (
         <>
           <span className={styles.eventGroup}>{event.group}</span>
-          {event.venue && <span className={styles.eventVenue}>@ {formatVenue(event.venue)}</span>}
-          {event.tutor &&
-            (showTutor ? (
-              <span className={styles.eventTutor}>
-                <User size={14} />
-                {formatTutor(event.tutor)}
-              </span>
-            ) : (
-              <span className={styles.eventTutorIcon} title={formatTutor(event.tutor)}>
-                <User size={14} />
-              </span>
-            ))}
+          {event.venue && (
+            <span
+              className={`${styles.eventVenue} ${isEdited ? styles.venueHighlight : ''}`}
+              title={venueTitle}
+            >
+              @ {formatVenue(event.venue)}
+            </span>
+          )}
+          {isEdited && (
+            <span className={styles.editedBadge} title="This event has been modified">
+              edited
+            </span>
+          )}
         </>
       )}
-      {isCustom && (onEdit || onDelete) && (
-        <span className={styles.customActions}>
-          {onEdit && (
-            <button className={styles.customActionBtn} onClick={onEdit} title="Edit custom event">
-              <Pencil size={14} />
-            </button>
-          )}
-          {onDelete && (
-            <button
-              className={`${styles.customActionBtn} ${styles.deleteBtn}`}
-              onClick={onDelete}
-              title="Delete custom event"
+      <span className={styles.rightSection}>
+        {event.tutor &&
+          (showTutor ? (
+            <span
+              className={`${styles.eventTutor} ${originalTutor ? styles.tutorEdited : ''}`}
+              title={originalTutor ? tutorTitle : undefined}
             >
-              <Trash2 size={14} />
-            </button>
-          )}
-        </span>
-      )}
+              <User size={14} />
+              {formatTutor(event.tutor)}
+            </span>
+          ) : (
+            <span
+              className={`${styles.eventTutorIcon} ${originalTutor ? styles.tutorEdited : ''}`}
+              title={tutorTitle}
+            >
+              <User size={14} />
+            </span>
+          ))}
+        {(onEdit || onDelete) && (
+          <span className={styles.customActions}>
+            {onEdit && (
+              <button
+                className={styles.customActionBtn}
+                onClick={onEdit}
+                title={isCustom ? 'Edit custom event' : 'Edit event'}
+              >
+                <Pencil size={14} />
+              </button>
+            )}
+            {onDelete && (
+              <button
+                className={`${styles.customActionBtn} ${styles.deleteBtn}`}
+                onClick={onDelete}
+                title={isCustom ? 'Delete custom event' : 'Delete event'}
+              >
+                <Trash2 size={14} />
+              </button>
+            )}
+          </span>
+        )}
+      </span>
     </li>
   );
 });

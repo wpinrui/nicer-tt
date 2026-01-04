@@ -13,6 +13,7 @@ export const STORAGE_KEYS = {
   HAS_SEEN_SHARE_TIP: 'nie-has-seen-share-tip',
   CUSTOM_BACKGROUND: 'nie-custom-background',
   CUSTOM_EVENTS: 'nie-custom-events', // CustomEventsStore JSON
+  EVENT_OVERRIDES: 'nie-event-overrides', // EventOverridesStore JSON
 } as const;
 
 // Default name sequence for added timetables

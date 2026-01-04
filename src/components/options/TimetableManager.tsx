@@ -1,14 +1,37 @@
-import { Check, Eye, Link, Pencil, Trash2, Upload } from 'lucide-react';
+import { Check, Eye, Link, Pencil, RefreshCw, Trash2, Upload } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-import type { CustomEvent, Timetable, TimetableEvent } from '../../types';
+import type {
+  CustomEvent,
+  EventInstanceKey,
+  EventOverride,
+  Timetable,
+  TimetableEvent,
+} from '../../types';
 import type { CustomEventInput } from '../../hooks/useCustomEvents';
 import { TOAST_DURATION_MS } from '../../utils/constants';
+import { downloadIcs, generateIcs } from '../../utils/generateIcs';
 import { parseHtmlTimetable } from '../../utils/parseHtml';
 import { parseIcs } from '../../utils/parseIcs';
 import { decodeShareUrl } from '../../utils/shareUtils';
 import { Modal } from '../Modal';
+import { Toast } from '../Toast';
 import styles from '../OptionsPanel.module.scss';
+
+/**
+ * Formats a timestamp for display in the timetable list.
+ */
+function formatTimestamp(timestamp: number | undefined): string {
+  if (!timestamp) return '';
+  const date = new Date(timestamp);
+  const day = date.getDate();
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const hour12 = hours % 12 || 12;
+  return `${day} ${month}, ${hour12}:${minutes} ${ampm}`;
+}
 
 interface TimetableManagerProps {
   timetables: Timetable[];
@@ -24,6 +47,13 @@ interface TimetableManagerProps {
   onDeleteTimetable: (id: string) => boolean;
   onViewingToast: (name: string) => void;
   onClose: () => void;
+  onRegenerateTimetable?: (events: TimetableEvent[], fileName: string) => void;
+  /** Current timetable events for backup download before regenerating */
+  currentEvents?: TimetableEvent[];
+  /** Event overrides for ICS export */
+  overrides?: Record<EventInstanceKey, EventOverride>;
+  /** Deleted event keys for ICS export */
+  deletions?: EventInstanceKey[];
 }
 
 export function TimetableManager({
@@ -36,8 +66,13 @@ export function TimetableManager({
   onDeleteTimetable,
   onViewingToast,
   onClose,
+  onRegenerateTimetable,
+  currentEvents,
+  overrides = {},
+  deletions = [],
 }: TimetableManagerProps) {
   const addFileInputRef = useRef<HTMLInputElement>(null);
+  const regenerateFileInputRef = useRef<HTMLInputElement>(null);
 
   // State
   const [shareLinkInput, setShareLinkInput] = useState('');
@@ -52,6 +87,10 @@ export function TimetableManager({
     id: string;
     name: string;
     isPrimary: boolean;
+  } | null>(null);
+  const [pendingRegenerate, setPendingRegenerate] = useState<{
+    events: TimetableEvent[];
+    fileName: string;
   } | null>(null);
 
   // Auto-hide toast
@@ -123,6 +162,53 @@ export function TimetableManager({
     if (addFileInputRef.current) {
       addFileInputRef.current.value = '';
     }
+  };
+
+  const handleRegenerateFromFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !onRegenerateTimetable) return;
+
+    try {
+      const text = await file.text();
+      let events: TimetableEvent[];
+
+      if (file.name.toLowerCase().endsWith('.ics')) {
+        const parsed = parseIcs(text);
+        events = parsed.events;
+      } else {
+        events = parseHtmlTimetable(text);
+      }
+
+      // Show confirmation modal instead of immediately regenerating
+      setPendingRegenerate({ events, fileName: file.name });
+    } catch (err) {
+      setTimetableToast({
+        message: err instanceof Error ? err.message : 'Failed to parse file',
+        type: 'error',
+      });
+    }
+
+    // Reset input
+    if (regenerateFileInputRef.current) {
+      regenerateFileInputRef.current.value = '';
+    }
+  };
+
+  const confirmRegenerate = (downloadBackup: boolean) => {
+    if (!pendingRegenerate || !onRegenerateTimetable) return;
+
+    // Download backup if requested (with user's edits applied)
+    if (downloadBackup && currentEvents && currentEvents.length > 0) {
+      downloadIcs(generateIcs(currentEvents, { overrides, deletions }));
+    }
+
+    // Regenerate the timetable
+    onRegenerateTimetable(pendingRegenerate.events, pendingRegenerate.fileName);
+    setTimetableToast({
+      message: 'Timetable regenerated! Your custom events are preserved.',
+      type: 'success',
+    });
+    setPendingRegenerate(null);
   };
 
   const handleStartRename = (timetable: Timetable) => {
@@ -205,11 +291,20 @@ export function TimetableManager({
                 ) : (
                   <>
                     <div className={styles.timetableInfo}>
-                      <span className={styles.timetableName}>{timetable.name}</span>
-                      {timetable.isPrimary && <span className={styles.timetableBadge}>You</span>}
-                      {isActive && (
-                        <span className={`${styles.timetableBadge} ${styles.timetableBadgeActive}`}>
-                          Viewing
+                      <div className={styles.timetableNameRow}>
+                        <span className={styles.timetableName}>{timetable.name}</span>
+                        {timetable.isPrimary && <span className={styles.timetableBadge}>You</span>}
+                        {isActive && (
+                          <span
+                            className={`${styles.timetableBadge} ${styles.timetableBadgeActive}`}
+                          >
+                            Viewing
+                          </span>
+                        )}
+                      </div>
+                      {timetable.updatedAt && (
+                        <span className={styles.timetableTimestamp}>
+                          Updated {formatTimestamp(timetable.updatedAt)}
                         </span>
                       )}
                     </div>
@@ -222,6 +317,21 @@ export function TimetableManager({
                         >
                           <Eye size={14} />
                         </button>
+                      )}
+                      {timetable.isPrimary && onRegenerateTimetable && (
+                        <label
+                          className={`${styles.timetableActionBtn} ${styles.timetableActionBtnRegenerate}`}
+                          title="Regenerate from HTML (keeps custom events)"
+                        >
+                          <input
+                            ref={regenerateFileInputRef}
+                            type="file"
+                            accept=".html,.htm,.ics"
+                            onChange={handleRegenerateFromFile}
+                            style={{ display: 'none' }}
+                          />
+                          <RefreshCw size={14} />
+                        </label>
                       )}
                       <button
                         className={styles.timetableActionBtn}
@@ -294,13 +404,7 @@ export function TimetableManager({
           </label>
         </div>
 
-        {timetableToast && (
-          <div
-            className={`${styles.backgroundToast} ${timetableToast.type === 'success' ? styles.success : styles.error}`}
-          >
-            {timetableToast.message}
-          </div>
-        )}
+        {timetableToast && <Toast message={timetableToast.message} type={timetableToast.type} />}
       </div>
 
       {/* Delete confirmation modal */}
@@ -316,6 +420,24 @@ export function TimetableManager({
             {deleteConfirm.isPrimary
               ? "This will clear your timetable data. You'll need to upload a new file."
               : 'This cannot be undone.'}
+          </p>
+        </Modal>
+      )}
+
+      {/* Regenerate confirmation modal */}
+      {pendingRegenerate && (
+        <Modal
+          title="Regenerate Timetable"
+          onClose={() => setPendingRegenerate(null)}
+          onConfirm={() => confirmRegenerate(true)}
+          confirmText="Download ICS & Regenerate"
+          confirmVariant="primary"
+          onSecondary={() => confirmRegenerate(false)}
+          secondaryText="Regenerate Only"
+        >
+          <p>Would you like to download a backup of your current timetable before regenerating?</p>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.5rem' }}>
+            Your custom events will be preserved.
           </p>
         </Modal>
       )}
