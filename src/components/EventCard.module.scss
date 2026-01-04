@@ -50,6 +50,10 @@
   @include custom-event-style(var(--color-upgrading-border), var(--color-upgrading-bg));
 }
 
+.eventEdited {
+  @include custom-event-style(var(--color-edited-border, #f39c12), var(--color-edited-bg, rgba(243, 156, 18, 0.08)));
+}
+
 .customBadge {
   font-size: 0.65rem;
   padding: 0.1rem 0.4rem;
@@ -83,8 +87,7 @@
   margin-left: auto;
   flex-shrink: 0;
 
-  .eventCustom:hover &,
-  .eventUpgrading:hover & {
+  .eventItem:hover & {
     display: flex;
   }
 
@@ -156,6 +159,20 @@
 .courseTagWrapper {
   min-width: 5.5rem;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.editedBadge {
+  font-size: 0.6rem;
+  padding: 0.1rem 0.3rem;
+  background: var(--color-edited-badge-bg, #f39c12);
+  color: var(--color-edited-badge-text, #fff);
+  border-radius: 3px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .courseTag {
@@ -194,6 +211,12 @@
   html.dark & {
     color: var(--color-text-disabled);
   }
+}
+
+.venueEdited {
+  color: var(--color-edited-border, #f39c12);
+  font-weight: 500;
+  cursor: help;
 }
 
 .eventTutorIcon {

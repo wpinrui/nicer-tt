@@ -1,6 +1,7 @@
 export { useCourseColorMap } from './useCourseColorMap';
 export { toCustomEventInput, useCustomEvents } from './useCustomEvents';
 export { useDebouncedValue } from './useDebouncedValue';
+export { useEventOverrides } from './useEventOverrides';
 export { useFilteredEvents } from './useFilteredEvents';
 export { useFilteredGroupedEvents } from './useFilteredGroupedEvents';
 export { useGroupedEvents } from './useGroupedEvents';

@@ -1,6 +1,14 @@
 import { useMemo } from 'react';
 
-import type { CustomEvent, DisplayEventItem, DisplayGroupedEvent, TimetableEvent } from '../types';
+import type {
+  CustomEvent,
+  DisplayEventItem,
+  DisplayGroupedEvent,
+  EventInstanceKey,
+  EventOverride,
+  TimetableEvent,
+} from '../types';
+import { createEventInstanceKey } from '../types';
 import {
   createSortKey,
   formatDateDisplay,
@@ -15,6 +23,11 @@ interface FilterOptions {
   selectedDate: string | null;
 }
 
+interface OverrideOptions {
+  overrides: Record<EventInstanceKey, EventOverride>;
+  deletions: EventInstanceKey[];
+}
+
 interface UseFilteredGroupedEventsResult {
   groupedByDate: DisplayGroupedEvent[];
   totalEvents: number;
@@ -25,10 +38,12 @@ interface UseFilteredGroupedEventsResult {
  * Applies filters to events and groups them by date.
  * Filters include: search query, course selection, hide past dates, and date picker.
  * Supports both regular events and custom events (marked with isCustom flag).
+ * Applies overrides and filters out deleted events.
  *
  * @param events - Array of timetable events (or null if no data loaded)
  * @param customEvents - Array of custom events to merge with regular events
  * @param filters - Filter options to apply
+ * @param overrideOptions - Overrides and deletions to apply to imported events
  * @returns groupedByDate - Filtered events grouped by date, sorted chronologically
  * @returns totalEvents - Total count before filtering
  * @returns filteredCount - Count after applying filters
@@ -36,9 +51,11 @@ interface UseFilteredGroupedEventsResult {
 export function useFilteredGroupedEvents(
   events: TimetableEvent[] | null,
   customEvents: CustomEvent[],
-  filters: FilterOptions
+  filters: FilterOptions,
+  overrideOptions: OverrideOptions = { overrides: {}, deletions: [] }
 ): UseFilteredGroupedEventsResult {
   const { searchQuery, selectedCourses, showPastDates, selectedDate } = filters;
+  const { overrides, deletions } = overrideOptions;
 
   return useMemo(() => {
     if (!events && customEvents.length === 0) {
@@ -75,6 +92,15 @@ export function useFilteredGroupedEvents(
       isCustom: boolean,
       customEventId?: string
     ) => {
+      // For imported events, check if deleted
+      let eventInstanceKey: EventInstanceKey | undefined;
+      if (!isCustom) {
+        eventInstanceKey = createEventInstanceKey(event.course, event.group, dateStr, event.startTime);
+        if (deletions.includes(eventInstanceKey)) {
+          return; // Skip deleted events
+        }
+      }
+
       total++;
 
       const sortKey = createSortKey(dateStr);
@@ -118,17 +144,33 @@ export function useFilteredGroupedEvents(
         dateMap.set(sortKey, { date: displayDate, sortKey, events: [] });
       }
 
+      // Apply overrides for imported events
+      let venue = event.venue;
+      let isEdited = false;
+      let originalVenue: string | undefined;
+      if (!isCustom && eventInstanceKey) {
+        const override = overrides[eventInstanceKey];
+        if (override?.venue !== undefined) {
+          originalVenue = event.venue;
+          venue = override.venue;
+          isEdited = true;
+        }
+      }
+
       const eventItem: DisplayEventItem = {
         course: event.course,
         group: event.group,
         startTime: event.startTime,
         endTime: event.endTime,
-        venue: event.venue,
+        venue,
         tutor: event.tutor,
         isCustom,
         customEventId,
         eventType: isCustom && 'eventType' in event ? event.eventType : undefined,
         description: isCustom && 'description' in event ? event.description : undefined,
+        eventInstanceKey,
+        isEdited,
+        originalVenue,
       };
       dateMap.get(sortKey)!.events.push(eventItem);
     };
@@ -161,5 +203,5 @@ export function useFilteredGroupedEvents(
       totalEvents: total,
       filteredCount: hasFilters ? filtered : total,
     };
-  }, [events, customEvents, searchQuery, selectedCourses, showPastDates, selectedDate]);
+  }, [events, customEvents, searchQuery, selectedCourses, showPastDates, selectedDate, overrides, deletions]);
 }

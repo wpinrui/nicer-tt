@@ -1,5 +1,15 @@
 # Changelog
 
+**v1.6.0 (4 Jan 2026)**
+- Add timetable modification support:
+  - Edit venue for any event (imported or custom)
+  - Delete any event (imported or custom)
+  - Visual indicator ("edited" badge) for modified events
+- Add regenerate timetable feature in Options (refresh icon on primary timetable)
+  - Re-upload HTML to sync with NIE timetable updates
+  - Custom events and upgrading courses are preserved
+- All changes are local-only and don't affect the original NIE timetable
+
 **v1.5.17 (30 Dec 2025)**
 - Add QUE503 (Tutorial) upgrading course with 6 tutorial groups
 

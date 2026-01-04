@@ -195,6 +195,12 @@ export interface DisplayEventItem extends EventItem {
   eventType?: CustomEventType;
   /** User-provided description (only for custom events) */
   description?: string;
+  /** Event instance key for imported events (used for overrides/deletions) */
+  eventInstanceKey?: EventInstanceKey;
+  /** Whether this event has been edited (venue changed) */
+  isEdited?: boolean;
+  /** Original venue before override (for tooltip) */
+  originalVenue?: string;
 }
 
 /**
@@ -274,4 +280,50 @@ export type ShareData = ShareDataV1 | ShareDataV2;
  */
 export function isShareDataV2(data: ShareData): data is ShareDataV2 {
   return 'version' in data && data.version === 2;
+}
+
+// =============================================================================
+// Event Override Types (for editing imported events)
+// =============================================================================
+
+/**
+ * Key to uniquely identify an imported event instance.
+ * Format: "{course}|{group}|{date}|{startTime}" - enough to uniquely identify an event on a specific date.
+ */
+export type EventInstanceKey = string;
+
+/**
+ * Override for a single field of an imported event.
+ * Only venue is currently editable, but structured for future extensibility.
+ */
+export interface EventOverride {
+  /** Overridden venue (if changed from original) */
+  venue?: string;
+  /** Timestamp when this override was created/updated */
+  updatedAt: number;
+}
+
+/**
+ * Storage format for event overrides.
+ * Overrides are stored per-timetable for isolation.
+ */
+export interface EventOverridesStore {
+  [timetableId: string]: {
+    /** Overrides keyed by EventInstanceKey */
+    overrides: Record<EventInstanceKey, EventOverride>;
+    /** Set of deleted event instance keys */
+    deletions: EventInstanceKey[];
+  };
+}
+
+/**
+ * Creates a unique key for an event instance on a specific date.
+ */
+export function createEventInstanceKey(
+  course: string,
+  group: string,
+  date: string,
+  startTime: string
+): EventInstanceKey {
+  return `${course}|${group}|${date}|${startTime}`;
 }

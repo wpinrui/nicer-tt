@@ -30,6 +30,8 @@ export const EventCard = memo(function EventCard({
   const isClickable = !!onCourseClick;
   const isCustom = 'isCustom' in event && event.isCustom;
   const isUpgrading = isCustom && 'eventType' in event && event.eventType === 'upgrading';
+  const isEdited = 'isEdited' in event && event.isEdited;
+  const originalVenue = 'originalVenue' in event ? event.originalVenue : undefined;
   const courseLabel = isUpgrading ? 'Upgrading' : isCustom ? 'Custom' : event.course;
 
   const classNames = [
@@ -37,9 +39,12 @@ export const EventCard = memo(function EventCard({
     isHighlighted ? styles.eventHighlighted : '',
     !disableCustomStyling &&
       (isUpgrading ? styles.eventUpgrading : isCustom ? styles.eventCustom : ''),
+    isEdited ? styles.eventEdited : '',
   ]
     .filter(Boolean)
     .join(' ');
+
+  const venueTitle = isEdited && originalVenue ? `Edited (was: ${formatVenue(originalVenue)})` : undefined;
 
   return (
     <li className={classNames}>
@@ -57,6 +62,7 @@ export const EventCard = memo(function EventCard({
         >
           {courseLabel}
         </span>
+        {isEdited && <span className={styles.editedBadge} title="This event has been modified">edited</span>}
       </span>
       {isCustom && 'description' in event && event.description ? (
         <>
@@ -66,7 +72,11 @@ export const EventCard = memo(function EventCard({
       ) : (
         <>
           <span className={styles.eventGroup}>{event.group}</span>
-          {event.venue && <span className={styles.eventVenue}>@ {formatVenue(event.venue)}</span>}
+          {event.venue && (
+            <span className={`${styles.eventVenue} ${isEdited ? styles.venueEdited : ''}`} title={venueTitle}>
+              @ {formatVenue(event.venue)}
+            </span>
+          )}
           {event.tutor &&
             (showTutor ? (
               <span className={styles.eventTutor}>
@@ -80,10 +90,10 @@ export const EventCard = memo(function EventCard({
             ))}
         </>
       )}
-      {isCustom && (onEdit || onDelete) && (
+      {(onEdit || onDelete) && (
         <span className={styles.customActions}>
           {onEdit && (
-            <button className={styles.customActionBtn} onClick={onEdit} title="Edit custom event">
+            <button className={styles.customActionBtn} onClick={onEdit} title={isCustom ? "Edit custom event" : "Edit venue"}>
               <Pencil size={14} />
             </button>
           )}
@@ -91,7 +101,7 @@ export const EventCard = memo(function EventCard({
             <button
               className={`${styles.customActionBtn} ${styles.deleteBtn}`}
               onClick={onDelete}
-              title="Delete custom event"
+              title={isCustom ? "Delete custom event" : "Delete event"}
             >
               <Trash2 size={14} />
             </button>

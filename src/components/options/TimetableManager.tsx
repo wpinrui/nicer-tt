@@ -1,4 +1,4 @@
-import { Check, Eye, Link, Pencil, Trash2, Upload } from 'lucide-react';
+import { Check, Eye, Link, Pencil, RefreshCw, Trash2, Upload } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import type { CustomEvent, Timetable, TimetableEvent } from '../../types';
@@ -24,6 +24,7 @@ interface TimetableManagerProps {
   onDeleteTimetable: (id: string) => boolean;
   onViewingToast: (name: string) => void;
   onClose: () => void;
+  onRegenerateTimetable?: (events: TimetableEvent[], fileName: string) => void;
 }
 
 export function TimetableManager({
@@ -36,8 +37,10 @@ export function TimetableManager({
   onDeleteTimetable,
   onViewingToast,
   onClose,
+  onRegenerateTimetable,
 }: TimetableManagerProps) {
   const addFileInputRef = useRef<HTMLInputElement>(null);
+  const regenerateFileInputRef = useRef<HTMLInputElement>(null);
 
   // State
   const [shareLinkInput, setShareLinkInput] = useState('');
@@ -122,6 +125,36 @@ export function TimetableManager({
     // Reset input
     if (addFileInputRef.current) {
       addFileInputRef.current.value = '';
+    }
+  };
+
+  const handleRegenerateFromFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !onRegenerateTimetable) return;
+
+    try {
+      const text = await file.text();
+      let events: TimetableEvent[];
+
+      if (file.name.toLowerCase().endsWith('.ics')) {
+        const parsed = parseIcs(text);
+        events = parsed.events;
+      } else {
+        events = parseHtmlTimetable(text);
+      }
+
+      onRegenerateTimetable(events, file.name);
+      setTimetableToast({ message: 'Timetable regenerated! Your custom events are preserved.', type: 'success' });
+    } catch (err) {
+      setTimetableToast({
+        message: err instanceof Error ? err.message : 'Failed to parse file',
+        type: 'error',
+      });
+    }
+
+    // Reset input
+    if (regenerateFileInputRef.current) {
+      regenerateFileInputRef.current.value = '';
     }
   };
 
@@ -222,6 +255,21 @@ export function TimetableManager({
                         >
                           <Eye size={14} />
                         </button>
+                      )}
+                      {timetable.isPrimary && onRegenerateTimetable && (
+                        <label
+                          className={`${styles.timetableActionBtn} ${styles.timetableActionBtnRegenerate}`}
+                          title="Regenerate from HTML (keeps custom events)"
+                        >
+                          <input
+                            ref={regenerateFileInputRef}
+                            type="file"
+                            accept=".html,.htm,.ics"
+                            onChange={handleRegenerateFromFile}
+                            style={{ display: 'none' }}
+                          />
+                          <RefreshCw size={14} />
+                        </label>
                       )}
                       <button
                         className={styles.timetableActionBtn}

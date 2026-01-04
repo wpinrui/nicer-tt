@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react';
 
-import type { DisplayGroupedEvent } from '../types';
+import type { DisplayGroupedEvent, EventInstanceKey } from '../types';
 import { CUSTOM_EVENT_COLORS } from '../utils/constants';
 import { isToday } from '../utils/formatters';
 import { EventCard } from './EventCard';
@@ -13,6 +13,8 @@ interface EventGroupProps {
   onCourseClick?: (course: string) => void;
   onEditCustomEvent?: (eventId: string) => void;
   onDeleteCustomEvent?: (eventId: string, date: string) => void;
+  onEditImportedEvent?: (eventKey: EventInstanceKey, currentVenue: string) => void;
+  onDeleteImportedEvent?: (eventKey: EventInstanceKey) => void;
 }
 
 export const EventGroup = memo(function EventGroup({
@@ -22,6 +24,8 @@ export const EventGroup = memo(function EventGroup({
   onCourseClick,
   onEditCustomEvent,
   onDeleteCustomEvent,
+  onEditImportedEvent,
+  onDeleteImportedEvent,
 }: EventGroupProps) {
   const createEditHandler = useCallback(
     (eventId: string | undefined) => {
@@ -39,6 +43,22 @@ export const EventGroup = memo(function EventGroup({
     [onDeleteCustomEvent]
   );
 
+  const createImportedEditHandler = useCallback(
+    (eventKey: EventInstanceKey | undefined, currentVenue: string) => {
+      if (!eventKey || !onEditImportedEvent) return undefined;
+      return () => onEditImportedEvent(eventKey, currentVenue);
+    },
+    [onEditImportedEvent]
+  );
+
+  const createImportedDeleteHandler = useCallback(
+    (eventKey: EventInstanceKey | undefined) => {
+      if (!eventKey || !onDeleteImportedEvent) return undefined;
+      return () => onDeleteImportedEvent(eventKey);
+    },
+    [onDeleteImportedEvent]
+  );
+
   return (
     <div className={styles.dateGroup}>
       <div
@@ -52,9 +72,25 @@ export const EventGroup = memo(function EventGroup({
       <ul className={styles.eventsList}>
         {group.events.map((event, i) => {
           const isUpgrading = event.eventType === 'upgrading';
+          const isCustom = event.isCustom;
+
+          // For custom events, use custom event handlers
+          // For imported events, use imported event handlers
+          let onEdit: (() => void) | undefined;
+          let onDelete: (() => void) | undefined;
+
+          if (isCustom) {
+            onEdit = isUpgrading ? undefined : createEditHandler(event.customEventId);
+            onDelete = createDeleteHandler(event.customEventId, group.sortKey);
+          } else {
+            // Imported events - use eventInstanceKey for edit/delete
+            onEdit = createImportedEditHandler(event.eventInstanceKey, event.venue);
+            onDelete = createImportedDeleteHandler(event.eventInstanceKey);
+          }
+
           return (
             <EventCard
-              key={event.customEventId || i}
+              key={event.customEventId || event.eventInstanceKey || i}
               event={event}
               showTutor={showTutor}
               courseColor={
@@ -62,8 +98,8 @@ export const EventGroup = memo(function EventGroup({
                 (isUpgrading ? CUSTOM_EVENT_COLORS.Upgrading : CUSTOM_EVENT_COLORS.Custom)
               }
               onCourseClick={onCourseClick}
-              onEdit={isUpgrading ? undefined : createEditHandler(event.customEventId)}
-              onDelete={createDeleteHandler(event.customEventId, group.sortKey)}
+              onEdit={onEdit}
+              onDelete={onDelete}
             />
           );
         })}

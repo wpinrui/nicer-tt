@@ -1,8 +1,19 @@
 import { useMemo } from 'react';
 
-import type { CustomEvent, DisplayGroupedEvent, TimetableEvent } from '../types';
+import type {
+  CustomEvent,
+  DisplayGroupedEvent,
+  EventInstanceKey,
+  EventOverride,
+  TimetableEvent,
+} from '../types';
 import { useCourseColorMap } from './useCourseColorMap';
 import { useFilteredGroupedEvents } from './useFilteredGroupedEvents';
+
+interface OverrideOptions {
+  overrides: Record<EventInstanceKey, EventOverride>;
+  deletions: EventInstanceKey[];
+}
 
 interface UseFilteredEventsResult {
   groupedByDate: DisplayGroupedEvent[];
@@ -23,6 +34,7 @@ interface UseFilteredEventsResult {
  * @param selectedCourses - Set of course names to show (empty = all courses)
  * @param showPastDates - Whether to show events with dates before today
  * @param selectedDate - Optional date filter in YYYY-MM-DD format (matches month/day only)
+ * @param overrideOptions - Optional overrides and deletions for imported events
  * @returns Combined result with grouped events, counts, and color mapping
  */
 export function useFilteredEvents(
@@ -31,7 +43,8 @@ export function useFilteredEvents(
   searchQuery: string,
   selectedCourses: Set<string>,
   showPastDates: boolean,
-  selectedDate: string | null = null
+  selectedDate: string | null = null,
+  overrideOptions: OverrideOptions = { overrides: {}, deletions: [] }
 ): UseFilteredEventsResult {
   // Combine regular events with custom events for color mapping
   const allEvents = useMemo(() => {
@@ -49,7 +62,8 @@ export function useFilteredEvents(
       selectedCourses,
       showPastDates,
       selectedDate,
-    }
+    },
+    overrideOptions
   );
 
   return {

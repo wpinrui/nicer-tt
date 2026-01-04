@@ -28,6 +28,7 @@ interface OptionsPanelProps {
   onRenameTimetable: (id: string, newName: string) => void;
   onDeleteTimetable: (id: string) => boolean;
   onViewingToast: (name: string) => void;
+  onRegenerateTimetable?: (events: TimetableEvent[], fileName: string) => void;
 }
 
 export function OptionsPanel({
@@ -45,6 +46,7 @@ export function OptionsPanel({
   onRenameTimetable,
   onDeleteTimetable,
   onViewingToast,
+  onRegenerateTimetable,
 }: OptionsPanelProps) {
   const [showFactoryReset, setShowFactoryReset] = useState(false);
 
@@ -81,6 +83,7 @@ export function OptionsPanel({
             onDeleteTimetable={onDeleteTimetable}
             onViewingToast={onViewingToast}
             onClose={onClose}
+            onRegenerateTimetable={onRegenerateTimetable}
           />
 
           <BackgroundSettings />
