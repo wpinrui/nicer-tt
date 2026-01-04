@@ -13,6 +13,7 @@ import {
   X,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import type { ExportOptions, ImportOptions } from '../components';
 import {
@@ -50,7 +51,6 @@ import type { CustomEvent, EventInstanceKey, ShareData, Timetable } from '../typ
 import { applyOverridesToEvents, isShareDataV2 } from '../types';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
 import { downloadIcs, generateIcs } from '../utils/generateIcs';
-import HelpPage from './HelpPage';
 
 /**
  * Filters custom events based on export options.
@@ -611,6 +611,9 @@ function MainPage() {
             <button onClick={() => setOptionsPanelOpen(true)} className="header-btn">
               <Settings size={14} /> Options
             </button>
+            <Link to="/help" className="header-btn header-btn-icon" title="Help & Guide">
+              <HelpCircle size={18} />
+            </Link>
           </div>
           <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -658,14 +661,9 @@ function MainPage() {
               >
                 <Settings size={18} /> Options
               </button>
-              <a
-                href="https://github.com/wpinrui/nicer-tt/blob/main/GUIDE.md"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <Link to="/help" onClick={() => setMobileMenuOpen(false)}>
                 <HelpCircle size={18} /> Help & Guide
-              </a>
+              </Link>
             </div>
           )}
         </div>
@@ -689,10 +687,40 @@ function MainPage() {
             onClear={clearTimetable}
             onFirstUpload={() => setShareWelcomeModalOpen(true)}
           />
-          <HelpPage
-            onUploadClick={() => uploadRef.current?.triggerUpload()}
-            onPrivacyClick={() => setPrivacyNoticeModalOpen(true)}
-          />
+          <div className="onboarding-section">
+            <div className="privacy-banner">
+              🔒 This app does not collect your data.{' '}
+              <button
+                className="privacy-banner-link"
+                onClick={() => setPrivacyNoticeModalOpen(true)}
+              >
+                Privacy Notice
+              </button>
+            </div>
+            <ol className="onboarding-steps">
+              <li>
+                <strong>Go to your timetable page</strong>
+                <p>NIE Portal → Academics → Programme Administration Matters → Timetable</p>
+              </li>
+              <li>
+                <strong>Save the webpage</strong>
+                <p>
+                  Press <kbd>Ctrl</kbd>+<kbd>S</kbd> (or <kbd>Cmd</kbd>+<kbd>S</kbd> on Mac)
+                </p>
+              </li>
+              <li>
+                <strong>Upload the file</strong>
+                <p>Click the upload button above and choose the file you downloaded</p>
+              </li>
+              <li>
+                <strong>Export your timetable</strong>
+                <p>Download an ICS file to add to Google, Outlook, or Apple Calendar</p>
+              </li>
+            </ol>
+            <Link to="/help" className="full-guide-link">
+              <HelpCircle size={16} /> View full guide
+            </Link>
+          </div>
         </>
       )}
 

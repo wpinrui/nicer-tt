@@ -1,4 +1,4 @@
-import { ExternalLink, HelpCircle, RotateCcw, X } from 'lucide-react';
+import { ExternalLink, RotateCcw, X } from 'lucide-react';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -103,19 +103,9 @@ export function OptionsPanel({
           <PrivacySection onShowPrivacy={onShowPrivacy} />
 
           <div className={styles.section}>
-            <h4>Help</h4>
-            <p className={styles.privacyDesc}>
-              Version {__APP_VERSION__}. Refer to the User Guide for usage instructions.
-            </p>
+            <h4>About</h4>
+            <p className={styles.privacyDesc}>Version {__APP_VERSION__}</p>
             <div className={styles.buttons}>
-              <a
-                href="https://github.com/wpinrui/nicer-tt/blob/main/GUIDE.md"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.btn}
-              >
-                <HelpCircle size={14} /> User Guide <ExternalLink size={12} />
-              </a>
               <a
                 href="https://github.com/wpinrui/nicer-tt/issues"
                 target="_blank"

@@ -7,6 +7,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import { useLocalStorage } from './hooks';
 import ContributePage from './pages/ContributePage';
+import HelpPage from './pages/HelpPage';
 import MainPage from './pages/MainPage';
 import { STORAGE_KEYS } from './utils/constants';
 import { logError } from './utils/errors';
@@ -87,6 +88,16 @@ function App() {
             <div className="card">
               <div className="card-content">
                 <ContributePage />
+              </div>
+            </div>
+          }
+        />
+        <Route
+          path="/help"
+          element={
+            <div className="card">
+              <div className="card-content">
+                <HelpPage />
               </div>
             </div>
           }

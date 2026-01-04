@@ -1,5 +1,11 @@
 # Changelog
 
+**v1.7.0 (4 Jan 2026)**
+- Add interactive help page with searchable feature cards
+- Help button (?) now in header for quick access
+- Organized by category tabs: Getting Started, Events, Export & Share, Settings
+- Full-text search across all features
+
 **v1.6.0 (4 Jan 2026)**
 - Add timetable modification support:
   - Edit venue for any event (imported or custom)
