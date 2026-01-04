@@ -13,7 +13,13 @@ interface EventGroupProps {
   onCourseClick?: (course: string) => void;
   onEditCustomEvent?: (eventId: string) => void;
   onDeleteCustomEvent?: (eventId: string, date: string) => void;
-  onEditImportedEvent?: (eventKey: EventInstanceKey, currentVenue: string) => void;
+  onEditImportedEvent?: (
+    eventKey: EventInstanceKey,
+    currentVenue: string,
+    currentTutor: string,
+    currentStartTime: string,
+    currentEndTime: string
+  ) => void;
   onDeleteImportedEvent?: (eventKey: EventInstanceKey) => void;
 }
 
@@ -44,9 +50,16 @@ export const EventGroup = memo(function EventGroup({
   );
 
   const createImportedEditHandler = useCallback(
-    (eventKey: EventInstanceKey | undefined, currentVenue: string) => {
+    (
+      eventKey: EventInstanceKey | undefined,
+      currentVenue: string,
+      currentTutor: string,
+      currentStartTime: string,
+      currentEndTime: string
+    ) => {
       if (!eventKey || !onEditImportedEvent) return undefined;
-      return () => onEditImportedEvent(eventKey, currentVenue);
+      return () =>
+        onEditImportedEvent(eventKey, currentVenue, currentTutor, currentStartTime, currentEndTime);
     },
     [onEditImportedEvent]
   );
@@ -84,7 +97,13 @@ export const EventGroup = memo(function EventGroup({
             onDelete = createDeleteHandler(event.customEventId, group.sortKey);
           } else {
             // Imported events - use eventInstanceKey for edit/delete
-            onEdit = createImportedEditHandler(event.eventInstanceKey, event.venue);
+            onEdit = createImportedEditHandler(
+              event.eventInstanceKey,
+              event.venue,
+              event.tutor,
+              event.startTime,
+              event.endTime
+            );
             onDelete = createImportedDeleteHandler(event.eventInstanceKey);
           }
 

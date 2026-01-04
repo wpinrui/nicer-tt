@@ -481,6 +481,12 @@
 
 .timetableInfo {
   display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.timetableNameRow {
+  display: flex;
   align-items: center;
   gap: 0.5rem;
 }
@@ -492,6 +498,15 @@
 
   html.dark & {
     color: var(--color-text-primary);
+  }
+}
+
+.timetableTimestamp {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+
+  html.dark & {
+    color: var(--color-text-disabled);
   }
 }
 

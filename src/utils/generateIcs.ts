@@ -94,12 +94,24 @@ ${icsEvents.join('\n')}
 END:VCALENDAR`;
 }
 
-export function downloadIcs(icsContent: string, filename: string = 'nie-timetable.ics'): void {
+/**
+ * Generates a timestamped filename for the .ics download.
+ * Format: nie-timetable-YYYY-MM-DD.ics
+ */
+function generateIcsFilename(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `nie-timetable-${year}-${month}-${day}.ics`;
+}
+
+export function downloadIcs(icsContent: string, filename?: string): void {
   const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = filename;
+  link.download = filename ?? generateIcsFilename();
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

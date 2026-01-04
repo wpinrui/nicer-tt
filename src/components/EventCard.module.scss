@@ -51,7 +51,10 @@
 }
 
 .eventEdited {
-  @include custom-event-style(var(--color-edited-border, #f39c12), var(--color-edited-bg, rgba(243, 156, 18, 0.08)));
+  @include custom-event-style(
+    var(--color-edited-border, #f39c12),
+    var(--color-edited-bg, rgba(243, 156, 18, 0.08))
+  );
 }
 
 .customBadge {
@@ -81,10 +84,17 @@
   }
 }
 
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
 .customActions {
   display: none;
   gap: 0.25rem;
-  margin-left: auto;
   flex-shrink: 0;
 
   .eventItem:hover & {
@@ -219,6 +229,16 @@
   cursor: help;
 }
 
+.tutorEdited {
+  color: var(--color-edited-border, #f39c12);
+  cursor: help;
+}
+
+.timeEdited {
+  color: var(--color-edited-border, #f39c12);
+  cursor: help;
+}
+
 .eventTutorIcon {
   display: inline-flex;
   align-items: center;
@@ -226,7 +246,6 @@
   color: var(--color-text-placeholder);
   cursor: help;
   position: relative;
-  margin-left: auto;
   padding: 0.2rem;
   border-radius: 50%;
   transition: all 0.2s;
@@ -284,7 +303,6 @@
   gap: 0.3rem;
   color: var(--color-text-muted);
   font-size: 0.8rem;
-  margin-left: auto;
 
   html.dark & {
     color: var(--color-text-disabled);

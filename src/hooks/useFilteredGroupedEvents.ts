@@ -95,7 +95,12 @@ export function useFilteredGroupedEvents(
       // For imported events, check if deleted
       let eventInstanceKey: EventInstanceKey | undefined;
       if (!isCustom) {
-        eventInstanceKey = createEventInstanceKey(event.course, event.group, dateStr, event.startTime);
+        eventInstanceKey = createEventInstanceKey(
+          event.course,
+          event.group,
+          dateStr,
+          event.startTime
+        );
         if (deletions.includes(eventInstanceKey)) {
           return; // Skip deleted events
         }
@@ -146,8 +151,14 @@ export function useFilteredGroupedEvents(
 
       // Apply overrides for imported events
       let venue = event.venue;
+      let tutor = event.tutor;
+      let startTime = event.startTime;
+      let endTime = event.endTime;
       let isEdited = false;
       let originalVenue: string | undefined;
+      let originalTutor: string | undefined;
+      let originalStartTime: string | undefined;
+      let originalEndTime: string | undefined;
       if (!isCustom && eventInstanceKey) {
         const override = overrides[eventInstanceKey];
         if (override?.venue !== undefined) {
@@ -155,15 +166,30 @@ export function useFilteredGroupedEvents(
           venue = override.venue;
           isEdited = true;
         }
+        if (override?.tutor !== undefined) {
+          originalTutor = event.tutor;
+          tutor = override.tutor;
+          isEdited = true;
+        }
+        if (override?.startTime !== undefined) {
+          originalStartTime = event.startTime;
+          startTime = override.startTime;
+          isEdited = true;
+        }
+        if (override?.endTime !== undefined) {
+          originalEndTime = event.endTime;
+          endTime = override.endTime;
+          isEdited = true;
+        }
       }
 
       const eventItem: DisplayEventItem = {
         course: event.course,
         group: event.group,
-        startTime: event.startTime,
-        endTime: event.endTime,
+        startTime,
+        endTime,
         venue,
-        tutor: event.tutor,
+        tutor,
         isCustom,
         customEventId,
         eventType: isCustom && 'eventType' in event ? event.eventType : undefined,
@@ -171,6 +197,9 @@ export function useFilteredGroupedEvents(
         eventInstanceKey,
         isEdited,
         originalVenue,
+        originalTutor,
+        originalStartTime,
+        originalEndTime,
       };
       dateMap.get(sortKey)!.events.push(eventItem);
     };
@@ -203,5 +232,14 @@ export function useFilteredGroupedEvents(
       totalEvents: total,
       filteredCount: hasFilters ? filtered : total,
     };
-  }, [events, customEvents, searchQuery, selectedCourses, showPastDates, selectedDate, overrides, deletions]);
+  }, [
+    events,
+    customEvents,
+    searchQuery,
+    selectedCourses,
+    showPastDates,
+    selectedDate,
+    overrides,
+    deletions,
+  ]);
 }

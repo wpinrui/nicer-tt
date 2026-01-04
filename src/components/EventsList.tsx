@@ -10,7 +10,13 @@ interface EventsListProps {
   onCourseClick: (course: string) => void;
   onEditCustomEvent?: (eventId: string) => void;
   onDeleteCustomEvent?: (eventId: string, date: string) => void;
-  onEditImportedEvent?: (eventKey: EventInstanceKey, currentVenue: string) => void;
+  onEditImportedEvent?: (
+    eventKey: EventInstanceKey,
+    currentVenue: string,
+    currentTutor: string,
+    currentStartTime: string,
+    currentEndTime: string
+  ) => void;
   onDeleteImportedEvent?: (eventKey: EventInstanceKey) => void;
 }
 

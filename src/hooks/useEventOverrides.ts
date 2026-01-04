@@ -62,7 +62,10 @@ export function useEventOverrides(activeTimetableId: string | null) {
   // Overrides and deletions for the active timetable
   const { overrides, deletions } = useMemo(() => {
     if (!activeTimetableId) {
-      return { overrides: {} as Record<EventInstanceKey, EventOverride>, deletions: [] as EventInstanceKey[] };
+      return {
+        overrides: {} as Record<EventInstanceKey, EventOverride>,
+        deletions: [] as EventInstanceKey[],
+      };
     }
     const entry = store[activeTimetableId];
     return entry || { overrides: {}, deletions: [] };
@@ -77,6 +80,7 @@ export function useEventOverrides(activeTimetableId: string | null) {
 
       setStore((prev) => {
         const entry = getOrCreateEntry(prev, activeTimetableId);
+        const existingOverride = entry.overrides[eventKey] || {};
         const updated: EventOverridesStore = {
           ...prev,
           [activeTimetableId]: {
@@ -84,7 +88,8 @@ export function useEventOverrides(activeTimetableId: string | null) {
             overrides: {
               ...entry.overrides,
               [eventKey]: {
-                ...override,
+                ...existingOverride, // Preserve existing override fields
+                ...override, // Apply new changes
                 updatedAt: Date.now(),
               },
             },
@@ -198,18 +203,15 @@ export function useEventOverrides(activeTimetableId: string | null) {
    * Clears all overrides and deletions for a timetable.
    * Useful when regenerating a timetable.
    */
-  const clearAllForTimetable = useCallback(
-    (timetableId: string): void => {
-      setStore((prev) => {
-        if (!prev[timetableId]) return prev;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { [timetableId]: _removed, ...rest } = prev;
-        saveEventOverridesStore(rest);
-        return rest;
-      });
-    },
-    []
-  );
+  const clearAllForTimetable = useCallback((timetableId: string): void => {
+    setStore((prev) => {
+      if (!prev[timetableId]) return prev;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [timetableId]: _removed, ...rest } = prev;
+      saveEventOverridesStore(rest);
+      return rest;
+    });
+  }, []);
 
   /**
    * Gets count of overrides and deletions for the active timetable.

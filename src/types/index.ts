@@ -45,6 +45,8 @@ export interface Timetable {
   fileName: string | null;
   /** Whether this is the user's primary timetable */
   isPrimary: boolean;
+  /** Timestamp when timetable was last updated (ms since epoch) */
+  updatedAt?: number;
 }
 
 // =============================================================================
@@ -197,10 +199,16 @@ export interface DisplayEventItem extends EventItem {
   description?: string;
   /** Event instance key for imported events (used for overrides/deletions) */
   eventInstanceKey?: EventInstanceKey;
-  /** Whether this event has been edited (venue changed) */
+  /** Whether this event has been edited (any field changed) */
   isEdited?: boolean;
   /** Original venue before override (for tooltip) */
   originalVenue?: string;
+  /** Original tutor before override (for tooltip) */
+  originalTutor?: string;
+  /** Original start time before override (for tooltip) */
+  originalStartTime?: string;
+  /** Original end time before override (for tooltip) */
+  originalEndTime?: string;
 }
 
 /**
@@ -293,12 +301,18 @@ export function isShareDataV2(data: ShareData): data is ShareDataV2 {
 export type EventInstanceKey = string;
 
 /**
- * Override for a single field of an imported event.
- * Only venue is currently editable, but structured for future extensibility.
+ * Override fields for an imported event.
+ * Supports editing venue, tutor, and time fields.
  */
 export interface EventOverride {
   /** Overridden venue (if changed from original) */
   venue?: string;
+  /** Overridden tutor (if changed from original) */
+  tutor?: string;
+  /** Overridden start time (if changed from original) */
+  startTime?: string;
+  /** Overridden end time (if changed from original) */
+  endTime?: string;
   /** Timestamp when this override was created/updated */
   updatedAt: number;
 }

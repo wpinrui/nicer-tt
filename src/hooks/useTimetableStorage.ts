@@ -172,6 +172,7 @@ export function useTimetableStorage() {
             ...updated[primaryIndex],
             events: newEvents,
             fileName: newFileName,
+            updatedAt: Date.now(),
           };
           saveTimetables(updated);
           return updated;
@@ -184,6 +185,7 @@ export function useTimetableStorage() {
               events: newEvents,
               fileName: newFileName,
               isPrimary: true,
+              updatedAt: Date.now(),
             },
             ...prev,
           ];
@@ -217,6 +219,7 @@ export function useTimetableStorage() {
           events: newEvents,
           fileName: newFileName,
           isPrimary: false,
+          updatedAt: Date.now(),
         };
         const updated = [...prev, newTimetable];
         saveTimetables(updated);

@@ -126,8 +126,8 @@ export const HOURS = [
   '07',
 ];
 
-// Minutes as buttons (00, 15, 30, 45)
-export const MINUTES = ['00', '15', '30', '45'];
+// Minutes in 5-minute intervals
+export const MINUTES = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
 
 // Support current year and next year for custom events
 export const CURRENT_YEAR = new Date().getFullYear();

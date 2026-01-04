@@ -113,6 +113,9 @@ function MainPage() {
   const [editingImportedEvent, setEditingImportedEvent] = useState<{
     eventKey: EventInstanceKey;
     currentVenue: string;
+    currentTutor: string;
+    currentStartTime: string;
+    currentEndTime: string;
   } | null>(null);
   const [deletingImportedEvent, setDeletingImportedEvent] = useState<EventInstanceKey | null>(null);
   const [pendingExportAction, setPendingExportAction] = useState<'download' | 'share' | null>(null);
@@ -185,7 +188,9 @@ function MainPage() {
   const displayCustomEvents = isViewingPreview ? [] : customEvents;
 
   // Only apply overrides when viewing the active timetable (not preview)
-  const displayOverrides = isViewingPreview ? { overrides: {}, deletions: [] } : { overrides, deletions };
+  const displayOverrides = isViewingPreview
+    ? { overrides: {}, deletions: [] }
+    : { overrides, deletions };
 
   const { groupedByDate, totalEvents, courseColorMap, uniqueCourses, filteredCount } =
     useFilteredEvents(
@@ -463,18 +468,33 @@ function MainPage() {
   );
 
   // Imported event handlers
-  const handleEditImportedEvent = useCallback((eventKey: EventInstanceKey, currentVenue: string) => {
-    setEditingImportedEvent({ eventKey, currentVenue });
-  }, []);
+  const handleEditImportedEvent = useCallback(
+    (
+      eventKey: EventInstanceKey,
+      currentVenue: string,
+      currentTutor: string,
+      currentStartTime: string,
+      currentEndTime: string
+    ) => {
+      setEditingImportedEvent({
+        eventKey,
+        currentVenue,
+        currentTutor,
+        currentStartTime,
+        currentEndTime,
+      });
+    },
+    []
+  );
 
   const handleDeleteImportedEvent = useCallback((eventKey: EventInstanceKey) => {
     setDeletingImportedEvent(eventKey);
   }, []);
 
   const confirmEditImportedEvent = useCallback(
-    (newVenue: string) => {
+    (override: { venue?: string; tutor?: string; startTime?: string; endTime?: string }) => {
       if (!editingImportedEvent) return;
-      setOverride(editingImportedEvent.eventKey, { venue: newVenue });
+      setOverride(editingImportedEvent.eventKey, override);
       setEditingImportedEvent(null);
     },
     [editingImportedEvent, setOverride]
@@ -862,6 +882,7 @@ function MainPage() {
           onDeleteTimetable={deleteTimetable}
           onViewingToast={handleViewingToast}
           onRegenerateTimetable={handleRegenerateTimetable}
+          currentEvents={events ?? undefined}
         />
       )}
       {isShareWelcomeModalOpen && (
@@ -959,6 +980,9 @@ function MainPage() {
       {editingImportedEvent && (
         <EditVenueModal
           currentVenue={editingImportedEvent.currentVenue}
+          currentTutor={editingImportedEvent.currentTutor}
+          currentStartTime={editingImportedEvent.currentStartTime}
+          currentEndTime={editingImportedEvent.currentEndTime}
           onConfirm={confirmEditImportedEvent}
           onCancel={() => setEditingImportedEvent(null)}
           onRevert={revertImportedEvent}
