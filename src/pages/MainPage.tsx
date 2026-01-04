@@ -19,7 +19,7 @@ import {
   AddEventModal,
   CompareFilters,
   CompareModal,
-  EditVenueModal,
+  EditEventModal,
   EventsCompareView,
   EventsList,
   ExportMenu,
@@ -996,7 +996,7 @@ function MainPage() {
       )}
 
       {editingImportedEvent && (
-        <EditVenueModal
+        <EditEventModal
           currentVenue={editingImportedEvent.currentVenue}
           currentTutor={editingImportedEvent.currentTutor}
           currentStartTime={editingImportedEvent.currentStartTime}

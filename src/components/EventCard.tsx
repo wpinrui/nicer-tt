@@ -86,7 +86,7 @@ export const EventCard = memo(function EventCard({
           <span className={styles.eventGroup}>{event.group}</span>
           {event.venue && (
             <span
-              className={`${styles.eventVenue} ${isEdited ? styles.venueEdited : ''}`}
+              className={`${styles.eventVenue} ${originalVenue ? styles.venueEdited : ''}`}
               title={venueTitle}
             >
               @ {formatVenue(event.venue)}

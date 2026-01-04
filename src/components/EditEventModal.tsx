@@ -23,7 +23,7 @@ interface EditEventModalProps {
   isEdited?: boolean;
 }
 
-export function EditVenueModal({
+export function EditEventModal({
   currentVenue,
   currentTutor,
   currentStartTime,
