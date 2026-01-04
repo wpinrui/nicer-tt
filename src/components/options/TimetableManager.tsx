@@ -1,4 +1,4 @@
-import { Check, Eye, Link, Pencil, RefreshCw, Trash2, Upload } from 'lucide-react';
+import { Check, Eye, Link, Pencil, RefreshCw, Star, Trash2, Upload } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import type {
@@ -37,6 +37,7 @@ interface TimetableManagerProps {
   timetables: Timetable[];
   activeTimetableId: string | null;
   onSetActiveTimetable: (id: string) => void;
+  onSetPrimaryTimetable: (id: string) => void;
   onAddTimetable: (
     events: TimetableEvent[],
     fileName: string | null,
@@ -60,6 +61,7 @@ export function TimetableManager({
   timetables,
   activeTimetableId,
   onSetActiveTimetable,
+  onSetPrimaryTimetable,
   onAddTimetable,
   onAddCustomEventsToTimetable,
   onRenameTimetable,
@@ -249,6 +251,11 @@ export function TimetableManager({
     onViewingToast(name);
   };
 
+  const handleSetPrimaryTimetable = (id: string, name: string) => {
+    onSetPrimaryTimetable(id);
+    setTimetableToast({ message: `"${name}" is now your main timetable.`, type: 'success' });
+  };
+
   return (
     <>
       <div className={styles.section}>
@@ -316,6 +323,15 @@ export function TimetableManager({
                           title="View this timetable"
                         >
                           <Eye size={14} />
+                        </button>
+                      )}
+                      {!timetable.isPrimary && (
+                        <button
+                          className={`${styles.timetableActionBtn} ${styles.timetableActionBtnPrimary}`}
+                          onClick={() => handleSetPrimaryTimetable(timetable.id, timetable.name)}
+                          title="Set as your main timetable"
+                        >
+                          <Star size={14} />
                         </button>
                       )}
                       {timetable.isPrimary && onRegenerateTimetable && (

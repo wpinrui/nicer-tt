@@ -70,6 +70,7 @@ function MainPage() {
     timetables,
     activeTimetable,
     setActiveTimetable,
+    setPrimaryTimetable,
     addTimetable,
     renameTimetable,
     deleteTimetable,
@@ -892,6 +893,7 @@ function MainPage() {
           timetables={timetables}
           activeTimetableId={activeTimetable?.id || null}
           onSetActiveTimetable={setActiveTimetable}
+          onSetPrimaryTimetable={setPrimaryTimetable}
           onAddTimetable={addTimetable}
           onAddCustomEventsToTimetable={addCustomEventToTimetable}
           onRenameTimetable={renameTimetable}

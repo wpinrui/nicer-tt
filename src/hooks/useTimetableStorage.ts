@@ -277,6 +277,25 @@ export function useTimetableStorage() {
     [setActiveTimetableIdState]
   );
 
+  /**
+   * Sets a timetable as the primary (main) timetable.
+   * Removes primary status from all other timetables.
+   */
+  const setPrimaryTimetable = useCallback((id: string) => {
+    setTimetablesState((prev) => {
+      const timetable = prev.find((t) => t.id === id);
+      if (!timetable || timetable.isPrimary) {
+        return prev;
+      }
+      const updated = prev.map((t) => ({
+        ...t,
+        isPrimary: t.id === id,
+      }));
+      saveTimetables(updated);
+      return updated;
+    });
+  }, []);
+
   /** Gets a timetable by ID */
   const getTimetable = useCallback(
     (id: string): Timetable | null => {
@@ -302,6 +321,7 @@ export function useTimetableStorage() {
     primaryTimetable,
     activeTimetable,
     setActiveTimetable,
+    setPrimaryTimetable,
     addTimetable,
     renameTimetable,
     deleteTimetable,
