@@ -39,12 +39,20 @@ export function EditEventModal({
     parseTimeString(currentStartTime)
   );
   const [endTime, setEndTime] = useState<TimeValue | null>(() => parseTimeString(currentEndTime));
+  const [timeError, setTimeError] = useState<string | null>(null);
 
   const handleConfirm = () => {
     const trimmedVenue = venue.trim();
     const trimmedTutor = tutor.trim();
     const newStartTime = timeValueToString(startTime);
     const newEndTime = timeValueToString(endTime);
+
+    // Validate start time is before end time
+    if (newStartTime >= newEndTime) {
+      setTimeError('Start time must be before end time');
+      return;
+    }
+    setTimeError(null);
 
     const override: Omit<EventOverride, 'updatedAt'> = {};
 
@@ -163,6 +171,17 @@ export function EditEventModal({
           </div>
         </div>
       </div>
+      {timeError && (
+        <p
+          style={{
+            fontSize: '0.85rem',
+            color: 'var(--color-error, #e74c3c)',
+            marginBottom: '1rem',
+          }}
+        >
+          {timeError}
+        </p>
+      )}
       <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
         This change is local only and won't affect the original NIE timetable.
       </p>
