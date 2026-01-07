@@ -1,5 +1,12 @@
 # Changelog
 
+### v1.7.0 (8 Jan 2026)
+- Add cohort-wide events feature:
+  - Events defined in `src/data/cohort-events.json` appear for all users
+  - Displayed with orange "Cohort" tag
+  - Users can edit or delete cohort events like custom events
+  - Changes are per-user (stored in localStorage)
+
 **v1.6.1 (5 Jan 2026)**
 - Add ability to set any timetable as your main timetable (star icon in Options → Timetables)
 

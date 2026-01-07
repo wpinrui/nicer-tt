@@ -14,6 +14,7 @@ export const STORAGE_KEYS = {
   CUSTOM_BACKGROUND: 'nie-custom-background',
   CUSTOM_EVENTS: 'nie-custom-events', // CustomEventsStore JSON
   EVENT_OVERRIDES: 'nie-event-overrides', // EventOverridesStore JSON
+  SYNCED_COHORT_EVENTS: 'nie-synced-cohort-events', // Per-timetable synced cohort event IDs
 } as const;
 
 // Default name sequence for added timetables
@@ -34,6 +35,7 @@ export const DEFAULT_TIMETABLE_NAMES = [
 export const CUSTOM_EVENT_COLORS: Record<string, string> = {
   Custom: '#9c27b0', // Purple
   Upgrading: '#16a085', // Teal
+  Cohort: '#e67e22', // Orange
 } as const;
 
 // Color palette for course codes (rainbow spectrum)

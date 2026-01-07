@@ -50,6 +50,10 @@
   @include custom-event-style(var(--color-upgrading-border), var(--color-upgrading-bg));
 }
 
+.eventCohort {
+  @include custom-event-style(var(--color-cohort-border), var(--color-cohort-bg));
+}
+
 .eventEdited {
   @include custom-event-style(
     var(--color-edited-border, #f39c12),

@@ -1,3 +1,4 @@
+export { useCohortEvents } from './useCohortEvents';
 export { useCourseColorMap } from './useCourseColorMap';
 export { toCustomEventInput, useCustomEvents } from './useCustomEvents';
 export { useDebouncedValue } from './useDebouncedValue';

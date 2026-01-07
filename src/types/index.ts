@@ -156,7 +156,7 @@ export interface MealConfig {
 /**
  * Type of custom event - determines badge display.
  */
-export type CustomEventType = 'custom' | 'upgrading';
+export type CustomEventType = 'custom' | 'upgrading' | 'cohort';
 
 /**
  * A custom event created by the user (not parsed from NIE).
@@ -379,4 +379,38 @@ export function applyOverridesToEvents(
   }
 
   return result;
+}
+
+// =============================================================================
+// Cohort Event Types
+// =============================================================================
+
+/**
+ * A single cohort event defined in the JSON file.
+ */
+export interface CohortEventDefinition {
+  /** Unique identifier for this cohort event (used to track synced events) */
+  id: string;
+  /** Event title/description */
+  title: string;
+  /** Date in YYYY-MM-DD format */
+  date: string;
+  /** Start time in HH:MM format (24-hour) */
+  startTime: string;
+  /** End time in HH:MM format (24-hour) */
+  endTime: string;
+  /** Venue/location (optional) */
+  venue?: string;
+  /** Additional notes (optional) */
+  notes?: string;
+}
+
+/**
+ * Schema for the cohort-events.json file.
+ */
+export interface CohortEventsData {
+  /** Schema version for future migrations */
+  version: number;
+  /** Array of cohort events */
+  events: CohortEventDefinition[];
 }

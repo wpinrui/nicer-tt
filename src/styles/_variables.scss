@@ -68,6 +68,12 @@
   --color-upgrading-badge-bg: rgba(22, 160, 133, 0.15);
   --color-upgrading-badge-text: rgba(22, 160, 133, 1);
 
+  // Cohort event styling
+  --color-cohort-border: rgba(230, 126, 34, 1);
+  --color-cohort-bg: rgba(230, 126, 34, 0.08);
+  --color-cohort-badge-bg: rgba(230, 126, 34, 0.15);
+  --color-cohort-badge-text: rgba(211, 84, 0, 1);
+
   // Today highlight
   --color-today: rgba(216, 67, 21, 1);
   --color-today-bg: rgba(100, 108, 255, 0.1);
@@ -170,6 +176,12 @@ html.dark {
   --color-upgrading-bg: rgba(26, 188, 156, 0.15);
   --color-upgrading-badge-bg: rgba(26, 188, 156, 0.25);
   --color-upgrading-badge-text: rgba(26, 188, 156, 1);
+
+  // Cohort event styling (dark)
+  --color-cohort-border: rgba(243, 156, 18, 1);
+  --color-cohort-bg: rgba(243, 156, 18, 0.15);
+  --color-cohort-badge-bg: rgba(243, 156, 18, 0.25);
+  --color-cohort-badge-text: rgba(243, 156, 18, 1);
 
   --color-overlay: rgba(0, 0, 0, 0.7);
   --color-modal-bg: rgba(42, 42, 42, 1);

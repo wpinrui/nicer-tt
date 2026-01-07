@@ -36,6 +36,7 @@ import {
 import type { UploadSectionHandle } from '../components/UploadSection';
 import {
   toCustomEventInput,
+  useCohortEvents,
   useCustomEvents,
   useDebouncedValue,
   useEventOverrides,
@@ -93,6 +94,9 @@ function MainPage() {
     getCustomEvent,
     getCustomEventsForTimetable,
   } = useCustomEvents(activeTimetable?.id || null);
+
+  // Sync cohort events from JSON file to custom events
+  useCohortEvents(activeTimetable?.id || null, addCustomEvent);
 
   // Event overrides for imported events
   const {
