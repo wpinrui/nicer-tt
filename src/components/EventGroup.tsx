@@ -85,6 +85,7 @@ export const EventGroup = memo(function EventGroup({
       <ul className={styles.eventsList}>
         {group.events.map((event, i) => {
           const isUpgrading = event.eventType === 'upgrading';
+          const isCohort = event.eventType === 'cohort';
           const isCustom = event.isCustom;
 
           // For custom events, use custom event handlers
@@ -93,7 +94,8 @@ export const EventGroup = memo(function EventGroup({
           let onDelete: (() => void) | undefined;
 
           if (isCustom) {
-            onEdit = isUpgrading ? undefined : createEditHandler(event.customEventId);
+            // Upgrading and cohort events are predefined - no edit allowed
+            onEdit = isUpgrading || isCohort ? undefined : createEditHandler(event.customEventId);
             onDelete = createDeleteHandler(event.customEventId, group.sortKey);
           } else {
             // Imported events - use eventInstanceKey for edit/delete
@@ -114,7 +116,11 @@ export const EventGroup = memo(function EventGroup({
               showTutor={showTutor}
               courseColor={
                 courseColorMap.get(event.course) ||
-                (isUpgrading ? CUSTOM_EVENT_COLORS.Upgrading : CUSTOM_EVENT_COLORS.Custom)
+                (isCohort
+                  ? CUSTOM_EVENT_COLORS.Cohort
+                  : isUpgrading
+                    ? CUSTOM_EVENT_COLORS.Upgrading
+                    : CUSTOM_EVENT_COLORS.Custom)
               }
               onCourseClick={onCourseClick}
               onEdit={onEdit}
