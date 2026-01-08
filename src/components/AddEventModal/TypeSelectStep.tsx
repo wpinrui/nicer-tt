@@ -5,12 +5,14 @@ interface TypeSelectStepProps {
   onClose: () => void;
   onSelectCustom: () => void;
   onSelectUpgrading: () => void;
+  onSelectCohort: () => void;
 }
 
 export function TypeSelectStep({
   onClose,
   onSelectCustom,
   onSelectUpgrading,
+  onSelectCohort,
 }: TypeSelectStepProps) {
   return (
     <>
@@ -24,6 +26,13 @@ export function TypeSelectStep({
             <span className={styles.typeSelectBtnTitle}>Content Upgrading Course</span>
             <span className={styles.typeSelectBtnDesc}>
               Select from available upgrading courses
+            </span>
+          </button>
+
+          <button className={styles.typeSelectBtn} onClick={onSelectCohort}>
+            <span className={styles.typeSelectBtnTitle}>Cohort Event</span>
+            <span className={styles.typeSelectBtnDesc}>
+              Select from cohort-wide events
             </span>
           </button>
 

@@ -1,10 +1,13 @@
 import { useCallback, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { type CohortEvent } from '../../data/cohort-events';
 import type { CustomEventInput } from '../../hooks/useCustomEvents';
 import type { CustomEvent, CustomEventType, UpgradingCourse } from '../../types';
 import { generateId } from '../../utils/id';
 import styles from './AddEventModal.module.scss';
+import { CohortPreviewStep } from './CohortPreviewStep';
+import { CohortSelectStep } from './CohortSelectStep';
 import { CustomFormStep } from './CustomFormStep';
 import { TypeSelectStep } from './TypeSelectStep';
 import { UpgradingPreviewStep } from './UpgradingPreviewStep';
@@ -20,13 +23,20 @@ import {
   timeValueToString,
 } from './utils';
 
-type ModalStep = 'type-select' | 'custom-form' | 'upgrading-select' | 'upgrading-preview';
+type ModalStep =
+  | 'type-select'
+  | 'custom-form'
+  | 'upgrading-select'
+  | 'upgrading-preview'
+  | 'cohort-select'
+  | 'cohort-preview';
 
 interface AddEventModalProps {
   onClose: () => void;
   onSave: (events: CustomEventInput | CustomEventInput[]) => void;
   editingEvent?: CustomEvent | null;
   addedUpgradingCourseNames?: Set<string>;
+  addedCohortEventNames?: Set<string>;
 }
 
 export function AddEventModal({
@@ -34,13 +44,16 @@ export function AddEventModal({
   onSave,
   editingEvent,
   addedUpgradingCourseNames,
+  addedCohortEventNames,
 }: AddEventModalProps) {
   const isEditing = !!editingEvent;
 
   // Determine initial step based on whether editing
   const getInitialStep = (): ModalStep => {
     if (isEditing) {
-      return editingEvent.eventType === 'upgrading' ? 'upgrading-preview' : 'custom-form';
+      if (editingEvent.eventType === 'upgrading') return 'upgrading-preview';
+      if (editingEvent.eventType === 'cohort') return 'cohort-preview';
+      return 'custom-form';
     }
     return 'type-select';
   };
@@ -49,6 +62,9 @@ export function AddEventModal({
 
   // Selected upgrading course
   const [selectedCourse, setSelectedCourse] = useState<UpgradingCourse | null>(null);
+
+  // Selected cohort event
+  const [selectedCohortEvent, setSelectedCohortEvent] = useState<CohortEvent | null>(null);
 
   // Custom event form state
   const [selectedDates, setSelectedDates] = useState<Date[]>(() => {
@@ -71,18 +87,27 @@ export function AddEventModal({
   // Navigation handlers
   const handleSelectCustom = useCallback(() => setStep('custom-form'), []);
   const handleSelectUpgrading = useCallback(() => setStep('upgrading-select'), []);
+  const handleSelectCohort = useCallback(() => setStep('cohort-select'), []);
 
   const handleCourseSelect = useCallback((course: UpgradingCourse) => {
     setSelectedCourse(course);
     setStep('upgrading-preview');
   }, []);
 
+  const handleCohortEventSelect = useCallback((event: CohortEvent) => {
+    setSelectedCohortEvent(event);
+    setStep('cohort-preview');
+  }, []);
+
   const handleBack = useCallback(() => {
-    if (step === 'custom-form' || step === 'upgrading-select') {
+    if (step === 'custom-form' || step === 'upgrading-select' || step === 'cohort-select') {
       setStep('type-select');
     } else if (step === 'upgrading-preview' && !isEditing) {
       setStep('upgrading-select');
       setSelectedCourse(null);
+    } else if (step === 'cohort-preview' && !isEditing) {
+      setStep('cohort-select');
+      setSelectedCohortEvent(null);
     }
   }, [step, isEditing]);
 
@@ -202,6 +227,34 @@ export function AddEventModal({
     onSave(eventInputs);
   }, [selectedCourse, onSave]);
 
+  // Submit cohort event - create one event per session, linked by groupId
+  const handleSubmitCohort = useCallback(() => {
+    if (!selectedCohortEvent) return;
+
+    // Generate a shared groupId so all sessions delete together
+    const groupId = generateId('coh');
+
+    // Create one event per session to preserve unique times
+    const eventInputs: CustomEventInput[] = selectedCohortEvent.sessions.map((session) => {
+      const date = ddmmToDate(session.date);
+      return {
+        dates: [dateToIso(date)],
+        day: getDayOfWeek(date),
+        startTime: colonTimeToHHMM(session.startTime),
+        endTime: colonTimeToHHMM(session.endTime),
+        eventType: 'cohort' as CustomEventType,
+        description: selectedCohortEvent.courseName,
+        course: '',
+        group: 'Cohort',
+        venue: session.venue,
+        tutor: session.tutor,
+        groupId,
+      };
+    });
+
+    onSave(eventInputs);
+  }, [selectedCohortEvent, onSave]);
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -219,6 +272,7 @@ export function AddEventModal({
             onClose={onClose}
             onSelectCustom={handleSelectCustom}
             onSelectUpgrading={handleSelectUpgrading}
+            onSelectCohort={handleSelectCohort}
           />
         )}
 
@@ -260,6 +314,25 @@ export function AddEventModal({
             onClose={onClose}
             onBack={!isEditing ? handleBack : undefined}
             onSubmit={handleSubmitUpgrading}
+          />
+        )}
+
+        {step === 'cohort-select' && (
+          <CohortSelectStep
+            onClose={onClose}
+            onBack={handleBack}
+            onEventSelect={handleCohortEventSelect}
+            addedEventNames={addedCohortEventNames}
+          />
+        )}
+
+        {step === 'cohort-preview' && selectedCohortEvent && (
+          <CohortPreviewStep
+            event={selectedCohortEvent}
+            isEditing={isEditing}
+            onClose={onClose}
+            onBack={!isEditing ? handleBack : undefined}
+            onSubmit={handleSubmitCohort}
           />
         )}
       </div>
