@@ -25,6 +25,8 @@
 
 import type { UpgradingCourse } from '../../types';
 
+import NIEWelcomeCeremony from './nie-welcome-ceremony.json';
+
 // Cohort event type alias (same structure as UpgradingCourse)
 export type CohortEvent = UpgradingCourse;
 
@@ -33,8 +35,5 @@ export type CohortEvent = UpgradingCourse;
  * Add new events here after importing their JSON files.
  */
 export const COHORT_EVENTS: CohortEvent[] = [
-  // Add cohort events here
-  // Example:
-  // import EventName from './event-name.json';
-  // EventName,
+  NIEWelcomeCeremony,
 ];
