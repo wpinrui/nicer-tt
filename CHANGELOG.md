@@ -1,5 +1,12 @@
 # Changelog
 
+### v1.7.0 (8 Jan 2026)
+- Add cohort events feature:
+  - New "Cohort Event" option in Add Event modal
+  - Select from predefined cohort-wide events (like upgrading courses)
+  - Events display with orange "Cohort" tag
+  - Define events in `src/data/cohort-events/` (same format as upgrading courses)
+
 **v1.6.1 (5 Jan 2026)**
 - Add ability to set any timetable as your main timetable (star icon in Options → Timetables)
 

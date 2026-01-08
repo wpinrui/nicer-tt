@@ -29,20 +29,28 @@ export const EventCard = memo(function EventCard({
 }: EventCardProps) {
   const isClickable = !!onCourseClick;
   const isCustom = 'isCustom' in event && event.isCustom;
-  const isUpgrading = isCustom && 'eventType' in event && event.eventType === 'upgrading';
+  const eventType = 'eventType' in event ? event.eventType : undefined;
+  const isUpgrading = isCustom && eventType === 'upgrading';
+  const isCohort = isCustom && eventType === 'cohort';
   const isEdited = 'isEdited' in event && event.isEdited;
   const originalVenue = 'originalVenue' in event ? event.originalVenue : undefined;
   const originalTutor = 'originalTutor' in event ? event.originalTutor : undefined;
   const originalStartTime = 'originalStartTime' in event ? event.originalStartTime : undefined;
   const originalEndTime = 'originalEndTime' in event ? event.originalEndTime : undefined;
-  const courseLabel = isUpgrading ? 'Upgrading' : isCustom ? 'Custom' : event.course;
+  const courseLabel = isCohort ? 'Cohort' : isUpgrading ? 'Upgrading' : isCustom ? 'Custom' : event.course;
   const hasTimeEdit = originalStartTime || originalEndTime;
+
+  const getEventStyleClass = () => {
+    if (isCohort) return styles.eventCohort;
+    if (isUpgrading) return styles.eventUpgrading;
+    if (isCustom) return styles.eventCustom;
+    return '';
+  };
 
   const classNames = [
     styles.eventItem,
     isHighlighted ? styles.eventHighlighted : '',
-    !disableCustomStyling &&
-      (isUpgrading ? styles.eventUpgrading : isCustom ? styles.eventCustom : ''),
+    !disableCustomStyling && getEventStyleClass(),
     isEdited ? styles.eventEdited : '',
   ]
     .filter(Boolean)

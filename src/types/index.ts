@@ -156,7 +156,7 @@ export interface MealConfig {
 /**
  * Type of custom event - determines badge display.
  */
-export type CustomEventType = 'custom' | 'upgrading';
+export type CustomEventType = 'custom' | 'upgrading' | 'cohort';
 
 /**
  * A custom event created by the user (not parsed from NIE).

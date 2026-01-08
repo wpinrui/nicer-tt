@@ -34,6 +34,7 @@ export const DEFAULT_TIMETABLE_NAMES = [
 export const CUSTOM_EVENT_COLORS: Record<string, string> = {
   Custom: '#9c27b0', // Purple
   Upgrading: '#16a085', // Teal
+  Cohort: '#e67e22', // Orange
 } as const;
 
 // Color palette for course codes (rainbow spectrum)

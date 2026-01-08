@@ -584,6 +584,17 @@ function MainPage() {
     return names;
   }, [customEvents]);
 
+  // Get already-added cohort event names to prevent duplicates
+  const addedCohortEventNames = useMemo(() => {
+    const names = new Set<string>();
+    for (const event of customEvents) {
+      if (event.eventType === 'cohort') {
+        names.add(event.description);
+      }
+    }
+    return names;
+  }, [customEvents]);
+
   return (
     <div className={`main-page ${isMobileMenuOpen ? 'menu-open' : ''}`}>
       {events ? (
@@ -960,6 +971,7 @@ function MainPage() {
           onSave={handleSaveCustomEvent}
           editingEvent={editingCustomEvent}
           addedUpgradingCourseNames={addedUpgradingCourseNames}
+          addedCohortEventNames={addedCohortEventNames}
         />
       )}
 
