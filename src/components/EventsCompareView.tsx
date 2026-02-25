@@ -9,7 +9,7 @@ import {
   processEventsWithCustom,
 } from '../utils/compareUtils';
 import { CUSTOM_EVENT_COLORS } from '../utils/constants';
-import { formatTime12Hour, isToday } from '../utils/formatters';
+import { formatTime12Hour, getTodaySortKey, isToday } from '../utils/formatters';
 import { useRenderTimer } from '../utils/perf';
 import { EventCard } from './EventCard';
 import styles from './EventsCompareView.module.scss';
@@ -25,6 +25,7 @@ interface EventsCompareViewProps {
   mealConfig: MealConfig;
   showTutor: boolean;
   courseColorMap: Map<string, string>;
+  showPastDates: boolean;
 }
 
 export function EventsCompareView({
@@ -38,6 +39,7 @@ export function EventsCompareView({
   mealConfig,
   showTutor,
   courseColorMap,
+  showPastDates,
 }: EventsCompareViewProps) {
   useRenderTimer('EventsCompareView');
 
@@ -64,8 +66,12 @@ export function EventsCompareView({
     [rightGrouped]
   );
 
+  const todaySortKey = useMemo(() => getTodaySortKey(), []);
+
   const filteredDates = useMemo(() => {
     return allDates.filter((sortKey) => {
+      if (!showPastDates && sortKey < todaySortKey) return false;
+
       const leftGroup = leftByDate.get(sortKey);
       const rightGroup = rightByDate.get(sortKey);
 
@@ -125,7 +131,16 @@ export function EventsCompareView({
           return true;
       }
     });
-  }, [allDates, leftByDate, rightByDate, compareFilter, travelConfig, mealConfig]);
+  }, [
+    allDates,
+    leftByDate,
+    rightByDate,
+    compareFilter,
+    travelConfig,
+    mealConfig,
+    showPastDates,
+    todaySortKey,
+  ]);
 
   if (filteredDates.length === 0) {
     return <div className={styles.noResults}>No events match your filters</div>;

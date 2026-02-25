@@ -751,6 +751,8 @@ function MainPage() {
                   onMealConfigChange={handleMealConfigChange}
                   leftName={leftTimetable.name}
                   rightName={rightTimetable.name}
+                  showPastDates={showPastDates}
+                  onShowPastChange={setShowPastDates}
                 />
               </div>
               <div className="compare-headers-row no-print">
@@ -773,6 +775,7 @@ function MainPage() {
                   mealConfig={mealConfig}
                   showTutor={false}
                   courseColorMap={courseColorMap}
+                  showPastDates={showPastDates}
                 />
               </div>
             </>

@@ -25,6 +25,8 @@ interface CompareFiltersProps {
   onMealConfigChange: (config: Partial<MealConfig>) => void;
   leftName: string;
   rightName: string;
+  showPastDates: boolean;
+  onShowPastChange: (value: boolean) => void;
 }
 
 interface FilterButtonConfig {
@@ -72,6 +74,8 @@ export function CompareFilters({
   onMealConfigChange,
   leftName,
   rightName,
+  showPastDates,
+  onShowPastChange,
 }: CompareFiltersProps) {
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const [isConfigModalOpen, setConfigModalOpen] = useState(false);
@@ -147,6 +151,14 @@ export function CompareFilters({
         <span className={styles.compareNameTag}>{leftName}</span>
         <span className={styles.compareVs}>vs</span>
         <span className={styles.compareNameTag}>{rightName}</span>
+        <label className={styles.hidePastToggle}>
+          <input
+            type="checkbox"
+            checked={!showPastDates}
+            onChange={(e) => onShowPastChange(!e.target.checked)}
+          />
+          <span>Hide past</span>
+        </label>
       </div>
 
       <MobileCompareSheet
