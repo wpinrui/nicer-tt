@@ -806,7 +806,7 @@ function MainPage() {
                 {hasActiveFilters && ` of ${totalEvents}`} events
                 {` across ${groupedByDate.length} days`}
                 {activeTimetable && (
-                  <span className="events-count-timetable">
+                  <>
                     {' from '}
                     <TimetableSwitcher
                       timetables={timetables}
@@ -816,7 +816,7 @@ function MainPage() {
                         handleViewingToast(name);
                       }}
                     />
-                  </span>
+                  </>
                 )}
               </p>
               <div className="events-preview">
