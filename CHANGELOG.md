@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.6.2 (26 Feb 2026)**
+- Update dependencies (security patches)
+
 **v1.6.1 (5 Jan 2026)**
 - Add ability to set any timetable as your main timetable (star icon in Options → Timetables)
 
