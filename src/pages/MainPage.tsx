@@ -356,6 +356,11 @@ function MainPage() {
     setTimeout(() => setSwitchedToast(null), TOAST_DURATION_MS);
   };
 
+  const handleSwitchTimetable = (id: string, name: string) => {
+    setActiveTimetable(id);
+    handleViewingToast(name);
+  };
+
   const handleAddShareData = () => {
     const sharedData = confirmShare();
     if (!sharedData) return;
@@ -779,10 +784,7 @@ function MainPage() {
                   <TimetableSwitcher
                     timetables={timetables}
                     activeTimetable={activeTimetable}
-                    onSwitch={(id, name) => {
-                      setActiveTimetable(id);
-                      handleViewingToast(name);
-                    }}
+                    onSwitch={handleSwitchTimetable}
                   />
                 </div>
               )}

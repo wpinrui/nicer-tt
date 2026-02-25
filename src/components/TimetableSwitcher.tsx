@@ -11,7 +11,11 @@ interface TimetableSwitcherProps {
   onSwitch: (id: string, name: string) => void;
 }
 
-export function TimetableSwitcher({ timetables, activeTimetable, onSwitch }: TimetableSwitcherProps) {
+export function TimetableSwitcher({
+  timetables,
+  activeTimetable,
+  onSwitch,
+}: TimetableSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLSpanElement>(null);
 
