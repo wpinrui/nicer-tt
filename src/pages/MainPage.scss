@@ -332,10 +332,6 @@ header h1 {
   text-align: left;
 }
 
-.events-count-timetable {
-  color: var(--color-primary);
-  font-weight: 500;
-}
 
 .events-preview {
   background: var(--color-bg-card);
@@ -729,9 +725,6 @@ html.dark .events-count {
   color: var(--color-text-muted);
 }
 
-html.dark .events-count-timetable {
-  color: var(--color-badge-text);
-}
 
 html.dark .events-preview {
   background: rgba(0, 0, 0, 0.3);
