@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.7.2 (26 Feb 2026)**
+- Bump rollup from 4.53.5 to 4.59.0 (includes Windows heap corruption fix)
+
 **v1.7.1 (26 Feb 2026)**
 - Fix compare mode not respecting "hide past events" toggle
 
