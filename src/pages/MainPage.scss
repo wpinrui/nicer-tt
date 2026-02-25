@@ -332,11 +332,6 @@ header h1 {
   text-align: left;
 }
 
-.events-count-timetable {
-  color: var(--color-primary);
-  font-weight: 500;
-}
-
 .events-preview {
   background: var(--color-bg-card);
   border: 1px solid var(--color-border-card);
@@ -727,10 +722,6 @@ html.dark .search-icon {
 
 html.dark .events-count {
   color: var(--color-text-muted);
-}
-
-html.dark .events-count-timetable {
-  color: var(--color-badge-text);
 }
 
 html.dark .events-preview {
@@ -1137,11 +1128,6 @@ html.dark .file-button-tertiary:hover {
     padding: 0.5rem 0;
     font-size: 0.85rem;
     color: var(--color-text-muted);
-  }
-
-  .mobile-timetable-name {
-    font-weight: 600;
-    color: var(--color-primary);
   }
 
   /* Hide tutor icon on mobile (tooltips don't work well) */

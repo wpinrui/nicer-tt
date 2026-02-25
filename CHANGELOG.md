@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.7.0 (26 Feb 2026)**
+- Add inline timetable switcher dropdown — click the timetable name in the summary text to quickly switch between timetables (desktop and mobile)
+
 **v1.6.2 (26 Feb 2026)**
 - Update dependencies (security patches)
 

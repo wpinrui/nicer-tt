@@ -15,5 +15,6 @@ export { OptionsPanel } from './OptionsPanel';
 export { PrivacyNoticeModal } from './PrivacyNoticeModal';
 export { ShareSelectModal } from './ShareSelectModal';
 export { ShareWelcomeModal } from './ShareWelcomeModal';
+export { TimetableSwitcher } from './TimetableSwitcher';
 export { Toast } from './Toast';
 export { UploadSection } from './UploadSection';
