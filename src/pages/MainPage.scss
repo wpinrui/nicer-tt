@@ -1139,11 +1139,6 @@ html.dark .file-button-tertiary:hover {
     color: var(--color-text-muted);
   }
 
-  .mobile-timetable-name {
-    font-weight: 600;
-    color: var(--color-primary);
-  }
-
   /* Hide tutor icon on mobile (tooltips don't work well) */
   .event-tutor-icon {
     display: none;

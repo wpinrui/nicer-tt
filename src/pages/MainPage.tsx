@@ -31,6 +31,7 @@ import {
   PrivacyNoticeModal,
   ShareSelectModal,
   ShareWelcomeModal,
+  TimetableSwitcher,
   UploadSection,
 } from '../components';
 import type { UploadSectionHandle } from '../components/UploadSection';
@@ -775,7 +776,14 @@ function MainPage() {
               {activeTimetable && (
                 <div className="mobile-timetable-label">
                   <span>Showing:</span>
-                  <span className="mobile-timetable-name">{activeTimetable.name}</span>
+                  <TimetableSwitcher
+                    timetables={timetables}
+                    activeTimetable={activeTimetable}
+                    onSwitch={(id, name) => {
+                      setActiveTimetable(id);
+                      handleViewingToast(name);
+                    }}
+                  />
                 </div>
               )}
               <FilterSection
@@ -798,7 +806,17 @@ function MainPage() {
                 {hasActiveFilters && ` of ${totalEvents}`} events
                 {` across ${groupedByDate.length} days`}
                 {activeTimetable && (
-                  <span className="events-count-timetable"> from {activeTimetable.name}</span>
+                  <span className="events-count-timetable">
+                    {' from '}
+                    <TimetableSwitcher
+                      timetables={timetables}
+                      activeTimetable={activeTimetable}
+                      onSwitch={(id, name) => {
+                        setActiveTimetable(id);
+                        handleViewingToast(name);
+                      }}
+                    />
+                  </span>
                 )}
               </p>
               <div className="events-preview">
