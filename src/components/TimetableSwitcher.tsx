@@ -21,7 +21,7 @@ export function TimetableSwitcher({
 
   const hasMultiple = timetables.length > 1;
 
-  // Close on click outside
+  // Close on click outside or Escape
   useEffect(() => {
     if (!isOpen) return;
 
@@ -31,22 +31,18 @@ export function TimetableSwitcher({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen]);
-
-  // Close on Escape
-  useEffect(() => {
-    if (!isOpen) return;
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsOpen(false);
       }
     };
 
+    document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, [isOpen]);
 
   if (!hasMultiple) {

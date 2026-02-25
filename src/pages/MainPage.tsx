@@ -813,10 +813,7 @@ function MainPage() {
                     <TimetableSwitcher
                       timetables={timetables}
                       activeTimetable={activeTimetable}
-                      onSwitch={(id, name) => {
-                        setActiveTimetable(id);
-                        handleViewingToast(name);
-                      }}
+                      onSwitch={handleSwitchTimetable}
                     />
                   </>
                 )}
