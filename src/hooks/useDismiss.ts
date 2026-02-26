@@ -1,19 +1,26 @@
 import type { RefObject } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
-export function useDismiss(ref: RefObject<HTMLElement | null>, onClose: () => void, active: boolean) {
+export function useDismiss(
+  ref: RefObject<HTMLElement | null>,
+  onClose: () => void,
+  active: boolean
+) {
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
   useEffect(() => {
     if (!active) return;
 
     const handleClickOutside = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
+        onCloseRef.current();
       }
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        onCloseRef.current();
       }
     };
 
@@ -23,5 +30,5 @@ export function useDismiss(ref: RefObject<HTMLElement | null>, onClose: () => vo
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [ref, onClose, active]);
+  }, [ref, active]);
 }
