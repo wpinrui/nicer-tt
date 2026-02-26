@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.7.3 (26 Feb 2026)**
+- Extract reusable useDismiss hook, replacing duplicated click-outside and Escape key logic across 3 dropdown components
+
 **v1.7.2 (26 Feb 2026)**
 - Bump rollup from 4.53.5 to 4.59.0 (includes Windows heap corruption fix)
 
