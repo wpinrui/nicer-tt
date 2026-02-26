@@ -1,5 +1,7 @@
 import { ChevronDown } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+
+import { useDismiss } from '../../hooks';
 
 import styles from './AddEventModal.module.scss';
 
@@ -14,17 +16,7 @@ export function TimeDropdown({ value, options, placeholder, onChange }: TimeDrop
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [isOpen]);
+  useDismiss(containerRef, () => setIsOpen(false), isOpen);
 
   return (
     <div className={styles.timeDropdown} ref={containerRef}>

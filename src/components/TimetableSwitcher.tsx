@@ -1,6 +1,7 @@
 import { Check, ChevronDown } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
+import { useDismiss } from '../hooks';
 import type { Timetable } from '../types';
 
 import styles from './TimetableSwitcher.module.scss';
@@ -21,29 +22,7 @@ export function TimetableSwitcher({
 
   const hasMultiple = timetables.length > 1;
 
-  // Close on click outside or Escape
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen]);
+  useDismiss(containerRef, () => setIsOpen(false), isOpen);
 
   if (!hasMultiple) {
     return <span className={styles.name}>{activeTimetable.name}</span>;
