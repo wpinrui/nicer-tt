@@ -24,6 +24,7 @@ dist-ssr
 *.sw?
 
 # Claude Code agent files
+.agent/
 agents/
 .claude/
 .claudeignore

@@ -19,12 +19,12 @@ interface ImportOptionsModalProps {
 
 export function ImportOptionsModal({ shareData, onConfirm, onCancel }: ImportOptionsModalProps) {
   const isV2 = isShareDataV2(shareData);
-  const customEvents = isV2 ? shareData.customEvents : [];
 
   const { customCount, upgradingCount } = useMemo(() => {
+    const events = isV2 ? shareData.customEvents : [];
     let custom = 0;
     let upgrading = 0;
-    for (const event of customEvents) {
+    for (const event of events) {
       if (event.eventType === 'upgrading') {
         upgrading++;
       } else {
@@ -32,7 +32,7 @@ export function ImportOptionsModal({ shareData, onConfirm, onCancel }: ImportOpt
       }
     }
     return { customCount: custom, upgradingCount: upgrading };
-  }, [customEvents]);
+  }, [isV2, shareData]);
 
   const regularCount = shareData.events.length;
   const hasCustom = customCount > 0;

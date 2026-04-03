@@ -1,15 +1,15 @@
 import { useState } from 'react';
 
+import type { EventOverride } from '../types';
+import styles from './AddEventModal/AddEventModal.module.scss';
 import { TimeDropdown } from './AddEventModal/TimeDropdown';
 import {
   HOURS,
   MINUTES,
   parseTimeString,
-  timeValueToString,
   type TimeValue,
+  timeValueToString,
 } from './AddEventModal/utils';
-import styles from './AddEventModal/AddEventModal.module.scss';
-import type { EventOverride } from '../types';
 import { Modal } from './Modal';
 
 interface EditEventModalProps {

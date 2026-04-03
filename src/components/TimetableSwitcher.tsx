@@ -2,7 +2,6 @@ import { Check, ChevronDown } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import type { Timetable } from '../types';
-
 import styles from './TimetableSwitcher.module.scss';
 
 interface TimetableSwitcherProps {

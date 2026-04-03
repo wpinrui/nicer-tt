@@ -1,6 +1,7 @@
 import { Check, Eye, Link, Pencil, RefreshCw, Star, Trash2, Upload } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
+import type { CustomEventInput } from '../../hooks/useCustomEvents';
 import type {
   CustomEvent,
   EventInstanceKey,
@@ -8,15 +9,14 @@ import type {
   Timetable,
   TimetableEvent,
 } from '../../types';
-import type { CustomEventInput } from '../../hooks/useCustomEvents';
 import { TOAST_DURATION_MS } from '../../utils/constants';
 import { downloadIcs, generateIcs } from '../../utils/generateIcs';
 import { parseHtmlTimetable } from '../../utils/parseHtml';
 import { parseIcs } from '../../utils/parseIcs';
 import { decodeShareUrl } from '../../utils/shareUtils';
 import { Modal } from '../Modal';
-import { Toast } from '../Toast';
 import styles from '../OptionsPanel.module.scss';
+import { Toast } from '../Toast';
 
 /**
  * Formats a timestamp for display in the timetable list.
