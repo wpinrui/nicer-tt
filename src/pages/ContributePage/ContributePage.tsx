@@ -1,5 +1,5 @@
-import { ArrowLeft, CheckCircle,Send } from 'lucide-react';
-import { useEffect,useState } from 'react';
+import { ArrowLeft, CheckCircle, Send } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { submitSchedule } from '../../firebase';
