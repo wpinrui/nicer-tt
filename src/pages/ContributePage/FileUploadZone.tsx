@@ -1,5 +1,5 @@
+import { File,FileText, Image, Upload, X } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
-import { Upload, X, FileText, Image, File } from 'lucide-react';
 
 import styles from './ContributePage.module.scss';
 

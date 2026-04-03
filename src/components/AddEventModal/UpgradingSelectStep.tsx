@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
 import { ArrowRight, Search } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { UPGRADING_COURSES } from '../../data/upgrading-courses';

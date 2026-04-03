@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../../utils/constants';
 import { logError } from '../../utils/errors';
-import { Toast } from '../Toast';
 import styles from '../OptionsPanel.module.scss';
+import { Toast } from '../Toast';
 
 export function BackgroundSettings() {
   // Custom background state

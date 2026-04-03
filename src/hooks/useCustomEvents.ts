@@ -81,7 +81,8 @@ export type CustomEventInput = Omit<CustomEvent, 'id' | 'createdAt' | 'updatedAt
  * Useful when importing/copying events between timetables.
  */
 export function toCustomEventInput(event: CustomEvent): CustomEventInput {
-  const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, ...input } = event;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id, createdAt, updatedAt, ...input } = event;
   return input;
 }
 

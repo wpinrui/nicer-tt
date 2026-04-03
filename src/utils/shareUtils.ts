@@ -1,8 +1,8 @@
 import pako from 'pako';
 
 import {
-  isShareDataV2,
   type CustomEvent,
+  isShareDataV2,
   type ShareData,
   type ShareDataV2,
   type TimetableEvent,

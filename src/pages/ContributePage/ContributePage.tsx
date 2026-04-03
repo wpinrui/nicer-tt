@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { ArrowLeft, CheckCircle,Send } from 'lucide-react';
+import { useEffect,useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Send, CheckCircle } from 'lucide-react';
 
 import { submitSchedule } from '../../firebase';
-import { FileUploadZone } from './FileUploadZone';
 import styles from './ContributePage.module.scss';
+import { FileUploadZone } from './FileUploadZone';
 
 export function ContributePage() {
   const [courseName, setCourseName] = useState('');
