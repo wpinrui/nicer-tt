@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.7.3 (4 Apr 2026)**
+- Fix minimatch ReDoS security vulnerability (bump eslint 9.39.2 → 9.39.4, @vercel/node 5.6.7 → 5.7.0)
+
 **v1.7.2 (26 Feb 2026)**
 - Bump rollup from 4.53.5 to 4.59.0 (includes Windows heap corruption fix)
 
