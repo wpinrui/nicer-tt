@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.7.4 (19 May 2026)**
+- Update dependencies (postcss, vite, protobufjs and related packages)
+
 **v1.7.3 (4 Apr 2026)**
 - Fix minimatch ReDoS security vulnerability (bump eslint 9.39.2 → 9.39.4, @vercel/node 5.6.7 → 5.7.0)
 
