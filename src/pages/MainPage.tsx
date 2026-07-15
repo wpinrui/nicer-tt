@@ -93,6 +93,7 @@ function MainPage() {
     deleteCustomEventsByGroupId,
     getCustomEvent,
     getCustomEventsForTimetable,
+    deleteCustomEventsForTimetable,
   } = useCustomEvents(activeTimetable?.id || null);
 
   // Event overrides for imported events
@@ -546,6 +547,20 @@ function MainPage() {
     [activeTimetable, setTimetable, clearAllForTimetable]
   );
 
+  // Deletes a timetable and cleans up its associated custom events and overrides,
+  // which would otherwise be orphaned in localStorage.
+  const handleDeleteTimetable = useCallback(
+    (id: string): boolean => {
+      const deleted = deleteTimetable(id);
+      if (deleted) {
+        deleteCustomEventsForTimetable(id);
+        clearAllForTimetable(id);
+      }
+      return deleted;
+    },
+    [deleteTimetable, deleteCustomEventsForTimetable, clearAllForTimetable]
+  );
+
   const handleSaveCustomEvent = useCallback(
     (eventInput: CustomEventInput | CustomEventInput[]) => {
       if (editingCustomEvent) {
@@ -917,7 +932,7 @@ function MainPage() {
           onAddTimetable={addTimetable}
           onAddCustomEventsToTimetable={addCustomEventToTimetable}
           onRenameTimetable={renameTimetable}
-          onDeleteTimetable={deleteTimetable}
+          onDeleteTimetable={handleDeleteTimetable}
           onViewingToast={handleViewingToast}
           onRegenerateTimetable={handleRegenerateTimetable}
           currentEvents={events ?? undefined}
