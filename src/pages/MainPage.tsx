@@ -82,7 +82,6 @@ function MainPage() {
     renameTimetable,
     deleteTimetable,
     getTimetable,
-    getNextName,
   } = useTimetableStorage();
   const [error, setError] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useLocalStorage(STORAGE_KEYS.DARK_MODE, true);
@@ -594,12 +593,12 @@ function MainPage() {
     setNudgePermanentlyDismissed(true);
   }, []);
 
-  // Accept path: add the new timetable alongside the old one, switch to it, and
-  // rename the old one with an "(Old)" suffix. Non-destructive — nothing is deleted.
+  // Accept path: add the new timetable (named "Semester 2") alongside the old one,
+  // switch to it, and rename the old one with an "(Old)" suffix. Non-destructive.
   const handleSem2Import = useCallback(
     (newEvents: TimetableEvent[], fileName: string): Sem2ImportResult => {
       const oldActive = activeTimetable;
-      const newName = getNextName();
+      const newName = 'Semester 2';
       const newId = addTimetable(newEvents, fileName, newName);
       setActiveTimetable(newId);
 
@@ -618,7 +617,7 @@ function MainPage() {
 
       return { newName, oldName };
     },
-    [activeTimetable, addTimetable, setActiveTimetable, renameTimetable, getNextName]
+    [activeTimetable, addTimetable, setActiveTimetable, renameTimetable]
   );
 
   const handleSaveCustomEvent = useCallback(
