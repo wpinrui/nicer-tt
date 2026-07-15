@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { CustomEvent, TimetableEvent } from '../types';
-import { hasFutureEvents } from './staleTimetable';
+import { hasFutureEvents, withOldSuffix } from './staleTimetable';
 
 /**
  * `hasFutureEvents` is the entire nudge trigger: a timetable is "stale" (and the
@@ -102,5 +102,22 @@ describe('hasFutureEvents — stale-timetable trigger', () => {
   it('returns false for an event carrying an empty dates array', () => {
     // A degenerate event with no dates must not be treated as future.
     expect(hasFutureEvents([event([])], [])).toBe(false);
+  });
+});
+
+describe('withOldSuffix — accept-path rename of the previous timetable', () => {
+  it('appends " (Old)" to a plain name', () => {
+    expect(withOldSuffix('Semester 1')).toBe('Semester 1 (Old)');
+  });
+
+  it('does not double-append when the name already ends with (Old)', () => {
+    // Guards against "Semester 1 (Old) (Old)" if the accept path is somehow re-run.
+    expect(withOldSuffix('Semester 1 (Old)')).toBe('Semester 1 (Old)');
+  });
+
+  it('is idempotent — applying twice equals applying once', () => {
+    expect(withOldSuffix(withOldSuffix('Someone\'s Timetable'))).toBe(
+      withOldSuffix('Someone\'s Timetable')
+    );
   });
 });
