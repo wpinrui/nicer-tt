@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.7.5 (15 Jul 2026)**
+- Update dependencies (vite 8, react-router-dom, @vitejs/plugin-react, @grpc/grpc-js, tar)
+
 **v1.7.4 (19 May 2026)**
 - Update dependencies (postcss, vite, protobufjs and related packages)
 
