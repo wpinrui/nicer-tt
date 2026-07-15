@@ -1,0 +1,30 @@
+.emptyState {
+  max-width: 440px;
+  margin: 24px auto 0;
+  text-align: center;
+  color: var(--color-text-muted);
+
+  h4 {
+    margin: 0 0 6px;
+    font-size: 16px;
+    color: var(--color-text-secondary);
+  }
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+}
+
+.glyph {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  margin: 0 auto 16px;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

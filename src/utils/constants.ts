@@ -14,6 +14,7 @@ export const STORAGE_KEYS = {
   CUSTOM_BACKGROUND: 'nie-custom-background',
   CUSTOM_EVENTS: 'nie-custom-events', // CustomEventsStore JSON
   EVENT_OVERRIDES: 'nie-event-overrides', // EventOverridesStore JSON
+  STALE_NUDGE_DISMISSED: 'nie-stale-nudge-dismissed', // Permanent opt-out of the stale-timetable nudge
 } as const;
 
 // Default name sequence for added timetables

@@ -7,6 +7,7 @@ export { useFilteredGroupedEvents } from './useFilteredGroupedEvents';
 export { useGroupedEvents } from './useGroupedEvents';
 export { useLocalStorage, useLocalStorageJson } from './useLocalStorage';
 export { useMainPageState } from './useMainPageState';
+export { useIsDesktop, useMediaQuery } from './useMediaQuery';
 export { useShareData } from './useShareData';
 export { useTimetableStorage } from './useTimetableStorage';
 export { useToast } from './useToast';
