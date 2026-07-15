@@ -13,8 +13,13 @@ const STEP2_SHOTS: Shot[] = [
   { src: '/guide/save as.png', cap: 'Save as', sub: 'Webpage, HTML Only' },
 ];
 
+interface StepBodyProps {
+  /** Smaller screenshot thumbnails, for the space-constrained inline HelpPage stepper. */
+  compact?: boolean;
+}
+
 /** Step-1 body (find your timetable on NIE Launchpad). Shared by the wizard and HelpPage stepper. */
-export function LaunchpadStepBody() {
+export function LaunchpadStepBody({ compact = false }: StepBodyProps = {}) {
   return (
     <>
       <p className={styles.lead}>
@@ -37,13 +42,13 @@ export function LaunchpadStepBody() {
           <span className={styles.strong}>ISAAC Student Timetable</span>. It opens in a new tab.
         </li>
       </ol>
-      <ScreenshotGrid shots={STEP1_SHOTS} />
+      <ScreenshotGrid shots={STEP1_SHOTS} compact={compact} />
     </>
   );
 }
 
 /** Step-2 body (save the loaded page as HTML). Shared by the wizard and HelpPage stepper. */
-export function SavePageStepBody() {
+export function SavePageStepBody({ compact = false }: StepBodyProps = {}) {
   return (
     <>
       <p className={styles.lead}>
@@ -59,7 +64,7 @@ export function SavePageStepBody() {
           folder).
         </li>
       </ol>
-      <ScreenshotGrid shots={STEP2_SHOTS} />
+      <ScreenshotGrid shots={STEP2_SHOTS} compact={compact} />
     </>
   );
 }

@@ -43,8 +43,8 @@ function HelpPage({ onUploadClick, onPrivacyClick }: HelpPageProps) {
         </div>
 
         <div className="iw-body">
-          {step === 1 && <LaunchpadStepBody />}
-          {step === 2 && <SavePageStepBody />}
+          {step === 1 && <LaunchpadStepBody compact />}
+          {step === 2 && <SavePageStepBody compact />}
           {step === 3 && (
             <>
               <p className="iw-lead">

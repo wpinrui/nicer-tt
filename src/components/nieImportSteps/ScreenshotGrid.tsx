@@ -12,15 +12,17 @@ export interface Shot {
 
 interface ScreenshotGridProps {
   shots: Shot[];
+  /** Smaller thumbnails, for space-constrained contexts like the inline HelpPage stepper. */
+  compact?: boolean;
 }
 
 /** Grid of screenshot thumbnails with click-to-enlarge lightbox. Shared by the wizard and the HelpPage stepper. */
-export function ScreenshotGrid({ shots }: ScreenshotGridProps) {
+export function ScreenshotGrid({ shots, compact = false }: ScreenshotGridProps) {
   const [lightbox, setLightbox] = useState<string | null>(null);
 
   return (
     <>
-      <div className={styles.grid}>
+      <div className={`${styles.grid} ${compact ? styles.compact : ''}`}>
         {shots.map((shot) => (
           <button
             key={shot.src}

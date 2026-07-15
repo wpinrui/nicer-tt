@@ -11,6 +11,15 @@
   }
 }
 
+// Smaller thumbnails so the inline stepper fits without forcing the page to scroll.
+.compact {
+  max-width: 400px;
+
+  @include mobile {
+    max-width: 260px;
+  }
+}
+
 .shot {
   display: flex;
   flex-direction: column;
