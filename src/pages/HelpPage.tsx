@@ -19,15 +19,34 @@ function HelpPage({ onUploadClick, onPrivacyClick }: HelpPageProps) {
 
   const steps: Step[] = [
     {
-      title: 'Go to your timetable page',
-      description: 'NIE Portal > Academics > Programme Administration Matters > Timetable',
+      title: 'Open your timetable on NIE Launchpad',
+      description: (
+        <>
+          NIE moved where your timetable lives. Go to <strong>launchpad.nie.edu.sg</strong> and sign
+          in, then search <strong>"timetable"</strong> (top-right) and open the first result tagged{' '}
+          <strong>Service</strong> — <strong>ISAAC Student Timetable</strong>. It opens in a new
+          tab.
+        </>
+      ),
+      image: '/guide/launchpad search.png',
+    },
+    {
+      title: 'Wait for it to load',
+      description: 'Launchpad signs you in securely — keep the tab open while it works.',
+      image: '/guide/timetable loading.png',
+    },
+    {
+      title: 'Your timetable appears',
+      description:
+        'Once it finishes loading, your full timetable is shown. This is the page you save in the next step.',
       image: '/guide/timetable page.png',
     },
     {
       title: 'Save the webpage',
       description: (
         <>
-          Press <kbd>Ctrl</kbd>+<kbd>S</kbd> (or <kbd>Cmd</kbd>+<kbd>S</kbd> on Mac)
+          On your timetable page, press <kbd>Ctrl</kbd>+<kbd>S</kbd> (or <kbd>Cmd</kbd>+<kbd>S</kbd>{' '}
+          on Mac). If asked, choose <strong>"Webpage, HTML Only"</strong>.
         </>
       ),
       image: '/guide/save as.png',
@@ -40,7 +59,7 @@ function HelpPage({ onUploadClick, onPrivacyClick }: HelpPageProps) {
           <button className="inline-upload-btn" onClick={onUploadClick}>
             <Upload size={14} /> Upload Timetable HTML
           </button>{' '}
-          above and choose the file you downloaded
+          above and choose the file you saved
         </>
       ),
     },
