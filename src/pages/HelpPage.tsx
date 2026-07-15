@@ -54,9 +54,6 @@ function HelpPage({ onUploadClick, onPrivacyClick }: HelpPageProps) {
               <button className="iw-upload" onClick={onUploadClick}>
                 <Upload size={16} /> Upload Timetable HTML
               </button>
-              <p className="iw-note">
-                Your file is read right here in your browser. Nothing is uploaded to any server.
-              </p>
             </>
           )}
         </div>
