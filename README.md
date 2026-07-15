@@ -10,7 +10,7 @@ A better way to view, filter, and organize your NIE timetable.
 
 ## What it does
 
-NIcEr Timetable transforms your clunky NIE Portal timetable into a clean, searchable interface. Filter by course, search for specific classes, hide past events, and share your schedule with classmates. When you're ready, export to Google Calendar, Outlook, or any calendar app.
+NIcEr Timetable transforms your clunky NIE timetable into a clean, searchable interface. Filter by course, search for specific classes, hide past events, and share your schedule with classmates. When you're ready, export to Google Calendar, Outlook, or any calendar app.
 
 ## :sparkles: Features
 
