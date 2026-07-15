@@ -1,55 +1,24 @@
 import './HelpPage.scss';
 
-import { Upload, X } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { useState } from 'react';
 
-interface Step {
-  title: string;
-  description: React.ReactNode;
-  image?: string;
-}
+import { LaunchpadStepBody, SavePageStepBody, StepProgress } from '../components/nieImportSteps';
 
 interface HelpPageProps {
   onUploadClick?: () => void;
   onPrivacyClick?: () => void;
 }
 
-function HelpPage({ onUploadClick, onPrivacyClick }: HelpPageProps) {
-  const [modalImage, setModalImage] = useState<{ src: string; step: Step } | null>(null);
+const TOTAL_STEPS = 3;
 
-  const steps: Step[] = [
-    {
-      title: 'Go to your timetable page',
-      description: 'NIE Portal > Academics > Programme Administration Matters > Timetable',
-      image: '/guide/timetable page.png',
-    },
-    {
-      title: 'Save the webpage',
-      description: (
-        <>
-          Press <kbd>Ctrl</kbd>+<kbd>S</kbd> (or <kbd>Cmd</kbd>+<kbd>S</kbd> on Mac)
-        </>
-      ),
-      image: '/guide/save as.png',
-    },
-    {
-      title: 'Upload the file',
-      description: (
-        <>
-          Click{' '}
-          <button className="inline-upload-btn" onClick={onUploadClick}>
-            <Upload size={14} /> Upload Timetable HTML
-          </button>{' '}
-          above and choose the file you downloaded
-        </>
-      ),
-    },
-    {
-      title: 'Export your timetable',
-      description:
-        'Your timetable is autosaved. You can download an ICS file and add it to your Google, Outlook, or Apple Calendar.',
-    },
-  ];
+/**
+ * Start-page walkthrough for brand-new users (no timetable yet). Adopts the
+ * import wizard's step-by-step layout (progress bar + Back/Next) but rendered
+ * inline in the page, not as a modal. Ends at the first upload.
+ */
+function HelpPage({ onUploadClick, onPrivacyClick }: HelpPageProps) {
+  const [step, setStep] = useState(1);
 
   return (
     <div className="help-page">
@@ -61,34 +30,64 @@ function HelpPage({ onUploadClick, onPrivacyClick }: HelpPageProps) {
           </button>
         </div>
       )}
-      <ol className="steps">
-        {steps.map((step, index) => (
-          <li key={index}>
-            <strong>{step.title}</strong>
-            <p>{step.description}</p>
-            {step.image && (
-              <button
-                className="step-thumbnail"
-                onClick={() => setModalImage({ src: step.image!, step })}
-              >
-                <img src={step.image} alt={step.title} />
-              </button>
-            )}
-          </li>
-        ))}
-      </ol>
 
-      {modalImage && (
-        <div className="image-modal-overlay">
-          <div className="image-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="image-modal-close" onClick={() => setModalImage(null)}>
-              <X size={24} />
-            </button>
-            <div className="image-modal-step">{modalImage.step.title}</div>
-            <img src={modalImage.src} alt={modalImage.step.title} />
-          </div>
+      <div className="inline-wizard">
+        <div className="iw-head">
+          <div className="iw-eyebrow">Set up your timetable</div>
+          <h3 className="iw-title">
+            {step === 1 && 'Open your timetable on NIE Launchpad'}
+            {step === 2 && 'Save the page as a file'}
+            {step === 3 && 'Upload it here'}
+          </h3>
+          <StepProgress current={step} total={TOTAL_STEPS} />
         </div>
-      )}
+
+        <div className="iw-body">
+          {step === 1 && <LaunchpadStepBody compact />}
+          {step === 2 && <SavePageStepBody compact />}
+          {step === 3 && (
+            <>
+              <p className="iw-lead">
+                Upload the <strong>.html</strong> file you just saved and your timetable appears
+                right away.
+              </p>
+              <button className="iw-upload" onClick={onUploadClick}>
+                <Upload size={16} /> Upload Timetable HTML
+              </button>
+            </>
+          )}
+        </div>
+
+        <div className="iw-foot">
+          {step === 1 && (
+            <>
+              <span className="iw-grow" />
+              <button className="iw-btn-primary" onClick={() => setStep(2)}>
+                Next
+              </button>
+            </>
+          )}
+          {step === 2 && (
+            <>
+              <button className="iw-btn-ghost" onClick={() => setStep(1)}>
+                Back
+              </button>
+              <span className="iw-grow" />
+              <button className="iw-btn-primary" onClick={() => setStep(3)}>
+                Next
+              </button>
+            </>
+          )}
+          {step === 3 && (
+            <>
+              <button className="iw-btn-ghost" onClick={() => setStep(2)}>
+                Back
+              </button>
+              <span className="iw-grow" />
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

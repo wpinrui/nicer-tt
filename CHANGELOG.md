@@ -1,5 +1,12 @@
 # Changelog
 
+**v1.8.0 (15 Jul 2026)**
+- Refresh onboarding to NIE's new Launchpad procedure for downloading your timetable (in-app help page and guide, with updated screenshots)
+- Add a stale-timetable nudge: when your active timetable has no upcoming classes (e.g. a new semester has started), a desktop prompt offers to add your new timetable
+- Add a guided Semester 2 import wizard that walks through the new NIE procedure, then adds the new timetable alongside the old one (kept and renamed "(Old)") and switches to it
+- Add a "No upcoming classes" empty-state so a stale timetable no longer looks blank
+- Fix: deleting a timetable now also removes its custom events and edits, which were previously left orphaned in storage
+
 **v1.7.5 (15 Jul 2026)**
 - Update dependencies (vite 8, react-router-dom, @vitejs/plugin-react, @grpc/grpc-js, tar)
 

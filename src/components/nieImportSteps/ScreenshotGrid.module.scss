@@ -1,0 +1,100 @@
+@use '../../styles/mixins' as *;
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Smaller thumbnails so the inline stepper fits without forcing the page to scroll.
+.compact {
+  max-width: 400px;
+
+  @include mobile {
+    max-width: 260px;
+  }
+}
+
+.shot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+  border: 1px solid var(--color-border-light);
+  border-radius: 10px;
+  background: var(--color-bg-secondary);
+  cursor: pointer;
+  overflow: hidden;
+  text-align: center;
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+
+  @include focus-visible;
+
+  img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    background: var(--color-bg-tertiary);
+  }
+}
+
+.cap {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  padding: 0 8px;
+}
+
+.sub {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  padding: 0 8px 10px;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  cursor: zoom-out;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    cursor: default;
+  }
+}
+
+.lightboxClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}

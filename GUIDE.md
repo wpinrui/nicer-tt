@@ -14,26 +14,36 @@ A tool to convert your NIE timetable into a calendar file you can import into Go
 
 ## :rocket: Getting Started
 
-### Step 1: Go to your timetable page
+### Step 1: Open your timetable on NIE Launchpad
 
-Navigate to your NIE Portal timetable:
+NIE recently changed where your timetable lives. To find it:
 
-**NIE Portal > Academics > Programme Administration Matters > Timetable**
+1. Go to **[launchpad.nie.edu.sg](https://launchpad.nie.edu.sg/student/overview)** and sign in.
+2. In the **search box** (top-right), type **"timetable"**.
+3. Open the first result tagged **Service** — **ISAAC Student Timetable**. It opens in a new tab.
 
-### Step 2: Save the webpage
+### Step 2: Wait for it to load
 
-Once you're on the timetable page, save it as an HTML file:
+Launchpad signs you in securely (you'll see a brief "signing you in" screen). Keep the tab open while it works.
+
+### Step 3: Your timetable appears
+
+Once it finishes loading, your full timetable is shown. This is the page you'll save in the next step.
+
+### Step 4: Save the webpage
+
+On your timetable page, save it as an HTML file:
 
 - **Windows/Linux:** Press `Ctrl + S`
 - **Mac:** Press `Cmd + S`
 
-Save the file anywhere on your computer. The default filename is usually fine.
+If asked, choose **"Webpage, HTML Only"**. Remember where it goes — usually your **Downloads** folder.
 
-### Step 3: Upload the file
+### Step 5: Upload the file
 
 Go to [NIcEr Timetable](https://nicer-tt.vercel.app/) and click the **Upload Timetable HTML** button. Select the HTML file you just saved.
 
-### Step 4: Export your timetable
+### Step 6: Export your timetable
 
 Your timetable is automatically saved in your browser. You can now download it as an ICS file to import into your calendar app.
 
@@ -100,7 +110,7 @@ Click the **Options** button to access settings:
 
 ### Loading a Saved ICS
 
-If you've previously downloaded an ICS file from this tool, you can load it back by clicking **Load Saved ICS** on the home page. This is useful if you want to view your timetable on a different device without re-downloading the HTML from NIE Portal.
+If you've previously downloaded an ICS file from this tool, you can load it back by clicking **Load Saved ICS** on the home page. This is useful if you want to view your timetable on a different device without re-downloading the HTML from NIE.
 
 ---
 
@@ -119,7 +129,7 @@ If you've previously downloaded an ICS file from this tool, you can load it back
 ## :warning: Troubleshooting
 
 ### "Failed to parse file"
-Make sure you're uploading the HTML file from the NIE Portal timetable page, not a PDF or screenshot. The file should have a `.html` or `.htm` extension.
+Make sure you're uploading the HTML file from the ISAAC Student Timetable page, not a PDF or screenshot. The file should have a `.html` or `.htm` extension.
 
 ### Events are missing
 The parser looks for specific table structures in the NIE timetable page. Make sure you saved the complete webpage (not just a selection) and that you were on the actual timetable page when saving.

@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stale-Timetable Nudge + Sem-2 Import Wizard — Mockups</title>
+<style>
+  /* ---- Design tokens: copied verbatim from src/styles/_variables.scss ---- */
+  :root {
+    --color-primary: rgba(100, 108, 255, 1);
+    --color-primary-hover: rgba(83, 91, 242, 1);
+    --color-primary-light: rgba(100, 108, 255, 0.1);
+    --color-text-primary: rgba(51, 51, 51, 1);
+    --color-text-secondary: rgba(85, 85, 85, 1);
+    --color-text-muted: rgba(102, 102, 102, 1);
+    --color-bg-primary: rgba(255, 255, 255, 1);
+    --color-bg-secondary: rgba(245, 245, 245, 1);
+    --color-bg-tertiary: rgba(0, 0, 0, 0.08);
+    --color-bg-hover: rgba(0, 0, 0, 0.12);
+    --color-border: rgba(0, 0, 0, 0.15);
+    --color-border-light: rgba(0, 0, 0, 0.1);
+    --color-success: rgba(76, 175, 80, 1);
+    --color-success-light: rgba(76, 175, 80, 0.1);
+    --color-success-text: rgba(46, 125, 50, 1);
+    --color-error: rgba(198, 40, 40, 1);
+    --color-error-hover: rgba(183, 28, 28, 1);
+    --color-error-light: rgba(198, 40, 40, 0.1);
+    --color-error-text: rgba(198, 40, 40, 1);
+    --color-warning: rgba(255, 152, 0, 1);
+    --color-warning-light: rgba(255, 152, 0, 0.1);
+    --color-warning-text: rgba(230, 81, 0, 1);
+    --color-modal-bg: rgba(255, 255, 255, 1);
+    --color-overlay: rgba(0, 0, 0, 0.5);
+    --color-badge-bg: rgba(100, 108, 255, 0.15);
+    --color-badge-text: rgba(100, 108, 255, 1);
+    --shadow-card: 0 20px 40px rgba(0, 0, 0, 0.2);
+    --shadow-bubble: 0 12px 32px rgba(0, 0, 0, 0.18);
+  }
+  .dark {
+    --color-primary: rgba(100, 108, 255, 1);
+    --color-primary-hover: rgba(117, 119, 255, 1);
+    --color-primary-light: rgba(100, 108, 255, 0.2);
+    --color-text-primary: rgba(224, 224, 224, 1);
+    --color-text-secondary: rgba(204, 204, 204, 1);
+    --color-text-muted: rgba(170, 170, 170, 1);
+    --color-bg-primary: rgba(26, 26, 26, 1);
+    --color-bg-secondary: rgba(36, 36, 36, 1);
+    --color-bg-tertiary: rgba(255, 255, 255, 0.08);
+    --color-bg-hover: rgba(255, 255, 255, 0.12);
+    --color-border: rgba(255, 255, 255, 0.15);
+    --color-border-light: rgba(255, 255, 255, 0.1);
+    --color-success-light: rgba(76, 175, 80, 0.2);
+    --color-success-text: rgba(129, 199, 132, 1);
+    --color-error-light: rgba(198, 40, 40, 0.2);
+    --color-error-text: rgba(239, 83, 80, 1);
+    --color-warning-light: rgba(255, 152, 0, 0.2);
+    --color-warning-text: rgba(255, 183, 77, 1);
+    --color-modal-bg: rgba(42, 42, 42, 1);
+    --color-overlay: rgba(0, 0, 0, 0.7);
+    --color-badge-bg: rgba(100, 108, 255, 0.25);
+    --color-badge-text: rgba(165, 168, 255, 1);
+    --shadow-card: 0 20px 40px rgba(0, 0, 0, 0.4);
+    --shadow-bubble: 0 12px 32px rgba(0, 0, 0, 0.5);
+  }
+
+  * { box-sizing: border-box; }
+
+  /* ---- Thin scrollbars: matches NIcEr (MainPage/HelpPage/OptionsPanel) ---- */
+  * { scrollbar-width: thin; scrollbar-color: rgba(0, 0, 0, 0.2) transparent; }
+  .dark * { scrollbar-color: rgba(255, 255, 255, 0.2) transparent; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.3); }
+  .dark ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
+  .dark ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #eceef3;
+    color: #1c2230;
+    -webkit-font-smoothing: antialiased;
+  }
+  .dark body { background: #101014; }
+
+  /* ---- Mockup harness (chrome, not part of the app) ---- */
+  .harness-head {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 8px;
+  }
+  .harness-head h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .harness-head p { margin: 0; color: #5b6472; font-size: 14px; max-width: 720px; }
+  .controls {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid #dbe0e8;
+    padding: 12px 24px;
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    margin-bottom: 8px;
+  }
+  .controls .group { display: flex; gap: 4px; align-items: center; }
+  .controls .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #8a93a3; margin-right: 4px; font-weight: 600; }
+  .controls button {
+    font: inherit; font-size: 13px; font-weight: 500;
+    padding: 6px 12px; border-radius: 999px;
+    border: 1px solid #cfd5df; background: #fff; color: #333; cursor: pointer;
+  }
+  .controls button.on { background: #646cff; border-color: #646cff; color: #fff; }
+  .controls .spacer { flex: 1; }
+
+  .sections { max-width: 1100px; margin: 0 auto; padding: 8px 24px 80px; }
+  .section-title {
+    font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    color: #7a8496; margin: 40px 0 4px;
+  }
+  .section-note { font-size: 13px; color: #6b7484; margin: 0 0 16px; max-width: 760px; line-height: 1.5; }
+  .dark-block-label { display: none; }
+
+  /* Stage: a framed viewport that shows the app + overlay */
+  .stage {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--color-border-light);
+    background: var(--color-bg-secondary);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+    height: 520px;
+    transition: max-width 0.25s ease;
+  }
+  .stage.mobile { max-width: 390px; }
+  .stage.desktop { max-width: 100%; }
+  .stage.tall { height: 640px; }
+  .stage-row { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
+  .stage-wrap { flex: 1; min-width: 320px; }
+  .stage-cap { font-size: 12px; color: #8a93a3; margin: 8px 2px 0; }
+
+  /* ---- Simulated app background inside the stage ---- */
+  .app {
+    position: absolute; inset: 0;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .app-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 18px;
+    background: var(--color-bg-primary);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+  .app-logo { font-weight: 700; font-size: 15px; color: var(--color-primary); display: flex; align-items: center; gap: 7px; }
+  .app-logo .dot { width: 20px; height: 20px; border-radius: 6px; background: var(--color-primary); display: inline-block; }
+  .app-header .grow { flex: 1; }
+  .app-pill { font-size: 12px; color: var(--color-text-muted); padding: 6px 10px; border: 1px solid var(--color-border-light); border-radius: 8px; }
+  .app-body { flex: 1; padding: 22px; overflow-y: auto; overflow-x: hidden; position: relative; }
+
+  /* The empty content state that sits BEHIND the bubble */
+  .empty-state {
+    max-width: 440px; margin: 24px auto 0; text-align: center;
+    color: var(--color-text-muted);
+  }
+  .empty-state .glyph {
+    width: 64px; height: 64px; border-radius: 16px; margin: 0 auto 16px;
+    background: var(--color-bg-tertiary);
+    display: flex; align-items: center; justify-content: center; font-size: 30px;
+  }
+  .empty-state h4 { margin: 0 0 6px; font-size: 16px; color: var(--color-text-secondary); }
+  .empty-state p { margin: 0; font-size: 13px; line-height: 1.55; }
+
+  /* ============================================================= */
+  /*  BUBBLE — non-blocking corner card                             */
+  /* ============================================================= */
+  .bubble {
+    position: absolute;
+    right: 20px; bottom: 20px;
+    width: 340px; max-width: calc(100% - 40px);
+    background: var(--color-modal-bg);
+    border: 1px solid var(--color-border-light);
+    border-radius: 16px;
+    box-shadow: var(--shadow-bubble);
+    padding: 18px 18px 16px;
+    z-index: 20;
+    animation: bubbleIn 0.28s cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  @keyframes bubbleIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .bubble-close {
+    position: absolute; top: 10px; right: 10px;
+    width: 26px; height: 26px; border: none; border-radius: 8px;
+    background: transparent; color: var(--color-text-muted);
+    cursor: pointer; font-size: 16px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .bubble-close:hover { background: var(--color-bg-tertiary); }
+  .bubble-head { display: flex; align-items: center; gap: 11px; margin-bottom: 10px; padding-right: 22px; }
+  .bubble-icon {
+    width: 40px; height: 40px; border-radius: 11px; flex-shrink: 0;
+    background: var(--color-primary-light); color: var(--color-primary);
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .bubble-title { margin: 0; font-size: 15px; font-weight: 700; color: var(--color-text-primary); line-height: 1.3; }
+  .bubble-body { margin: 0 0 14px; font-size: 13.5px; line-height: 1.55; color: var(--color-text-secondary); }
+  .bubble-body .strong { color: var(--color-text-primary); font-weight: 600; }
+  .bubble-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+  .btn {
+    font: inherit; font-size: 13.5px; font-weight: 500;
+    padding: 9px 16px; border-radius: 9px; border: none; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-primary { background: var(--color-primary); color: #fff; }
+  .btn-primary:hover { background: var(--color-primary-hover); }
+  .btn-ghost { background: var(--color-bg-tertiary); color: var(--color-text-secondary); }
+  .btn-ghost:hover { background: var(--color-bg-hover); }
+  .btn-link {
+    background: transparent; border: none; cursor: pointer;
+    padding: 4px 0; font: inherit; font-size: 12.5px;
+    color: var(--color-text-muted);
+    text-decoration: underline; text-underline-offset: 2px;
+  }
+  .btn-link:hover { color: var(--color-text-secondary); }
+  .bubble-optout { display: block; width: fit-content; margin: 12px 0 0 auto; }
+  .btn-block { width: 100%; justify-content: center; display: flex; align-items: center; gap: 6px; }
+
+  /* ============================================================= */
+  /*  WIZARD MODAL                                                  */
+  /* ============================================================= */
+  .overlay {
+    position: absolute; inset: 0; z-index: 30;
+    background: var(--color-overlay);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.15s ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .wizard {
+    background: var(--color-modal-bg);
+    border-radius: 16px;
+    width: 520px; max-width: 100%;
+    max-height: 100%;
+    box-shadow: var(--shadow-card);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    animation: slideIn 0.2s ease-out;
+  }
+  @keyframes slideIn { from { opacity: 0; transform: scale(0.96) translateY(-8px); } to { opacity: 1; transform: none; } }
+
+  .wiz-head { padding: 18px 20px 14px; border-bottom: 1px solid var(--color-border-light); }
+  .wiz-eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-primary); }
+  .wiz-titlerow { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+  .wiz-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--color-text-primary); flex: 1; }
+  .wiz-x { width: 30px; height: 30px; border: none; border-radius: 8px; background: transparent; color: var(--color-text-muted); font-size: 18px; cursor: pointer; }
+  .wiz-x:hover { background: var(--color-bg-tertiary); }
+
+  /* Progress dots */
+  .steps-dots { display: flex; align-items: center; gap: 6px; margin-top: 12px; }
+  .steps-dots .d { height: 5px; border-radius: 999px; background: var(--color-bg-tertiary); flex: 1; overflow: hidden; }
+  .steps-dots .d.done { background: var(--color-primary); }
+  .steps-dots .d.active { background: var(--color-primary); opacity: 0.55; }
+  .steps-count { font-size: 12px; color: var(--color-text-muted); margin-top: 8px; }
+
+  .wiz-body { padding: 18px 20px; overflow-y: auto; flex: 1; }
+  .wiz-lead { margin: 0 0 14px; font-size: 14px; line-height: 1.6; color: var(--color-text-secondary); }
+
+  .substeps { list-style: none; margin: 0 0 4px; padding: 0; counter-reset: s; }
+  .substeps li { position: relative; padding: 0 0 14px 34px; font-size: 13.5px; line-height: 1.55; color: var(--color-text-secondary); }
+  .substeps li::before {
+    counter-increment: s; content: counter(s);
+    position: absolute; left: 0; top: -1px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--color-primary-light); color: var(--color-primary);
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .substeps li .strong { color: var(--color-text-primary); font-weight: 600; }
+  kbd {
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px;
+    background: var(--color-bg-tertiary); border: 1px solid var(--color-border-light);
+    border-radius: 5px; padding: 1px 6px; color: var(--color-text-primary);
+  }
+  .pill-tag {
+    display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 6px;
+    background: var(--color-success-light); color: var(--color-success-text); vertical-align: middle;
+  }
+
+  /* Screenshot slot (Ivan supplies the real images) */
+  .shot {
+    margin: 12px 0 4px;
+    border: 1.5px dashed var(--color-border); border-radius: 10px;
+    background: var(--color-bg-secondary);
+    aspect-ratio: 16 / 9;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    color: var(--color-text-muted); text-align: center; padding: 12px;
+  }
+  .shot .ic { font-size: 22px; opacity: 0.7; }
+  .shot .cap { font-size: 12px; }
+  .shot .sub { font-size: 11px; opacity: 0.75; }
+  .shot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .shot-grid .shot { margin: 8px 0 0; }
+
+  /* File upload drop zone */
+  .drop {
+    margin: 6px 0; border: 1.5px dashed var(--color-primary);
+    background: var(--color-primary-light); border-radius: 12px;
+    padding: 26px 16px; text-align: center; cursor: pointer;
+  }
+  .drop .ic { font-size: 28px; color: var(--color-primary); }
+  .drop .t { font-size: 14px; font-weight: 600; color: var(--color-text-primary); margin: 8px 0 2px; }
+  .drop .s { font-size: 12px; color: var(--color-text-muted); }
+  .hint { font-size: 12px; color: var(--color-text-muted); margin-top: 10px; text-align: center; }
+
+  .banner { border-radius: 10px; padding: 11px 13px; font-size: 13px; line-height: 1.5; display: flex; gap: 9px; align-items: flex-start; margin: 4px 0; }
+  .banner .bic { flex-shrink: 0; }
+  .banner-error { background: var(--color-error-light); color: var(--color-error-text); }
+  .banner-info { background: var(--color-primary-light); color: var(--color-text-secondary); }
+
+  /* Success summary */
+  .success-glyph {
+    width: 60px; height: 60px; border-radius: 50%; margin: 4px auto 14px;
+    background: var(--color-success-light); color: var(--color-success);
+    display: flex; align-items: center; justify-content: center; font-size: 30px;
+  }
+  .summary { border: 1px solid var(--color-border-light); border-radius: 12px; overflow: hidden; margin: 14px 0 2px; }
+  .summary-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; font-size: 13.5px; }
+  .summary-row + .summary-row { border-top: 1px solid var(--color-border-light); }
+  .summary-row .k { color: var(--color-text-muted); width: 82px; flex-shrink: 0; }
+  .summary-row .v { color: var(--color-text-primary); font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .tt-badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--color-badge-bg); color: var(--color-badge-text); font-weight: 600; }
+  .tt-badge.muted { background: var(--color-bg-tertiary); color: var(--color-text-muted); }
+
+  .wiz-foot {
+    padding: 14px 20px; border-top: 1px solid var(--color-border-light);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .wiz-foot .grow { flex: 1; }
+  .btn-lg { padding: 10px 20px; font-size: 14px; }
+
+  /* Center the success step */
+  .wiz-body.center { text-align: center; }
+  .wiz-body.center .wiz-lead,
+  .wiz-body.center .summary-row { text-align: left; }
+
+  /* ============================================================= */
+  /*  HELPPAGE INLINE WALKTHROUGH (start page — all viewports)      */
+  /* ============================================================= */
+  .startpage { max-width: 620px; margin: 0 auto; }
+  .upload-bar {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    padding: 4px 0 18px;
+  }
+  .upload-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 10px 18px; border-radius: 9px; border: none; cursor: pointer;
+    font: inherit; font-size: 14px; font-weight: 600;
+  }
+  .upload-btn.primary { background: var(--color-primary); color: #fff; }
+  .upload-btn.secondary {
+    background: var(--color-bg-tertiary); color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-light);
+  }
+  .privacy-banner {
+    display: flex; gap: 8px; align-items: center; justify-content: center;
+    font-size: 12.5px; color: var(--color-text-muted);
+    background: var(--color-bg-tertiary); border-radius: 10px;
+    padding: 10px 14px; margin-bottom: 6px;
+  }
+  .privacy-banner a { color: var(--color-primary); text-decoration: none; font-weight: 600; }
+  .wt-link { color: var(--color-primary); text-decoration: none; font-weight: 600; }
+  /* Inline stepper: the SAME wizard layout (progress bar + Step N of N + Back/Next),
+     embedded in the page instead of a modal — no overlay, no backdrop, flows in content. */
+  .inline-wizard {
+    max-width: 560px; margin: 18px auto 0;
+    background: var(--color-modal-bg);
+    border: 1px solid var(--color-border-light);
+    border-radius: 14px; overflow: hidden;
+  }
+
+  @media (max-width: 560px) {
+    .shot-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <div class="group"><span class="label">Theme</span>
+    <button id="t-light" class="on" onclick="setTheme('light')">Light</button>
+    <button id="t-dark" onclick="setTheme('dark')">Dark</button>
+  </div>
+  <div class="group"><span class="label">Viewport</span>
+    <button id="v-desktop" class="on" onclick="setView('desktop')">Desktop</button>
+    <button id="v-mobile" onclick="setView('mobile')">Mobile</button>
+  </div>
+  <div class="spacer"></div>
+  <div class="group"><span class="label" style="color:#b0451f">Screenshot slots</span><span style="font-size:12px;color:#8a93a3">= Ivan supplies real images</span></div>
+</div>
+
+<div class="harness-head">
+  <h1>Stale-Timetable Nudge &amp; Semester-2 Import Wizard</h1>
+  <p>Interactive mockup for the Semester-2 feature (PR #139, v1.8.0). Colors, radii, shadows and dark-mode values are copied verbatim from <code>src/styles/_variables.scss</code>. Toggle theme and viewport above — every state re-renders live. Dashed boxes are screenshot placeholders you'll drop the real NIE-launchpad captures into.</p>
+</div>
+
+<div class="sections" id="sections"></div>
+
+<script>
+/* ---------------------------------------------------------------- */
+/*  State fragments — rendered into framed "stages"                  */
+/* ---------------------------------------------------------------- */
+
+// The simulated app shell that sits behind every overlay.
+function appShell(inner) {
+  return `
+    <div class="app">
+      <div class="app-header">
+        <span class="app-logo"><span class="dot"></span> NIcEr Timetable</span>
+        <span class="grow"></span>
+        <span class="app-pill">Semester 1 ▾</span>
+      </div>
+      <div class="app-body">${inner}</div>
+    </div>`;
+}
+
+// Empty content behind the bubble (the "why is my screen blank?" moment).
+const emptyBehind = `
+  <div class="empty-state">
+    <div class="glyph">🗓️</div>
+    <h4>No upcoming classes</h4>
+    <p>Everything in this timetable has already happened. If a new semester has started, add your latest timetable to see it here.</p>
+  </div>`;
+
+/* ---- BUBBLE: the stale-timetable nudge (single, three actions) ---- */
+/* ✕ maps to "Not now" (temporary dismiss, may reappear next visit). */
+const bubble1 = `
+  <div class="bubble">
+    <button class="bubble-close" title="Not now">✕</button>
+    <div class="bubble-head">
+      <div class="bubble-icon">📅</div>
+      <h3 class="bubble-title">Ready for Semester&nbsp;2?</h3>
+    </div>
+    <p class="bubble-body">
+      Your timetable has <span class="strong">no upcoming classes</span>. Last semester's has wrapped up,
+      so add your Semester&nbsp;2 timetable and you'll be sorted in about a minute.
+    </p>
+    <div class="bubble-actions">
+      <button class="btn btn-ghost">Not now</button>
+      <button class="btn btn-primary">Add Semester 2 →</button>
+    </div>
+    <button class="btn-link bubble-optout">Never show again</button>
+  </div>`;
+
+/* ---- WIZARD STEPS ---- */
+function dots(active, total = 4) {
+  let out = '<div class="steps-dots">';
+  for (let i = 1; i <= total; i++) {
+    const cls = i < active ? 'done' : (i === active ? 'active' : '');
+    out += `<span class="d ${cls}"></span>`;
+  }
+  out += '</div>';
+  return out;
+}
+
+function wizardFrame(step, eyebrow, title, bodyHtml, footHtml) {
+  return `
+  <div class="overlay">
+    <div class="wizard">
+      <div class="wiz-head">
+        <div class="wiz-eyebrow">${eyebrow}</div>
+        <div class="wiz-titlerow">
+          <h3 class="wiz-title">${title}</h3>
+          <button class="wiz-x" title="Close">✕</button>
+        </div>
+        ${dots(step)}
+        <div class="steps-count">Step ${step} of 4</div>
+      </div>
+      <div class="wiz-body ${step === 4 ? 'center' : ''}">${bodyHtml}</div>
+      <div class="wiz-foot">${footHtml}</div>
+    </div>
+  </div>`;
+}
+
+const wizStep1 = wizardFrame(1,
+  'Add Semester 2',
+  'Open your timetable on NIE',
+  `<p class="wiz-lead">NIE recently changed where your timetable lives. Here's the new way to find it:</p>
+   <ol class="substeps">
+     <li>Go to <span class="strong">launchpad.nie.edu.sg</span> and sign in.</li>
+     <li>In the <span class="strong">search box</span> (top-right), type <span class="strong">"timetable"</span>.</li>
+     <li>Open the first result tagged <span class="pill-tag">Service</span>: <span class="strong">ISAAC Student Timetable</span>. It opens in a new tab.</li>
+   </ol>
+   <div class="shot-grid">
+     <div class="shot"><span class="ic">🖼️</span><span class="cap">Launchpad search</span><span class="sub">searching "timetable"</span></div>
+     <div class="shot"><span class="ic">🖼️</span><span class="cap">The "Service" result</span><span class="sub">ISAAC Student Timetable</span></div>
+   </div>`,
+  `<span class="grow"></span><button class="btn btn-ghost btn-lg">Cancel</button><button class="btn btn-primary btn-lg">Next →</button>`
+);
+
+const wizStep2 = wizardFrame(2,
+  'Add Semester 2',
+  'Save the page as a file',
+  `<p class="wiz-lead">Once your timetable has loaded in the new tab, save it to your device:</p>
+   <ol class="substeps">
+     <li>Press <kbd>Ctrl</kbd>+<kbd>S</kbd> &nbsp;(or <kbd>Cmd</kbd>+<kbd>S</kbd> on Mac).</li>
+     <li>If asked, choose <span class="strong">"Webpage, HTML Only"</span> and save. Remember where it goes (usually your <span class="strong">Downloads</span> folder).</li>
+   </ol>
+   <div class="shot"><span class="ic">🖼️</span><span class="cap">The "Save as" dialog</span><span class="sub">Webpage, HTML Only</span></div>`,
+  `<button class="btn btn-ghost btn-lg">← Back</button><span class="grow"></span><button class="btn btn-primary btn-lg">Next →</button>`
+);
+
+const wizStep3 = wizardFrame(3,
+  'Add Semester 2',
+  'Upload the file here',
+  `<p class="wiz-lead">Now bring that saved file back into NIcEr Timetable.</p>
+   <div class="drop">
+     <div class="ic">⬆️</div>
+     <div class="t">Choose your timetable file</div>
+     <div class="s">or drag &amp; drop the <strong>.html</strong> file you just saved</div>
+   </div>`,
+  `<button class="btn btn-ghost btn-lg">← Back</button><span class="grow"></span><button class="btn btn-primary btn-lg" style="opacity:.55;pointer-events:none">Next →</button>`
+);
+
+// Step 3 — error variant (wrong file)
+const wizStep3err = wizardFrame(3,
+  'Add Semester 2',
+  'Upload the file here',
+  `<p class="wiz-lead">Now bring that saved file back into NIcEr Timetable.</p>
+   <div class="drop" style="border-color:var(--color-error);background:var(--color-error-light)">
+     <div class="ic" style="color:var(--color-error)">⚠️</div>
+     <div class="t">Try another file</div>
+     <div class="s">timetable.html</div>
+   </div>
+   <div class="banner banner-error"><span class="bic">⚠️</span><span>We couldn't find a timetable in that file. Make sure you saved the <strong>ISAAC Student Timetable</strong> page as "Webpage, HTML Only", then try again.</span></div>`,
+  `<button class="btn btn-ghost btn-lg">← Back</button><span class="grow"></span><button class="btn btn-primary btn-lg" style="opacity:.55;pointer-events:none">Next →</button>`
+);
+
+const wizStep4 = wizardFrame(4,
+  'All done',
+  "You're all set!",
+  `<div class="success-glyph">✓</div>
+   <p class="wiz-lead" style="text-align:center">Your <span style="color:var(--color-text-primary);font-weight:600">Semester 2</span> timetable is now active. We kept your old one safe, so nothing was lost.</p>
+   <div class="summary">
+     <div class="summary-row"><span class="k">Now showing</span><span class="v">Semester 2 <span class="tt-badge">Active</span></span></div>
+     <div class="summary-row"><span class="k">Kept</span><span class="v">Semester 1 (Old) <span class="tt-badge muted">Saved</span></span></div>
+   </div>
+   <p class="hint">Don't need the old one? Remove it anytime from <strong>Options → Timetables</strong>.</p>`,
+  `<span class="grow"></span><button class="btn btn-primary btn-lg">Done</button>`
+);
+
+/* ---- HELPPAGE INLINE STEPPER (start page for brand-new users) ---- */
+/* Ivan: adopt the WIZARD's layout — progress bar + Step N of N + Back/Next, */
+/* one step at a time — but rendered INLINE in the page (no modal/overlay).   */
+/* Renders on ALL viewports. Below it sits the always-present upload buttons.  */
+function helpStep(step, title, bodyHtml, footHtml) {
+  return `
+  <div class="startpage">
+    <div class="upload-bar">
+      <button class="upload-btn primary">⬆️ Upload Timetable HTML</button>
+      <button class="upload-btn secondary">📅 Load Saved ICS</button>
+    </div>
+    <div class="privacy-banner">🔒 This app doesn't collect your data. <a>Privacy Notice</a></div>
+    <div class="inline-wizard">
+      <div class="wiz-head">
+        <div class="wiz-eyebrow">Set up your timetable</div>
+        <div class="wiz-titlerow"><h3 class="wiz-title">${title}</h3></div>
+        ${dots(step, 3)}
+        <div class="steps-count">Step ${step} of 3</div>
+      </div>
+      <div class="wiz-body">${bodyHtml}</div>
+      <div class="wiz-foot">${footHtml}</div>
+    </div>
+  </div>`;
+}
+
+const helpStep1 = helpStep(1,
+  'Open your timetable on NIE Launchpad',
+  `<p class="wiz-lead">NIE recently changed where your timetable lives. Here's the new way to find it:</p>
+   <ol class="substeps">
+     <li>Go to <a class="wt-link">launchpad.nie.edu.sg</a> and sign in.</li>
+     <li>In the <span class="strong">search box</span> (top-right), type <span class="strong">"timetable"</span>.</li>
+     <li>Open the first result tagged <span class="pill-tag">Service</span>: <span class="strong">ISAAC Student Timetable</span>. It opens in a new tab.</li>
+   </ol>
+   <div class="shot-grid">
+     <div class="shot"><span class="ic">🖼️</span><span class="cap">Launchpad search</span><span class="sub">searching "timetable"</span></div>
+     <div class="shot"><span class="ic">🖼️</span><span class="cap">The "Service" result</span><span class="sub">ISAAC Student Timetable</span></div>
+   </div>`,
+  `<span class="grow"></span><button class="btn btn-primary btn-lg">Next →</button>`
+);
+
+/* ---------------------------------------------------------------- */
+/*  Layout                                                          */
+/* ---------------------------------------------------------------- */
+const SECTIONS = [
+  {
+    title: 'A · Stale-timetable nudge (single bubble, three actions) — DESKTOP ONLY',
+    note: 'Appears bottom-right (corner card, non-blocking) when the active timetable has zero future events. Slides up gently. Three actions: "Add Semester 2" (primary, opens the wizard), "Not now" (dismisses for this visit only — may reappear on a later visit while still stale), and a subtle "Never show again" link (permanent opt-out). The ✕ maps to "Not now". The empty content behind it carries the same "no upcoming classes" message, so the screen never feels broken. Desktop only — the nudge and wizard never render on mobile (import needs Ctrl+S on a desktop browser); the empty-state below still shows on every viewport.',
+    stages: [ { cap: 'Default appearance', inner: emptyBehind, overlay: bubble1 } ]
+  },
+  {
+    title: 'B · Guided import wizard — Step 1',
+    note: 'Opened by "Add Semester 2 →". A focused modal (blocking is right here — the user opted in). New NIE launchpad procedure, broken into obvious sub-steps with two screenshot slots.',
+    stages: [ { cap: 'Step 1 of 4 — find it on NIE', inner: '', overlay: wizStep1 } ]
+  },
+  {
+    title: 'B · Wizard — Step 2',
+    note: 'Save the loaded timetable page as HTML.',
+    stages: [ { cap: 'Step 2 of 4 — save the page', inner: '', overlay: wizStep2 } ]
+  },
+  {
+    title: 'B · Wizard — Step 3 (upload + error state)',
+    note: 'Drag-and-drop / file picker, reusing the existing parse pipeline. The error state reuses the app\'s existing parse-failure message, reworded for this flow.',
+    stages: [
+      { cap: 'Step 3 — idle', inner: '', overlay: wizStep3 },
+      { cap: 'Step 3 — wrong/invalid file', inner: '', overlay: wizStep3err }
+    ]
+  },
+  {
+    title: 'B · Wizard — Step 4 (confirmation)',
+    note: 'Non-destructive result made explicit: Semester 2 is active, Semester 1 renamed "(Old)" and kept. This reassures the user nothing was lost.',
+    stages: [ { cap: 'Step 4 of 4 — success', inner: '', overlay: wizStep4 } ]
+  },
+  {
+    title: 'C · HelpPage inline stepper (change #6) — ALL viewports',
+    note: 'For brand-new users (no timetable yet). Adopts the WIZARD\'s exact layout — progress bar, "Step N of 4", Back / Next — but rendered INLINE in the existing start-page div (no modal, no overlay, no backdrop); it flows in the page below the always-present upload buttons. It is ONE panel that advances IN PLACE as you press Next — the frame below shows it at Step 1. Step content and screenshots are identical to the import wizard (Section B). Renders on all viewports (responsive).',
+    tall: true,
+    stages: [
+      { cap: 'Inline stepper at Step 1 (advances in place via Next / Back)', inner: helpStep1, overlay: '' }
+    ]
+  }
+];
+
+function render() {
+  const view = document.body.dataset.view || 'desktop';
+  const root = document.getElementById('sections');
+  root.innerHTML = SECTIONS.map(sec => {
+    const stages = sec.stages.map(st => `
+      <div class="stage-wrap">
+        <div class="stage ${view}${sec.tall ? ' tall' : ''}">
+          ${appShell(st.inner)}
+          ${st.overlay || ''}
+        </div>
+        <div class="stage-cap">${st.cap}</div>
+      </div>`).join('');
+    return `
+      <div class="section-title">${sec.title}</div>
+      <p class="section-note">${sec.note}</p>
+      <div class="stage-row">${stages}</div>`;
+  }).join('');
+}
+
+function setTheme(mode) {
+  document.documentElement.classList.toggle('dark', mode === 'dark');
+  document.getElementById('t-light').classList.toggle('on', mode === 'light');
+  document.getElementById('t-dark').classList.toggle('on', mode === 'dark');
+  // Update harness chrome for dark
+  document.body.style.background = mode === 'dark' ? '#101014' : '#eceef3';
+  document.body.style.color = mode === 'dark' ? '#e6e8ee' : '#1c2230';
+  const controls = document.querySelector('.controls');
+  controls.style.background = mode === 'dark' ? 'rgba(20,20,26,0.85)' : 'rgba(255,255,255,0.85)';
+  controls.style.borderColor = mode === 'dark' ? '#2a2a34' : '#dbe0e8';
+}
+
+function setView(v) {
+  document.body.dataset.view = v;
+  document.getElementById('v-desktop').classList.toggle('on', v === 'desktop');
+  document.getElementById('v-mobile').classList.toggle('on', v === 'mobile');
+  render();
+}
+
+document.body.dataset.view = 'desktop';
+render();
+</script>
+</body>
+</html>

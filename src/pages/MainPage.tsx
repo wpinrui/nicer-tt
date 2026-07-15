@@ -20,6 +20,7 @@ import {
   CompareFilters,
   CompareModal,
   EditEventModal,
+  EmptyTimetableState,
   EventsCompareView,
   EventsList,
   ExportMenu,
@@ -29,11 +30,14 @@ import {
   Modal,
   OptionsPanel,
   PrivacyNoticeModal,
+  Sem2ImportWizard,
   ShareSelectModal,
   ShareWelcomeModal,
+  StaleTimetableNudge,
   TimetableSwitcher,
   UploadSection,
 } from '../components';
+import type { Sem2ImportResult } from '../components/Sem2ImportWizard';
 import type { UploadSectionHandle } from '../components/UploadSection';
 import {
   toCustomEventInput,
@@ -41,16 +45,18 @@ import {
   useDebouncedValue,
   useEventOverrides,
   useFilteredEvents,
+  useIsDesktop,
   useLocalStorage,
   useMainPageState,
   useShareData,
   useTimetableStorage,
 } from '../hooks';
 import type { CustomEventInput } from '../hooks/useCustomEvents';
-import type { CustomEvent, EventInstanceKey, ShareData, Timetable } from '../types';
+import type { CustomEvent, EventInstanceKey, ShareData, Timetable, TimetableEvent } from '../types';
 import { applyOverridesToEvents, isShareDataV2 } from '../types';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
 import { downloadIcs, generateIcs } from '../utils/generateIcs';
+import { hasFutureEvents, withOldSuffix } from '../utils/staleTimetable';
 import HelpPage from './HelpPage';
 
 /**
@@ -83,6 +89,14 @@ function MainPage() {
   const [switchedToast, setSwitchedToast] = useState<string | null>(null);
   const uploadRef = useRef<UploadSectionHandle>(null);
 
+  // Stale-timetable nudge state (desktop-only bubble + guided sem-2 import wizard)
+  const isDesktop = useIsDesktop();
+  const [nudgePermanentlyDismissed, setNudgePermanentlyDismissed] = useState(
+    () => localStorage.getItem(STORAGE_KEYS.STALE_NUDGE_DISMISSED) === 'true'
+  );
+  const [nudgeDismissedThisVisit, setNudgeDismissedThisVisit] = useState(false);
+  const [isSem2WizardOpen, setSem2WizardOpen] = useState(false);
+
   // Custom events
   const {
     customEvents,
@@ -93,6 +107,7 @@ function MainPage() {
     deleteCustomEventsByGroupId,
     getCustomEvent,
     getCustomEventsForTimetable,
+    deleteCustomEventsForTimetable,
   } = useCustomEvents(activeTimetable?.id || null);
 
   // Event overrides for imported events
@@ -193,6 +208,16 @@ function MainPage() {
   const displayOverrides = isViewingPreview
     ? { overrides: {}, deletions: [] }
     : { overrides, deletions };
+
+  // A timetable is "stale" when it has events but none are upcoming (imported or custom).
+  const hasFuture = useMemo(() => hasFutureEvents(events, customEvents), [events, customEvents]);
+  const isStaleTimetable = hasExistingData && !hasFuture && !isViewingPreview && !compareMode;
+  const showStaleNudge =
+    isDesktop &&
+    isStaleTimetable &&
+    !nudgePermanentlyDismissed &&
+    !nudgeDismissedThisVisit &&
+    !isSem2WizardOpen;
 
   const { groupedByDate, totalEvents, courseColorMap, uniqueCourses, filteredCount } =
     useFilteredEvents(
@@ -546,6 +571,55 @@ function MainPage() {
     [activeTimetable, setTimetable, clearAllForTimetable]
   );
 
+  // Deletes a timetable and cleans up its associated custom events and overrides,
+  // which would otherwise be orphaned in localStorage.
+  const handleDeleteTimetable = useCallback(
+    (id: string): boolean => {
+      const deleted = deleteTimetable(id);
+      if (deleted) {
+        deleteCustomEventsForTimetable(id);
+        clearAllForTimetable(id);
+      }
+      return deleted;
+    },
+    [deleteTimetable, deleteCustomEventsForTimetable, clearAllForTimetable]
+  );
+
+  // --- Stale-timetable nudge handlers ---
+  const handleNudgeDismiss = useCallback(() => setNudgeDismissedThisVisit(true), []);
+
+  const handleNudgeNeverShow = useCallback(() => {
+    localStorage.setItem(STORAGE_KEYS.STALE_NUDGE_DISMISSED, 'true');
+    setNudgePermanentlyDismissed(true);
+  }, []);
+
+  // Accept path: add the new timetable (named "Semester 2") alongside the old one,
+  // switch to it, make it primary, and rename the old one with an "(Old)" suffix.
+  // Non-destructive — nothing is deleted.
+  const handleSem2Import = useCallback(
+    (newEvents: TimetableEvent[], fileName: string): Sem2ImportResult => {
+      const oldActive = activeTimetable;
+      const newName = 'Semester 2';
+      const newId = addTimetable(newEvents, fileName, newName);
+      setActiveTimetable(newId);
+      setPrimaryTimetable(newId);
+
+      let oldName = 'your previous timetable';
+      if (oldActive) {
+        const renamed = withOldSuffix(oldActive.name);
+        if (renamed !== oldActive.name) renameTimetable(oldActive.id, renamed);
+        oldName = renamed;
+      }
+
+      // The user now has a fresh timetable — suppress future nudges permanently.
+      localStorage.setItem(STORAGE_KEYS.STALE_NUDGE_DISMISSED, 'true');
+      setNudgePermanentlyDismissed(true);
+
+      return { newName, oldName };
+    },
+    [activeTimetable, addTimetable, setActiveTimetable, setPrimaryTimetable, renameTimetable]
+  );
+
   const handleSaveCustomEvent = useCallback(
     (eventInput: CustomEventInput | CustomEventInput[]) => {
       if (editingCustomEvent) {
@@ -833,6 +907,14 @@ function MainPage() {
                   onEditImportedEvent={handleEditImportedEvent}
                   onDeleteImportedEvent={handleDeleteImportedEvent}
                 />
+                {isStaleTimetable &&
+                  groupedByDate.length === 0 &&
+                  !hasActiveFilters &&
+                  !showPastDates && (
+                    <EmptyTimetableState
+                      onAddTimetable={isDesktop ? () => setSem2WizardOpen(true) : undefined}
+                    />
+                  )}
               </div>
             </>
           )}
@@ -917,7 +999,7 @@ function MainPage() {
           onAddTimetable={addTimetable}
           onAddCustomEventsToTimetable={addCustomEventToTimetable}
           onRenameTimetable={renameTimetable}
-          onDeleteTimetable={deleteTimetable}
+          onDeleteTimetable={handleDeleteTimetable}
           onViewingToast={handleViewingToast}
           onRegenerateTimetable={handleRegenerateTimetable}
           currentEvents={events ?? undefined}
@@ -1046,6 +1128,18 @@ function MainPage() {
             To restore deleted events, regenerate your timetable from the original HTML file.
           </p>
         </Modal>
+      )}
+
+      {showStaleNudge && (
+        <StaleTimetableNudge
+          onAccept={() => setSem2WizardOpen(true)}
+          onDismiss={handleNudgeDismiss}
+          onNeverShow={handleNudgeNeverShow}
+        />
+      )}
+
+      {isSem2WizardOpen && (
+        <Sem2ImportWizard onImport={handleSem2Import} onClose={() => setSem2WizardOpen(false)} />
       )}
     </div>
   );
