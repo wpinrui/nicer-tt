@@ -56,7 +56,7 @@ import type { CustomEvent, EventInstanceKey, ShareData, Timetable, TimetableEven
 import { applyOverridesToEvents, isShareDataV2 } from '../types';
 import { STORAGE_KEYS, TOAST_DURATION_MS } from '../utils/constants';
 import { downloadIcs, generateIcs } from '../utils/generateIcs';
-import { hasFutureEvents } from '../utils/staleTimetable';
+import { hasFutureEvents, withOldSuffix } from '../utils/staleTimetable';
 import HelpPage from './HelpPage';
 
 /**
@@ -594,19 +594,19 @@ function MainPage() {
   }, []);
 
   // Accept path: add the new timetable (named "Semester 2") alongside the old one,
-  // switch to it, and rename the old one with an "(Old)" suffix. Non-destructive.
+  // switch to it, make it primary, and rename the old one with an "(Old)" suffix.
+  // Non-destructive — nothing is deleted.
   const handleSem2Import = useCallback(
     (newEvents: TimetableEvent[], fileName: string): Sem2ImportResult => {
       const oldActive = activeTimetable;
       const newName = 'Semester 2';
       const newId = addTimetable(newEvents, fileName, newName);
       setActiveTimetable(newId);
+      setPrimaryTimetable(newId);
 
       let oldName = 'your previous timetable';
       if (oldActive) {
-        const renamed = oldActive.name.endsWith('(Old)')
-          ? oldActive.name
-          : `${oldActive.name} (Old)`;
+        const renamed = withOldSuffix(oldActive.name);
         if (renamed !== oldActive.name) renameTimetable(oldActive.id, renamed);
         oldName = renamed;
       }
@@ -617,7 +617,7 @@ function MainPage() {
 
       return { newName, oldName };
     },
-    [activeTimetable, addTimetable, setActiveTimetable, renameTimetable]
+    [activeTimetable, addTimetable, setActiveTimetable, setPrimaryTimetable, renameTimetable]
   );
 
   const handleSaveCustomEvent = useCallback(
@@ -910,7 +910,11 @@ function MainPage() {
                 {isStaleTimetable &&
                   groupedByDate.length === 0 &&
                   !hasActiveFilters &&
-                  !showPastDates && <EmptyTimetableState />}
+                  !showPastDates && (
+                    <EmptyTimetableState
+                      onAddTimetable={isDesktop ? () => setSem2WizardOpen(true) : undefined}
+                    />
+                  )}
               </div>
             </>
           )}

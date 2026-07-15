@@ -19,3 +19,11 @@ export function hasFutureEvents(
   if (customEvents.some((event) => anyFuture(event.dates))) return true;
   return false;
 }
+
+/**
+ * Appends an " (Old)" suffix to a timetable name, unless it already ends with one.
+ * Used by the sem-2 accept path when demoting the previous timetable.
+ */
+export function withOldSuffix(name: string): string {
+  return name.endsWith('(Old)') ? name : `${name} (Old)`;
+}
