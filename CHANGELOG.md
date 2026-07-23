@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.8.1 (23 Jul 2026)**
+- Update dependencies (websocket-driver 0.7.4 → 0.7.5)
+
 **v1.8.0 (15 Jul 2026)**
 - Refresh onboarding to NIE's new Launchpad procedure for downloading your timetable (in-app help page and guide, with updated screenshots)
 - Add a stale-timetable nudge: when your active timetable has no upcoming classes (e.g. a new semester has started), a desktop prompt offers to add your new timetable
