@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.8.2 (23 Jul 2026)**
+- Patch dependency security advisories (protobufjs and related packages); production dependency tree is now free of known vulnerabilities
+
 **v1.8.1 (23 Jul 2026)**
 - Update dependencies (websocket-driver 0.7.4 → 0.7.5)
 
