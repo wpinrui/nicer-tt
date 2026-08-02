@@ -1,6 +1,9 @@
 # Changelog
 
-**v1.8.3 (2 Aug 2026)**
+**v1.8.4 (3 Aug 2026)**
+- Fix content upgrading sessions falling on today being dated a year late — a session on 3 Aug showed as "Tue, Aug 3" (2027) instead of "Mon, Aug 3" (2026), and was added to the timetable with the wrong year
+
+**v1.8.3 (3 Aug 2026)**
 - Add QCQ52D (Further Topics in Computer Applications — Python Upgrading) content upgrading course
 - Archive last semester's content upgrading courses so the course picker only offers courses that are currently running
 
