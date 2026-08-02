@@ -1,5 +1,9 @@
 # Changelog
 
+**v1.8.3 (2 Aug 2026)**
+- Add QCQ52D (Further Topics in Computer Applications — Python Upgrading) content upgrading course
+- Archive last semester's content upgrading courses so the course picker only offers courses that are currently running
+
 **v1.8.2 (23 Jul 2026)**
 - Patch dependency security advisories (protobufjs and related packages); production dependency tree is now free of known vulnerabilities
 

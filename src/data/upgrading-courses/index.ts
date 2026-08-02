@@ -8,6 +8,10 @@
  * 1. Create a new JSON file following the UpgradingCourse schema
  * 2. Import it below and add to the UPGRADING_COURSES array
  *
+ * At the start of each semester, move the previous semester's courses from
+ * UPGRADING_COURSES to ARCHIVED_UPGRADING_COURSES. Archived courses stay in the
+ * repo for reference but are no longer offered in the course picker.
+ *
  * JSON Schema:
  * {
  *   "courseName": "ABC1234 - Full Course Name",
@@ -24,6 +28,8 @@
  */
 
 import type { UpgradingCourse } from '../../types';
+// QCQ - Computer Applications
+import QCQ52D from './QCQ52D.json';
 // QUB - Biology
 import QUB511 from './QUB511.json';
 import QUB513 from './QUB513.json';
@@ -78,10 +84,21 @@ import QUY511 from './QUY511.json';
 import QUY512 from './QUY512.json';
 
 /**
- * All available upgrading courses.
+ * Upgrading courses currently on offer — these are what the course picker shows.
  * Add new courses here after importing their JSON files.
  */
 export const UPGRADING_COURSES: UpgradingCourse[] = [
+  // QCQ - Computer Applications
+  QCQ52D,
+];
+
+/**
+ * Past-semester upgrading courses, kept for reference only.
+ * These are not offered in the course picker. Move a course back into
+ * UPGRADING_COURSES if it runs again.
+ */
+export const ARCHIVED_UPGRADING_COURSES: UpgradingCourse[] = [
+  // Semester 2, AY2025/26 (Jan-Feb 2026)
   // QUB - Biology
   QUB511,
   QUB513,
