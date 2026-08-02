@@ -40,8 +40,12 @@ export function ddmmToDate(ddmm: string): Date {
   const [day, month] = ddmm.split('/').map(Number);
   const now = new Date();
   const thisYear = new Date(now.getFullYear(), month - 1, day);
+  // Compare against the start of today, not the current instant. `thisYear` is
+  // midnight, so comparing it to `now` would classify a session happening TODAY
+  // as past from 00:00 onwards and roll it a full year forward.
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   // If the date is in the past, use next year
-  if (thisYear < now) {
+  if (thisYear < startOfToday) {
     return new Date(now.getFullYear() + 1, month - 1, day);
   }
   return thisYear;
