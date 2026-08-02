@@ -74,6 +74,17 @@ For a course "Introduction to Educational Psychology" (ABC1234) with 3 sessions:
 4. Add to array: `export const UPGRADING_COURSES: UpgradingCourse[] = [NewCourse, ...];`
 5. Rebuild the app
 
+## Archiving Past Semesters
+
+`index.ts` exports two arrays. `UPGRADING_COURSES` holds the courses currently on
+offer — this is what the in-app course picker shows. `ARCHIVED_UPGRADING_COURSES`
+holds past-semester courses, which stay in the repo for reference but are not
+offered to users.
+
+At the start of each semester, move the previous semester's entries from
+`UPGRADING_COURSES` into `ARCHIVED_UPGRADING_COURSES` (keep the imports and the
+JSON files). Move a course back if it runs again.
+
 ## Notes
 
 - Date format must be DD/MM (day/month), not MM/DD

@@ -1,0 +1,10 @@
+{
+  "courseName": "QCQ52D - Further Topics in Computer Applications (Python Upgrading)",
+  "sessions": [
+    { "date": "03/08", "startTime": "10:30", "endTime": "12:30", "venue": "NIE2-01-TR201", "tutor": "" },
+    { "date": "17/08", "startTime": "10:30", "endTime": "12:30", "venue": "NIE2-01-TR202", "tutor": "" },
+    { "date": "24/08", "startTime": "10:30", "endTime": "12:30", "venue": "NIE2-01-TR202", "tutor": "" },
+    { "date": "31/08", "startTime": "10:30", "endTime": "12:30", "venue": "NIE2-01-TR202", "tutor": "" },
+    { "date": "07/09", "startTime": "11:30", "endTime": "13:30", "venue": "", "tutor": "" }
+  ]
+}
